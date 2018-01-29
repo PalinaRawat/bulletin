@@ -1,0 +1,11 @@
+POST /signup
+	req -
+		{ email: String, password: String }
+	res -
+		{ success: boolean, message: String }
+
+POST /signup
+  req -
+    { email: String, password: String }
+  res -
+    { success: boolean, message: String, token: jwt-token }
