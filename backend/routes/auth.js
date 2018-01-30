@@ -80,7 +80,7 @@ var login = function ( req, res ) {
 				else {
 					var tokenitems = {
 						_id: result[0]._id,
-						username: req.body.username
+						email: req.body.email
 					}
 					var token = jwt.sign( tokenitems , jwtsecret,  {
 						expiresIn: 86400 //24 Hours
@@ -95,6 +95,22 @@ var login = function ( req, res ) {
 
 // verifies a users token
 var authenticate = function ( req, res, next ) {
+	var token = req.header('token');
+
+	//If no token is provided in the header
+	if (!token) {
+		return res.send({ success: false, message: 'User is not logged in' });
+	}
+
+	//Verifies whether token is valid or not
+	jwt.verify(token, jwtsecret, function(err, decoded) {
+		if (err) {
+			return res.send({ success: false, message: 'Failed to authenticate token' });
+		} else {
+			req.decoded = decoded;
+			next();
+		}
+	})
 }
 
 var functions = {
