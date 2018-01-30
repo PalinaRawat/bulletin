@@ -9,3 +9,9 @@ POST /signup
     { email: String, password: String }
   res -
     { success: boolean, message: String, token: jwt-token }
+
+POST /createflyer
+  req -
+    { title: String, description: String, start-date: date, end-date: date }
+  res -
+    { success: boolean, message: String }
