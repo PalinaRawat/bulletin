@@ -1,21 +1,20 @@
 import React, { Component } from 'react';
-import { Route } from 'react-router-dom';
-import Signup from './routes/signup'
-import logo from './logo.svg';
+import { Route, BrowserRouter, Link } from 'react-router-dom';
+import home from './routes/home';
+import signup from './routes/signup';
+import login from './routes/login';
 import './App.css';
 
 class App extends Component {
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Bulletin</h1>
-        </header>
-        <p className="App-intro">
-          There is nothing here because frontend is the worst.
-        </p>
-      </div>
+      <BrowserRouter>
+        <div>
+          <Route exact path="/" component={home}/>
+          <Route path="/signup" component={signup}/>
+          <Route path="/login" component={login}/>
+        </div>
+      </BrowserRouter>
     );
   }
 }
