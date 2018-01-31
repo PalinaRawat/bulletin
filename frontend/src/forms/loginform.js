@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
 import { Link } from 'react-router';
 
-const SignupForm = ({
+const LoginForm = ({
   onSubmit,
   onChange,
   errors,
@@ -11,14 +11,6 @@ const SignupForm = ({
 
     <form action="/" onSubmit={onSubmit}>
       <div className="info-form">
-        <p1>Name</p1> <br/>
-        <input
-          floatingLabelText="Name"
-          name="name"
-          onChange={onChange}
-          value={user.name}
-        /> <br/>
-
         <p1>Email</p1> <br/>
         <input
           floatingLabelText="Email"
@@ -43,4 +35,4 @@ const SignupForm = ({
   </div>
 );
 
-export default SignupForm;
+export default LoginForm;

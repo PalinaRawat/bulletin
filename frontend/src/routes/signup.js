@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import Nav from '../forms/nav'
 import { Link } from 'react-router-dom';
-import signupform from '../forms/signupform';
+import { GET, POST } from '../tools/api'
+import SignupForm from '../forms/signupform';
 
 
 class signup extends Component {
@@ -16,16 +17,28 @@ class signup extends Component {
     }
   }
 
+  change = (e) => {
+    switch (e.target.name) {
+      case "name": this.setState({ user: {name: e.target.value}}); break;
+      case "email": this.setState({ user: {email: e.target.value }}); break;
+      case "password": this.setState({ user: {password: e.target.value }}); break;
+    };
+  }
+
+  submit = (e) => {
+    var response = POST(this.state.user);
+    console.log(response);
+  }
+
   render () {
     return (
       <div>
         <center>
           <h1> Bulletin </h1>
 
-          <signupform
+          <SignupForm
             onSubmit={this.submit}
             onChange={this.change}
-            errors={this.state.errors}
             user={this.state.user}
           />
 
