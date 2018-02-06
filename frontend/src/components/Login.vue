@@ -1,17 +1,15 @@
 <template>
   <div class="hello">
     <img id="icon" src="../assets/icon.svg">
-    <p>Log in</p>
+    <p id="login">Login</p>
     <p type="error" style='color:red; font-size: 12px;' v-if='!success'>{{ message }}</p>
     <p type="error" style='color:green; font-size: 12px;' v-if='success'>{{ message }}</p>
-    <div class="input-container">
-      Email<br/>
-      <input type="email" v-model="credentials.email"/><br/>
+    <div>
+      <input type="email" v-model="credentials.email" placeholder="Username" name="uname"/>
     </div>
-    <div class="input-container">
-      Password<br/>
-      <input type="password" v-model="credentials.password"/>
-    </div>
+    <div>
+      <input type="password" v-model="credentials.password" placeholder="Password" name="psw"/>
+   </div>
     <button v-on:click="login">
       Login
     </button>
@@ -78,12 +76,21 @@ export default {
   margin-top: 30px;
   font-size: 12px;
 }
-.input-container {
-  font-size: 12px;
+
+input {
+    width: 20%;
+    padding: 10px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+    font-size: 20px;
 }
 
-p1 {
-  font-size: 12px;
+#login{
+  font-size: 30px;
+  font-family: 'Lato', sans-serif;
+  margin-bottom: 0px;
 }
 
 </style>
