@@ -78,27 +78,35 @@ export default {
 
 input {
     width: 20%;
+    min-width: 150px;
     padding: 10px 20px;
     margin: 8px 0;
     display: inline-block;
     border: 1px solid #ccc;
     box-sizing: border-box;
-    font-size: 20px;
+    font-size: 15px;
+    text-align: center;
+    outline-width: 1px;
 }
 
 #login{
-  font-size: 30px;
+  font-size: 25px;
   margin-bottom: 0px;
 }
 
 button {
     background-color: #ADD8E6;
     color: black;
-    font-size: 20px;
+    font-size: 15px;
     padding: 14px 20px;
     margin: 8px 0;
     border: none;
     cursor: pointer;
     width: 20%;
+    min-width: 150px;
+}
+button:hover {
+    background-color: #ADD2E6;
+
 }
 </style>
