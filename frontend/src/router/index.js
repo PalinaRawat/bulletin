@@ -7,7 +7,7 @@ import Home from '@/components/Home'
 
 Vue.use(Router)
 
-export default new Router({
+var router = new Router({
   authenticated: false,
   routes: [
     {
@@ -28,7 +28,18 @@ export default new Router({
     {
       path: '/home',
       name: 'Home',
-      component: Home
+      component: Home,
+      meta: { requiresAuth: true }
     }
   ]
 })
+
+router.beforeEach((to, from, next) => {
+  const authUser = localStorage.getItem('token')
+  if (to.meta.requiresAuth && !authUser) {
+    next({ name: 'Login' })
+  }
+  next()
+})
+
+export default router

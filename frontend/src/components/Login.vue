@@ -55,13 +55,6 @@ export default {
         password: ''
       }
     }
-  },
-  mounted () {
-    this.$('#login-button').keypress(function (e) {
-      if (e.keyCode === 13) {
-        this.$('#linkadd').click()
-      }
-    })
   }
 }
 </script>
