@@ -55,7 +55,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .hello {
   font-family: 'Lato', sans-serif;
   text-align: center;
