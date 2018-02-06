@@ -1,16 +1,14 @@
 <template>
   <div class="hello">
     <img id="icon" src="../assets/icon.svg">
-    <p>Sign Up</p>
+    <p id="signup">Sign Up</p>
     <p type="error" style='color:red; font-size: 12px;' v-if='!success'>{{ message }}</p>
     <p type="error" style='color:green; font-size: 12px;' v-if='success'>{{ message }}</p>
-    <div class="input-container">
-      Email<br/>
-      <input type="email" v-model="credentials.email"/><br/>
+    <div>
+      <input type="email" v-model="credentials.email" placeholder="Username" name="uname"/>
     </div>
-    <div class="input-container">
-      Password<br/>
-      <input type="password" v-model="credentials.password"/>
+    <div>
+      <input type="password" v-model="credentials.password" placeholder="Password" name="psw"/>
     </div>
     <button v-on:click="signup">
       Signup
@@ -58,13 +56,16 @@ export default {
 </script>
 
 <style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+.hello {
+  font-family: 'Lato', sans-serif;
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
+}
+
+#signup{
+  font-size: 30px;
+  margin-bottom: 0px;
 }
 
 #icon {
@@ -76,12 +77,13 @@ export default {
   margin-top: 30px;
   font-size: 12px;
 }
-.input-container {
-  font-size: 12px;
+input {
+    width: 20%;
+    padding: 10px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+    font-size: 20px;
 }
-
-p1 {
-  font-size: 12px;
-}
-
 </style>

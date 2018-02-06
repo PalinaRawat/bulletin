@@ -58,10 +58,8 @@ export default {
 </script>
 
 <style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+.hello {
+  font-family: 'Lato', sans-serif;
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
@@ -89,8 +87,17 @@ input {
 
 #login{
   font-size: 30px;
-  font-family: 'Lato', sans-serif;
   margin-bottom: 0px;
 }
 
+button {
+    background-color: #ADD8E6;
+    color: black;
+    font-size: 20px;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    cursor: pointer;
+    width: 20%;
+}
 </style>
