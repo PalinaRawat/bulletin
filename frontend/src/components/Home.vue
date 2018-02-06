@@ -1,9 +1,9 @@
 <template>
   <div class="hello">
     <div class="topnav">
-      <a class="active" href="#home">Home</a>
-      <a href="#about">About</a>
-      <a href="#contact">Contact</a>
+      <router-link class="active" to="/home" tag="a">Home</router-link>
+      <router-link to="/about" tag="a">About</router-link>
+      <router-link to="/contact" tag="a">Contact</router-link>
       <img src="../assets/icon.svg">
     </div>
     <h1>{{ msg }}</h1>
