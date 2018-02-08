@@ -1,5 +1,5 @@
 var MongoClient	= require('mongodb').MongoClient
-var MongoURL		= 'mongodb://localhost:27017/bulletin'
+var MongoURL		= 'mongodb://admin:password@ds227168.mlab.com:27168/bulletin'
 var bcrypt			= require('bcryptjs')
 var jwt					= require('jsonwebtoken')
 
