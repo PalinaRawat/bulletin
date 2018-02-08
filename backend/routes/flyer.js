@@ -28,6 +28,7 @@ var functions = {
   create: create
   flag: flag
   getinfo: getinfo
+  getflyers: getflyers
 }
 
 var flag = function ( req, res ) {
@@ -73,6 +74,23 @@ var getinfo = function ( req, res ) {
       })
     })
 
+}
+
+var getflyers = function ( req, res ) {
+  //if (!req.body.start || !req.body.end)  WE WILL NEED THIS WHEN WE ADD FILTERS : TO KNOW
+  //  return res.json({ success: false, message: 'Insufficient information' })
+
+  MongoClient.connect(MongoURL, function(err, db) {
+    var flyers = db.collection('flyers')
+
+    flyers.find({}, function(err, result) {
+      if (err)
+        return res.json({ success: false, message: 'Error finding flyers in database'})
+
+
+      return res.json({result})
+    })
+  })
 }
 
 module.exports = functions

@@ -12,6 +12,7 @@ router.post('/signup', auth.signup)
 router.post('/login', auth.login)
 router.post('/flagflyer', flyer.flag)
 router.post('/getflyerinfo', flyer.getinfo)
+router.post('/getflyers', flyer.getflyers)
 
 
 ////// PROTECTED ROUTES //////
