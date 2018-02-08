@@ -4,7 +4,6 @@
       <router-link class="active" to="/home" tag="a">Home</router-link>
       <router-link to="/about" tag="a">About</router-link>
       <router-link to="/contact" tag="a">Contact</router-link>
-      <router-link to="/changePassword" tag="a">Change Password</router-link>
       <img src="../assets/icon.svg">
     </div>
     <h1>{{ msg }}</h1>
