@@ -26,6 +26,53 @@ var create = function ( req, res ) {
 
 var functions = {
   create: create
+  flag: flag
+  getinfo: getinfo
+}
+
+var flag = function ( req, res ) {
+  if (!req.body.flyer)
+    return res.json({ success: false, message: 'Insufficient information' })
+
+    MongoClient.connect(MongoURL, function(err, db) {
+      var flyers = db.collection('flyers')
+
+      flyers.findOne( {_id: req.body.flyer}, function(err, result) {
+        if (err)
+          return res.json({ success: false, message: 'Error finding flyer in database'})
+
+        //if (result.owner == currentUser) {
+        //  flyers.remove('_id':req.body.flyer)
+        //  return res.json({ success: true, message: 'Deleted own flyer' })
+        //}
+
+        if (result.flags == 4) {
+          flyers.remove('_id' : req.body.flyer)
+          return res.json({ success: true, message: 'Flagged flyer and deleted' })
+        } else {
+          flyers.update({'_id' : req.body.flyer}, $set{'flags' : result.flags + 1})
+          return res.json({ success: true, message: 'Flagged flyer' })
+        }
+      })
+    })
+}
+
+var getinfo = function ( req, res ) {
+  if (!req.body.flyer)
+    return res.json({ success: false, message: 'Insufficient information' })
+
+    MongoClient.connect(MongoURL, function(err, db) {
+      var flyers = db.collection('flyers')
+
+      flyers.findOne( {_id: req.body.flyer}, function(err, result) {
+        if (err)
+          return res.json({ success: false, message: 'Error finding flyer in database'})
+
+
+        return res.json({ title: result.title, description: result.description, startdate: result.stardate, enddate: result.enddate, image_url: result.image_url, owner: result.owner })
+      })
+    })
+
 }
 
 module.exports = functions
