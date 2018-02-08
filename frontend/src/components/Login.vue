@@ -17,6 +17,10 @@
       Need an account?<br/>
       <router-link to="/signup" tag="button">Signup</router-link>
     </div>
+    <div class="login-container">
+      Forgot Password?<br/>
+      <router-link to="/reset" tag="button">Reset Password</router-link>
+    </div>
   </div>
 </template>
 

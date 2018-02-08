@@ -36,7 +36,6 @@ var router = new Router({
       path: '/reset',
       name: 'ResetPassword',
       component: ResetPassword
-      // meta: { requiresAuth: true }
     }
   ]
 })
