@@ -1,26 +1,24 @@
 <template>
   <div class="hello">
     <img id="icon" src="../assets/icon.svg">
-    <p id="login">Login</p>
+    <p id="login">Reset Password </p>
     <p type="error" style='color:red; font-size: 12px;' v-if='!success'>{{ message }}</p>
     <p type="error" style='color:green; font-size: 12px;' v-if='success'>{{ message }}</p>
     <div>
-      <input type="email" v-model="credentials.email" placeholder="Username" name="uname"/>
+      <input type="email" v-model="credentials.email" placeholder="Username" name="psw"/>
     </div>
     <div>
-      <input type="password" v-model="credentials.password" placeholder="Password" name="psw"/>
+      <input type="password" v-model="credentials.oldPassword" placeholder="Old Password" name="psw"/>
+    </div>
+    <div>
+      <input type="password" v-model="credentials.newPassword" placeholder="New Password" name="psw"/>
    </div>
-    <button v-on:click="login">
-      Login
+   <div>
+     <input type="password" v-model="credentials.confirmPassword" placeholder="Confirm Password" name="psw"/>
+  </div>
+    <button v-on:click="reset">
+      Reset Password
     </button>
-    <div class="login-container">
-      Need an account?<br/>
-      <router-link to="/signup" tag="button">Signup</router-link>
-    </div>
-    <div class="login-container">
-      Forgot Password?<br/>
-      <router-link to="/reset" tag="button">Reset Password</router-link>
-    </div>
   </div>
 </template>
 
@@ -33,28 +31,31 @@ export default {
       data: [],
       message: '',
       credentials: {
-        email: '',
-        password: ''
+        oldPassword: '',
+        newPassword: '',
+        confirmPassword: '',
+        email: ''
       },
       success: false
     }
   },
   methods: {
-    login () {
+    reset () {
       const context = this
-      axios.post(`http://localhost:5000/login`, this.credentials).then(res => {
+      axios.post(`http://localhost:5000/reset`, this.credentials).then(res => {
         if (res.data.success) {
-          context.message = 'Successfully logged in!'
+          context.message = 'Successfully Reset Password!'
           context.success = true
-          localStorage.setItem('token', res.data.token)
           this.$router.push('home')
         } else {
           context.message = res.data.message
         }
       })
       this.credentials = {
-        email: '',
-        password: ''
+        oldPassword: '',
+        newPassword: '',
+        confirmPassword: '',
+        email: ''
       }
     }
   }

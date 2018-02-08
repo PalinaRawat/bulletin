@@ -4,6 +4,7 @@ import Welcome from '@/components/Welcome'
 import Signup from '@/components/Signup'
 import Login from '@/components/Login'
 import Home from '@/components/Home'
+import ResetPassword from '@/components/ResetPassword'
 
 Vue.use(Router)
 
@@ -30,6 +31,11 @@ var router = new Router({
       name: 'Home',
       component: Home,
       meta: { requiresAuth: true }
+    },
+    {
+      path: '/reset',
+      name: 'ResetPassword',
+      component: ResetPassword
     }
   ]
 })
