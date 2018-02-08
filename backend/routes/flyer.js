@@ -13,6 +13,7 @@ var create = function ( req, res ) {
       description: req.body.description,
       startdate: req.body.startdate,
       enddate: req.body.enddate,
+      image_url: req.body.image_url,
       owner: req.decoded.email
     }
 
