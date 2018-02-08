@@ -3,19 +3,44 @@
     <div class="topnav">
       <router-link class="active" to="/home" tag="a">Home</router-link>
       <router-link to="/about" tag="a">About</router-link>
-      <router-link to="/contact" tag="a">Contact</router-link>
+       <button id="show-modal" @click="showModal = true">Create a flyer</button>
       <img src="../assets/icon.svg">
     </div>
-    <h1>{{ msg }}</h1>
+    <modal v-if="showModal" @close="showModal = false">
+      <div class="modal-content">
+        <form>
+           Title:<br>
+          <input type="text" name="firstname" value="">
+          <br>
+          <br>
+           Description:<br>
+          <input type="text" name="lastname" value="">
+          <br>
+          <br>
+           image url:<br>
+          <input type="text" name="image_url" value="">
+          <br>
+          <br>
+           Start date of the event<br>
+          <input type="date" name="eventdate" value="">
+           <br>
+           <br>
+           End date of the event<br>
+          <input type="date" name="eventdate" value="">
+          <br>
+          <br>
+          <button id="submit" type="button" @click="showModal = false"> Submit </button>
+        </form>
+      </div>
+    </modal>
   </div>
 </template>
-
 <script>
 export default {
   name: 'Welcome',
   data () {
     return {
-      msg: 'This is the home page. I haven\'t done anything for this yet. meep'
+      showModal: false
     }
   }
 }
@@ -48,5 +73,12 @@ a {
 img {
   height: 4%;
   width: 4%;
+}
+.modal-content {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
 }
 </style>
