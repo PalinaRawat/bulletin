@@ -35,10 +35,10 @@ var flag = function ( req, res ) {
         if (err)
           return res.json({ success: false, message: 'Error finding flyer in database'})
 
-        //if (result.owner == currentUser) {
-        //  flyers.remove('_id':req.body.flyer)
-        //  return res.json({ success: true, message: 'Deleted own flyer' })
-        //}
+        if (result.owner == req.decoded.email) {
+          flyers.remove('_id':req.body.flyer)
+          return res.json({ success: true, message: 'Deleted own flyer' })
+        }
 
         if (result.flags == 4) {
           flyers.remove({ "_id" : req.body.flyer })
