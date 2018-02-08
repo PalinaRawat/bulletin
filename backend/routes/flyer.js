@@ -24,13 +24,6 @@ var create = function ( req, res ) {
   })
 }
 
-var functions = {
-  create: create,
-  flag: flag,
-  getinfo: getinfo,
-  getflyers: getflyers
-}
-
 var flag = function ( req, res ) {
   if (!req.body.flyer)
     return res.json({ success: false, message: 'Insufficient information' })
@@ -56,6 +49,8 @@ var flag = function ( req, res ) {
         }
       })
     })
+
+	return res.json({ success: true, message: "test" })
 }
 
 var getinfo = function ( req, res ) {
@@ -91,6 +86,13 @@ var getflyers = function ( req, res ) {
       return res.json({result})
     })
   })
+}
+
+var functions = {
+  create: create,
+  flag: flag,
+  getinfo: getinfo,
+  getflyers: getflyers
 }
 
 module.exports = functions
