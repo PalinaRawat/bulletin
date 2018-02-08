@@ -1,5 +1,5 @@
 var MongoClient	= require('mongodb').MongoClient
-var MongoURL		= 'mongodb://localhost:27017/bulletin'
+var MongoURL		= 'mongodb://admin:password@ds227168.mlab.com:27168/bulletin'
 
 var create = function ( req, res ) {
   if (!req.body.title || !req.body.description || !req.body.startdate || !req.body.enddate)
