@@ -7,17 +7,46 @@
       <img src="../assets/icon.svg">
     </div>
     <h1>{{ msg }}</h1>
+    <div>
+      <button v-on:click='getflyers'>
+        View flyers
+      </button>
+    </div>
+    <img :src = "getImageSource()">
   </div>
 </template>
 
 <script>
+import axios from 'axios'
+
 export default {
   name: 'Welcome',
   data () {
     return {
       msg: 'This is the home page. I haven\'t done anything for this yet. meep'
     }
+  },
+  created () {
+    this.getflyers()
+  },
+  methods: {
+    getflyers () {
+      const context = this
+      context.message = 'yoo'
+      axios.post(`http://localhost:5000/getflyers`, this.credentials).then(res => {
+        context.msg = res.data.result[0].title
+        context.imageSource = res.data.result[1].image_url
+      })
+        .catch(function (error) {
+          context.msg = 'an error occurred.' + error
+        })
+    },
+    getImageSource () {
+      const context = this
+      return context.imageSource
+    }
   }
+
 }
 </script>
 
