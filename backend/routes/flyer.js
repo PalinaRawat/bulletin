@@ -85,7 +85,7 @@ var getflyers = function ( req, res ) {
         return res.json({ success: false, message: 'Error finding flyers in database'})
 
 
-      return res.json({result})
+      return res.json({flyers: result})
     })
   })
 }
