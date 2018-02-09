@@ -36,7 +36,7 @@ var flag = function ( req, res ) {
           return res.json({ success: false, message: 'Error finding flyer in database'})
 
         if (result.owner == req.decoded.email) {
-          flyers.remove('_id':req.body.flyer)
+          flyers.remove({ "_id" : req.body.flyer })
           return res.json({ success: true, message: 'Deleted own flyer' })
         }
 
