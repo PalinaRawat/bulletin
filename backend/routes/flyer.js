@@ -78,7 +78,7 @@ var getflyers = function ( req, res ) {
   MongoClient.connect(MongoURL, function(err, db) {
     var flyers = db.collection('flyers')
 
-    flyers.find({}, function(err, result) {
+    flyers.find({}).toArray(function(err, result) {
       if (err)
         return res.json({ success: false, message: 'Error finding flyers in database'})
 
