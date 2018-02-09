@@ -25,9 +25,9 @@ var create = function ( req, res ) {
 }
 
 var functions = {
-  create: create
-  flag: flag
-  getinfo: getinfo
+  create: create,
+  flag: flag,
+  getinfo: getinfo,
   getflyers: getflyers
 }
 
@@ -48,10 +48,10 @@ var flag = function ( req, res ) {
         //}
 
         if (result.flags == 4) {
-          flyers.remove('_id' : req.body.flyer)
+          flyers.remove({ "_id" : req.body.flyer })
           return res.json({ success: true, message: 'Flagged flyer and deleted' })
         } else {
-          flyers.update({'_id' : req.body.flyer}, $set{'flags' : result.flags + 1})
+          flyers.update({ "_id" : req.body.flyer}, {$set:{'flags' : result.flags + 1}})
           return res.json({ success: true, message: 'Flagged flyer' })
         }
       })
