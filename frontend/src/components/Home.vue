@@ -8,51 +8,53 @@
     </div>
     <h1>{{msg}}</h1>
     <div id="columns">
+      <!-- title1 is set in getFlyerImage to the corresponding title -->
       <figure>
-        <img :src="listOfFlyers[0].image_url">
-        <p>
-          {{listOfFlyers[0].title}}
-        </p>
+        <img :src="getFlyerImage(0)">
+        <figcaption>{{title1}}</figcaption>
       </figure>
       <figure>
-        <img :src="listOfFlyers[1].image_url">
-        <p>
-          {{listOfFlyers[1].title}}
-        </p>
+        <img :src="getFlyerImage(1)">
+        <figcaption>{{title1}}</figcaption>
       </figure>
       <figure>
-        <img src="//s3-us-west-2.amazonaws.com/s.cdpn.io/4273/belle.jpg">
-        <figcaption>Belle, based on 1770’s French court fashion</figcaption>
+        <img :src="getFlyerImage(2)">
+        <figcaption>{{title1}}</figcaption>
       </figure>
       <figure>
-        <img src="//s3-us-west-2.amazonaws.com/s.cdpn.io/4273/mulan_2.jpg">
-        <figcaption>Mulan, based on the Ming Dynasty period</figcaption>
+        <img :src="getFlyerImage(3)">
+        <figcaption>{{title1}}</figcaption>
       </figure>
       <figure>
-        <img src="//s3-us-west-2.amazonaws.com/s.cdpn.io/4273/sleeping-beauty.jpg">
-        <figcaption>Sleeping Beauty, based on European fashions in 1485</figcaption>
+        <img :src="getFlyerImage(4)">
+        <figcaption>{{title1}}</figcaption>
       </figure>
       <figure>
-        <img src="//s3-us-west-2.amazonaws.com/s.cdpn.io/4273/pocahontas_2.jpg">
-        <figcaption>Pocahontas based on 17th century Powhatan costume</figcaption>
+        <img :src="getFlyerImage(5)">
+        <figcaption>{{title1}}</figcaption>
       </figure>
 
-<figure>
-<img src="//s3-us-west-2.amazonaws.com/s.cdpn.io/4273/snow-white.jpg">
-<figcaption>Snow White, based on 16th century German fashion</figcaption>
-</figure>
+      <figure>
+        <img :src="getFlyerImage(6)">
+        <figcaption>{{title1}}</figcaption>
+      </figure>
 
- <figure>
-<img src="//s3-us-west-2.amazonaws.com/s.cdpn.io/4273/ariel.jpg">
-<figcaption>Ariel wearing an evening gown of the 1890’s</figcaption>
-</figure>
+      <figure>
+        <img :src="getFlyerImage(7)">
+        <figcaption>{{title1}}</figcaption>
+      </figure>
 
-<figure>
-<img src="//s3-us-west-2.amazonaws.com/s.cdpn.io/4273/tiana.jpg">
-<figcaption>Tiana wearing the <i>robe de style</i> of the 1920’s</figcaption>
-</figure>
+      <figure>
+        <img :src="getFlyerImage(8)">
+        <figcaption>{{title1}}</figcaption>
+      </figure>
 
-</div>
+      <figure>
+        <img :src="getFlyerImage(9)">
+        <figcaption>{{title1}}</figcaption>
+      </figure>
+
+    </div>
   </div>
 </template>
 
@@ -64,8 +66,6 @@ export default {
   data () {
     return {
       msg: 'Home Page',
-      url1: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a1/Mallard2.jpg/1200px-Mallard2.jpg',
-      title1: 'broken',
       listOfFlyers: [],
       currentFlyers: [],
       counter: 0
@@ -73,7 +73,6 @@ export default {
   },
   created () {
     this.getflyers()
-    this.selectFlyers()
   },
   methods: {
     getflyers () {
@@ -81,30 +80,53 @@ export default {
       context.message = 'yoo'
       axios.post(`http://localhost:5000/getflyers`, this.credentials).then(res => {
         context.listOfFlyers = res.data.flyers
+        context.len = res.data.flyers.length
+        console.log('Total flyer #: ' + res.data.flyers.length)
       })
         .catch(function (error) {
           context.msg = 'an error occurred.' + error
         })
     },
-    getImageSource () {
+    getFlyerImage (pos) {
       const context = this
-      return context.imageSource
+      if (context === null) {
+        console.log('context null')
+        return
+      }
+      if (pos >= context.len) {
+        console.log('array out of bounds')
+        context.title1 = 'oopsies'
+        return 'https://i2.wp.com/bibletruthandprophecy.com/wp-content/uploads/2016/01/unavailable.jpg?fit=522%2C315'
+      }
+      pos += context.counter
+      context.title1 = context.listOfFlyers[pos].title
+      if (context.title1 === null) {
+        context.title1 = 'oopsies'
+        return 'https://i2.wp.com/bibletruthandprophecy.com/wp-content/uploads/2016/01/unavailable.jpg?fit=522%2C315'
+      }
+      return context.listOfFlyers[pos].image_url
     },
-    selectFlyers () {
+    nextPage () {
       const context = this
-      var i = 0
-      for (i = 0; i < 9; i++) {
-        context.currentFlyers[i] = context.listOfFlyers[context.counter]
-        context.counter++
+      context.counter += 10
+    },
+    prevPage () {
+      const context = this
+      if ((context.counter / 10) > 0) {
+        context.counter -= 10
       }
     }
   }
-
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+body {
+  background-color: rgb(116, 6, 90) !important;
+  font-family: Calluna, Arial, sans-serif;
+  min-height: 1000px;
+}
 h1, h2 {
   font-weight: normal;
 }
@@ -136,27 +158,23 @@ img {
   height: 4%;
   width: 4%;
 }
-body {
-  background: url(//subtlepatterns.com/patterns/scribble_light.png);
-  font-family: Calluna, Arial, sans-serif;
-  min-height: 1000px;
-}
 #columns {
   column-width: 320px;
   column-gap: 15px;
   width: 90%;
-  max-width: 1100px;
+  max-width: 1500px;
   margin: 50px auto;
+  column-fill: balance;
 }
 
 div#columns figure {
-  background: #fefefe;
+  background: rgba(255, 255, 255, 0);
   border: 2px solid #fcfcfc;
   box-shadow: 0 1px 2px rgba(34, 25, 25, 0.4);
   margin: 0 2px 15px;
   padding: 15px;
+  column-fill: balance;
   padding-bottom: 10px;
-  transition: opacity .4s ease-in-out;
   display: inline-block;
   column-break-inside: avoid;
 }
@@ -188,7 +206,7 @@ div#columns small a {
 }
 
 div#columns:hover figure:not(:hover) {
-  opacity: 0.4;
+
 }
 
 @media screen and (max-width: 750px) {
