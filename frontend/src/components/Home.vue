@@ -7,12 +7,14 @@
       <img src="../assets/icon.svg">
     </div>
     <h1>{{ msg }}</h1>
-    <div>
-      <button v-on:click='getflyers'>
-        View flyers
-      </button>
-    </div>
     <img :src = "getImageSource()">
+    <li v-for="item in items">
+      {{item.title}}
+    </li>
+    <figure class="figure">
+      <img src="//s3-us-west-2.amazonaws.com/s.cdpn.io/4273/cinderella.jpg">
+      <figcaption>Cinderella wearing European fashion of the mid-1860’s</figcaption>
+    </figure>
   </div>
 </template>
 
@@ -23,7 +25,8 @@ export default {
   name: 'Welcome',
   data () {
     return {
-      msg: 'This is the home page. I haven\'t done anything for this yet. meep'
+      msg: 'This is the home page.',
+      items: []
     }
   },
   created () {
@@ -34,8 +37,8 @@ export default {
       const context = this
       context.message = 'yoo'
       axios.post(`http://localhost:5000/getflyers`, this.credentials).then(res => {
-        context.msg = res.data.result[0].title
-        context.imageSource = res.data.result[1].image_url
+        context.imageSource = res.data.flyers[1].image_url
+        context.items = res.data.flyers
       })
         .catch(function (error) {
           context.msg = 'an error occurred.' + error
@@ -57,6 +60,11 @@ h1, h2 {
 }
 a {
   color: #42b983;
+}
+figure {
+  display: block;
+  border: 100px;
+  border-color: darkgrey
 }
 .topnav {
     overflow: hidden;
