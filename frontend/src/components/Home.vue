@@ -1,5 +1,5 @@
 <template>
-  <div class="hello">
+  <div class="home">
     <div class="topnav">
       <router-link class="active" to="/home" tag="a">Home</router-link>
       <router-link to="/about" tag="a">About</router-link>
@@ -53,7 +53,14 @@
         <img :src="getFlyerImage(9)">
         <figcaption>{{title1}}</figcaption>
       </figure>
-
+    </div>
+    <div>
+      <button v-on:click="prevPage">
+          Previous
+      </button>
+      <button v-on:click="nextPage">
+          Next
+      </button>
     </div>
   </div>
 </template>
@@ -98,22 +105,32 @@ export default {
         context.title1 = 'oopsies'
         return 'https://i2.wp.com/bibletruthandprophecy.com/wp-content/uploads/2016/01/unavailable.jpg?fit=522%2C315'
       }
-      pos += context.counter
-      context.title1 = context.listOfFlyers[pos].title
-      if (context.title1 === null) {
-        context.title1 = 'oopsies'
+      pos += parseInt(sessionStorage.getItem('flyerCount'))
+      console.log('session Store: ' + pos)
+      if (pos > context.len) {
+        context.title1 = 'null title'
         return 'https://i2.wp.com/bibletruthandprophecy.com/wp-content/uploads/2016/01/unavailable.jpg?fit=522%2C315'
       }
+      if (context.listOfFlyers[pos] == null) {
+        context.title1 = 'null title'
+        return 'https://i2.wp.com/bibletruthandprophecy.com/wp-content/uploads/2016/01/unavailable.jpg?fit=522%2C315'
+      }
+      context.title1 = context.listOfFlyers[pos].title
       return context.listOfFlyers[pos].image_url
     },
     nextPage () {
       const context = this
-      context.counter += 10
+      context.counter = parseInt(sessionStorage.getItem('flyerCount')) + 10
+      sessionStorage.setItem('flyerCount', context.counter)
+      location.reload()
     },
     prevPage () {
       const context = this
-      if ((context.counter / 10) > 0) {
-        context.counter -= 10
+      context.counter = parseInt(sessionStorage.getItem('flyerCount'))
+      if (context.counter > 9) {
+        context.counter = parseInt(sessionStorage.getItem('flyerCount')) - 10
+        sessionStorage.setItem('flyerCount', context.counter)
+        location.reload()
       }
     }
   }
@@ -122,13 +139,12 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-body {
-  background-color: rgb(116, 6, 90) !important;
-  font-family: Calluna, Arial, sans-serif;
-  min-height: 1000px;
+html, body {
+  height: 100%;
+  width: 100%;
 }
 h1, h2 {
-  font-weight: normal;
+  font-size: 2em;
 }
 a {
   color: #42b983;
@@ -154,6 +170,14 @@ figure {
     text-decoration: none;
     font-size: 17px;
 }
+.home {
+  background-image: url(http://maxpixel.freegreatpicture.com/static/photo/1x/Background-Bulletin-Backdrop-Blank-Brown-Board-72250.jpg);
+  font-family: Calluna, Arial, sans-serif;
+  background-size: cover;
+  color: black;
+  height: 100%;
+  width: 100%;
+}
 img {
   height: 4%;
   width: 4%;
@@ -168,7 +192,10 @@ img {
 }
 
 div#columns figure {
-  background: rgba(255, 255, 255, 0);
+  /*
+    background below changes the color inside each flyer box
+  */
+  background: rgba(23, 137, 222, 1);
   border: 2px solid #fcfcfc;
   box-shadow: 0 1px 2px rgba(34, 25, 25, 0.4);
   margin: 0 2px 15px;
