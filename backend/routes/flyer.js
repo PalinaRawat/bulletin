@@ -60,12 +60,15 @@ var getinfo = function ( req, res ) {
     MongoClient.connect(MongoURL, function(err, db) {
       var flyers = db.collection('flyers')
 
-      flyers.findOne( {_id: req.body.flyer}, function(err, result) {
+      console.log(req.body.flyer)
+
+      flyers.find( {title : req.body.flyer}).toArray(function(err, result) {
         if (err)
           return res.json({ success: false, message: 'Error finding flyer in database'})
 
+          console.log(result)
 
-        return res.json({ title: result.title, description: result.description, startdate: result.stardate, enddate: result.enddate, image_url: result.image_url, owner: result.owner })
+        return res.json({result})
       })
     })
 
@@ -78,7 +81,7 @@ var getflyers = function ( req, res ) {
   MongoClient.connect(MongoURL, function(err, db) {
     var flyers = db.collection('flyers')
 
-    flyers.find({}, function(err, result) {
+    flyers.find({}).toArray(function(err, result) {
       if (err)
         return res.json({ success: false, message: 'Error finding flyers in database'})
 
