@@ -2,7 +2,6 @@
   <div class="hello">
     <div class="topnav">
       <router-link class="active" to="/home" tag="a">Home</router-link>
-      <router-link to="/about" tag="a">About</router-link>
        <button id="show-modal" @click="showModal = true">Create a flyer</button>
       <img src="../assets/icon.svg">
     </div>
@@ -10,26 +9,26 @@
       <div class="modal-content">
         <form>
            Title:<br>
-          <input type="text" name="firstname" value="">
+          <input type="text" id="title" value="">
           <br>
           <br>
            Description:<br>
-          <input type="text" name="lastname" value="">
+          <input type="text" id="description" value="">
           <br>
           <br>
            image url:<br>
-          <input type="text" name="image_url" value="">
+          <input type="text" id="image_url" value="">
           <br>
           <br>
            Start date of the event<br>
-          <input type="date" name="eventdate" value="">
+          <input type="date" id="startdate" value="">
            <br>
            <br>
            End date of the event<br>
-          <input type="date" name="eventdate" value="">
+          <input type="date" id="enddate" value="">
           <br>
           <br>
-          <button id="submit" type="button" @click="showModal = false"> Submit </button>
+          <button id="submit" type="button"  v-on:click="click"> Submit </button>
         </form>
       </div>
     </modal>
@@ -41,6 +40,18 @@ export default {
   data () {
     return {
       showModal: false
+    }
+  },
+  methods: {
+    click () {
+      var url = 'http://localhost:8000/questions?auth='
+      if (title.value === '') alert('Fill the title')
+      else if (description.value === '') alert('Fill the description')
+      else if (image_url.value === '') alert('Fill the image url')
+      else if (startdate.value === '') alert('Fill the startdate')
+      else if (enddate.value === '') alert('Fill the enddate')
+      url = url + '&title=' + title.value + '&description=' + description.value + '&image_url=' + image_url.value + '&start-date=' + startdate.value + '&end-date=' + enddate.value
+      console.log(url)
     }
   }
 }
