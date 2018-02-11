@@ -2,7 +2,12 @@
   <div class="hello">
     <div class="topnav">
       <router-link class="active" to="/home" tag="a">Home</router-link>
+      <router-link to="/about" tag="a">About</router-link>
+      <router-link to="/contact" tag="a">Contact</router-link>
+      <router-link to="/settings" tag="a">Settings</router-link>
+
        <button id="show-modal" @click="showModal = true">Create a flyer</button>
+
       <img src="../assets/icon.svg">
     </div>
     <modal v-if="showModal" @close="showModal = false">
