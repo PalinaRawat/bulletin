@@ -60,6 +60,7 @@ var signup = function ( req, res ) {
 
 // validates and signs user in
 var login = function ( req, res ) {
+
 	if (!req.body.email || !req.body.password)
 		return res.json({ success: false, message: 'Insufficient login information' })
 
@@ -73,7 +74,7 @@ var login = function ( req, res ) {
 			bcrypt.compare(req.body.password, result[0].password, function(err, match) {
 				if (err)
 					return res.json({ success: false, message: 'Error comparing passwords' })
-				console.log(result[0].password, req.body.password)
+				//console.log(result[0].password, req.body.password)
 				if (!match)
 					return res.json({ success: false, message: 'Invalid login information' })
 				else {
@@ -113,12 +114,20 @@ var reset = function ( req, res ) {
 			bcrypt.compare(req.body.oldPassword, result[0].password, function(err, match) {
 				if (err)
 					return res.json({ success: false, message: 'Error comparing passwords' })
-				console.log(result[0].password, req.body.oldPassword)
+
+				//console.log(result[0].password, req.body.oldPassword)
+
 				if (!match)
 					return res.json({ success: false, message: 'Invalid login information' })
+
 				else {
-					users.findOneAndUpdate({email: req.body.email}, {password: req.body.confirmPassword}).toArray(function(err, result) {
-						return res.json({ success: true, message: 'Successfully Changed Password!'});
+					bcrypt.hash(req.body.confirmPassword, 10, function(err, hash) {
+						if (err)
+							return res.json({ success: false, message: 'Error encrypting password' })
+
+							users.findOneAndUpdate( { email: req.body.email }, { $set: { password: hash } }, function (err, result2) {
+								return res.json({ success: true, message: 'Successfully Changed Password!'});
+							})
 					})
 				}
 			})
@@ -126,12 +135,44 @@ var reset = function ( req, res ) {
 	})
 }
 
+// validates current password and resets it to new password
+var change = function ( req, res ) {
+	console.log('I am in the change section')
+	if (!req.body.email || !req.body.newPassword || !req.body.confirmPassword)
+		return res.json({ success: false, message: 'Insufficient login information' })
 
+	if (req.body.newPassword.length < 8)
+		return res.json({ success: false, message: 'New Password is too short' })
+
+	if (req.body.newPassword !== req.body.confirmPassword)
+		return res.json({ success: false, message: 'New Passwords Do Not Match' })
+
+	MongoClient.connect(MongoURL, function(err, db) {
+		var users = db.collection('users')
+		users.find({ email: req.body.email }).toArray(function(err, result) {
+			if (err)
+				return res.json({ success: false, message: 'Error connecting to database' })
+			if (result.length === 0)
+				return res.json({ success: false, message: 'Invalid login information' })
+
+			bcrypt.hash(req.body.confirmPassword, 10, function(err, hash) {
+				if (err)
+					return res.json({ success: false, message: 'Error encrypting password' })
+
+					users.findOneAndUpdate( { email: req.body.email }, { $set: { password: hash } }, function (err, result2) {
+						console.log('password is now: ' + req.body.confirmPassword)
+						return res.json({ success: true, message: 'Successfully Changed Password!'});
+					})
+			})
+		})
+	})
+}
 
 // verifies a users token
 var authenticate = function ( req, res, next ) {
 	var token = req.header('token');
-
+	console.log('i am authenticating')
+	console.log(token);
 	//If no token is provided in the header
 	if (!token) {
 		return res.send({ success: false, message: 'User is not logged in' });
@@ -152,7 +193,8 @@ var functions = {
 	signup: signup,
 	login: login,
 	authenticate: authenticate,
-	reset: reset
+	reset: reset,
+	change: change
 }
 
 module.exports = functions

@@ -1,5 +1,4 @@
 node_modules
 package-lock.json
 google-secret.json
-google-secret1.json
 .env
