@@ -1,5 +1,6 @@
 var MongoClient	= require('mongodb').MongoClient
 var MongoURL		= 'mongodb://admin:password@ds227168.mlab.com:27168/bulletin'
+var ObjectId    = require('mongodb').ObjectID
 
 var create = function ( req, res ) {
   if (!req.body.title || !req.body.description || !req.body.startdate || !req.body.enddate)
@@ -16,6 +17,7 @@ var create = function ( req, res ) {
       owner: req.decoded.email
     }
 
+
     flyers.insert(flyer, function(err, result) {
       if (err)
         return res.json({ success: false, message: 'Error sending data to database'})
@@ -28,29 +30,27 @@ var flag = function ( req, res ) {
   if (!req.body.flyer)
     return res.json({ success: false, message: 'Insufficient information' })
 
-    MongoClient.connect(MongoURL, function(err, db) {
-      var flyers = db.collection('flyers')
+  MongoClient.connect(MongoURL, function(err, db) {
+    var flyers = db.collection('flyers')
 
-      flyers.findOne( {_id: req.body.flyer}, function(err, result) {
-        if (err)
-          return res.json({ success: false, message: 'Error finding flyer in database'})
+    flyers.findOne( {_id : new ObjectId(req.body.flyer)}, function(err, result) {
+      if (err)
+        return res.json({ success: false, message: 'Error finding flyer in database'})
 
-        if (result.owner == req.decoded.email) {
-          flyers.remove({ "_id" : req.body.flyer })
-          return res.json({ success: true, message: 'Deleted own flyer' })
-        }
-
-        if (result.flags == 4) {
-          flyers.remove({ "_id" : req.body.flyer })
-          return res.json({ success: true, message: 'Flagged flyer and deleted' })
-        } else {
-          flyers.update({ "_id" : req.body.flyer}, {$set:{'flags' : result.flags + 1}})
-          return res.json({ success: true, message: 'Flagged flyer' })
-        }
+        //if (result.owner == req.decoded.email) {
+        //  flyers.remove({ "_id" : req.body.flyer })
+        //  return res.json({ success: true, message: 'Deleted own flyer' })
+        //}
+      if (result.flags == 4) {
+        flyers.remove({_id : new ObjectId(req.body.flyer)})
+        return res.json({ success: true, message: 'Flagged flyer and deleted' })
+      } else {
+        flyers.update({_id : new ObjectId(req.body.flyer)}, {$set:{'flags' : parseInt(result.flags) + 1}})
+        return res.json({ success: true, message: 'Flagged flyer' })        }
       })
     })
 
-	return res.json({ success: true, message: "test" })
+	//return res.json({ success: true, message: "test" })
 }
 
 var getinfo = function ( req, res ) {
@@ -60,12 +60,15 @@ var getinfo = function ( req, res ) {
     MongoClient.connect(MongoURL, function(err, db) {
       var flyers = db.collection('flyers')
 
-      flyers.findOne( {_id: req.body.flyer}, function(err, result) {
+      console.log(req.body.flyer)
+
+      flyers.find( {_id : new ObjectId(req.body.flyer)}).toArray(function(err, result) {
         if (err)
           return res.json({ success: false, message: 'Error finding flyer in database'})
 
+          console.log(result)
 
-        return res.json({ title: result.title, description: result.description, startdate: result.stardate, enddate: result.enddate, image_url: result.image_url, owner: result.owner })
+        return res.json({result})
       })
     })
 
