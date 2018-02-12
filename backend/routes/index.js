@@ -17,7 +17,9 @@ router.post('/flagflyer', flyer.flag)
 ////// PROTECTED ROUTES //////
 router.use(auth.authenticate)
 router.post('/createflyer', flyer.create)
-//router.post('/flagflyer', flyer.flag)
+
+router.post('/flagflyer', flyer.flag)
+router.post('/change', auth.change)
 
 
 module.exports = router
