@@ -1,5 +1,5 @@
 var MongoClient	= require('mongodb').MongoClient
-var MongoURL		= 'mongodb://localhost:27017/bulletin'
+var MongoURL		= 'mongodb://admin:password@ds227168.mlab.com:27168/bulletin'
 var bcrypt			= require('bcryptjs')
 var jwt					= require('jsonwebtoken')
 
@@ -93,6 +93,42 @@ var login = function ( req, res ) {
 	})
 }
 
+// validates current password and resets it to new password
+var reset = function ( req, res ) {
+	if (!req.body.email || !req.body.oldPassword || !req.body.newPassword || !req.body.confirmPassword)
+		return res.json({ success: false, message: 'Insufficient login information' })
+
+	if (req.body.newPassword.length < 8)
+		return res.json({ success: false, message: 'New Password is too short' })
+
+	if (req.body.newPassword !== req.body.confirmPassword)
+		return res.json({ success: false, message: 'New Passwords Do Not Match' })
+
+	MongoClient.connect(MongoURL, function(err, db) {
+		var users = db.collection('users')
+		users.find({ email: req.body.email }).toArray(function(err, result) {
+			if (err)
+				return res.json({ success: false, message: 'Error connecting to database' })
+			if (result.length === 0)
+				return res.json({ success: false, message: 'Invalid login information' })
+			bcrypt.compare(req.body.oldPassword, result[0].password, function(err, match) {
+				if (err)
+					return res.json({ success: false, message: 'Error comparing passwords' })
+				console.log(result[0].password, req.body.oldPassword)
+				if (!match)
+					return res.json({ success: false, message: 'Invalid login information' })
+				else {
+					users.findOneAndUpdate({email: req.body.email}, {password: req.body.confirmPassword}).toArray(function(err, result) {
+						return res.json({ success: true, message: 'Successfully Changed Password!'});
+					})
+				}
+			})
+		})
+	})
+}
+
+
+
 // verifies a users token
 var authenticate = function ( req, res, next ) {
 	var token = req.header('token');
@@ -116,7 +152,8 @@ var authenticate = function ( req, res, next ) {
 var functions = {
 	signup: signup,
 	login: login,
-	authenticate: authenticate
+	authenticate: authenticate,
+	reset: reset
 }
 
 module.exports = functions
