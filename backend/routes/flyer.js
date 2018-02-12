@@ -42,10 +42,10 @@ var flag = function ( req, res ) {
         //  return res.json({ success: true, message: 'Deleted own flyer' })
         //}
       if (result.flags == 4) {
-        flyers.remove({ title : req.body.flyer })
+        flyers.remove({_id : new ObjectId(req.body.flyer)})
         return res.json({ success: true, message: 'Flagged flyer and deleted' })
       } else {
-        flyers.update({ title : req.body.flyer}, {$set:{'flags' : parseInt(result.flags) + 1}})
+        flyers.update({_id : new ObjectId(req.body.flyer)}, {$set:{'flags' : parseInt(result.flags) + 1}})
         return res.json({ success: true, message: 'Flagged flyer' })        }
       })
     })
