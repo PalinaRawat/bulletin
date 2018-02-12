@@ -42,6 +42,8 @@ export default {
         if (res.data.success) {
           context.message = 'Successfully signed up!'
           context.success = true
+          var auth = res.authToken
+          localStorageSet('auth', auth)
         } else {
           context.message = res.data.message
         }

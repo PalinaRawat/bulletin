@@ -42,6 +42,7 @@ export default {
   methods: {
     login () {
       const context = this
+      sessionStorage.setItem('flyerCount', 0)
       axios.post(`http://localhost:5000/login`, this.credentials).then(res => {
         if (res.data.success) {
           context.message = 'Successfully logged in!'
