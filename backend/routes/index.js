@@ -12,11 +12,14 @@ router.post('/login', auth.login)
 router.post('/reset', auth.reset)
 router.post('/getflyerinfo', flyer.getinfo)
 router.post('/getflyers', flyer.getflyers)
+router.post('/flagflyer', flyer.flag)
 
 ////// PROTECTED ROUTES //////
 router.use(auth.authenticate)
 router.post('/createflyer', flyer.create)
+
 router.post('/flagflyer', flyer.flag)
+router.post('/change', auth.change)
 
 
 module.exports = router
