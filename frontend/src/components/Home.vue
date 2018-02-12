@@ -48,16 +48,16 @@ export default {
     }
   },
   methods: {
-    click () {
-      var url = 'http://localhost:8000/questions?auth='
-      if (title.value === '') alert('Fill the title')
-      else if (description.value === '') alert('Fill the description')
-      else if (image_url.value === '') alert('Fill the image url')
-      else if (startdate.value === '') alert('Fill the startdate')
-      else if (enddate.value === '') alert('Fill the enddate')
-      url = url + '&title=' + title.value + '&description=' + description.value + '&image_url=' + image_url.value + '&start-date=' + startdate.value + '&end-date=' + enddate.value
-      console.log(url)
-    }
+    // click () {
+    //   var url = 'http://localhost:8000/questions?auth='
+    //   if (title.value === '') alert('Fill the title')
+    //   else if (description.value === '') alert('Fill the description')
+    //   else if (image_url.value === '') alert('Fill the image url')
+    //   else if (startdate.value === '') alert('Fill the startdate')
+    //   else if (enddate.value === '') alert('Fill the enddate')
+    //   url = url + '&title=' + title.value + '&description=' + description.value + '&image_url=' + image_url.value + '&start-date=' + startdate.value + '&end-date=' + enddate.value
+    //   console.log(url)
+    // }
   }
 }
 </script>

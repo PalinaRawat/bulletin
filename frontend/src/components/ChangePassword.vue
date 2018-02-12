@@ -10,9 +10,6 @@
       <p type="error" style='color:red; font-size: 12px;' v-if='!success'>{{ message }}</p>
       <p type="error" style='color:green; font-size: 12px;' v-if='success'>{{ message }}</p>
       <div>
-        <input type="email" v-model="credentials.email" placeholder="Username" name="psw"/>
-      </div>
-      <div>
         <input type="password" v-model="credentials.newPassword" placeholder="New Password" name="psw"/>
      </div>
      <div>
@@ -36,7 +33,6 @@ export default {
       msg: 'ChangePassword Fam',
       message: '',
       credentials: {
-        email: '',
         newPassword: '',
         confirmPassword: ''
       },
@@ -48,12 +44,9 @@ export default {
       const context = this
       const axiosConfig = {
         headers: {
-          'Content-Type': 'application/json;charset=UTF-8',
-          'Access-Control-Allow-Origin': '*',
           token: localStorage.getItem('token')
         }
       }
-      console.log(localStorage.getItem('token'))
       axios.post(`http://localhost:5000/change`, this.credentials, axiosConfig).then(res => {
         if (res.data.success) {
           context.message = 'Successfully Changed Password!'
@@ -64,10 +57,8 @@ export default {
         }
       })
       this.credentials = {
-        oldPassword: '',
         newPassword: '',
-        confirmPassword: '',
-        email: ''
+        confirmPassword: ''
       }
     }
   }
