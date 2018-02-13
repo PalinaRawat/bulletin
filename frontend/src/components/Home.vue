@@ -1,3 +1,4 @@
+/*global click title:true*/
 <template>
   <div class="home">
     <div class="topnav">
@@ -101,11 +102,11 @@
 import axios from 'axios'
 
 export default {
-  showModal: false
+  showModal: false,
   name: 'Welcome',
   data () {
     return {
-    
+
       msg: 'Home Page',
       listOfFlyers: [],
       currentFlyers: [],
@@ -166,9 +167,7 @@ export default {
         sessionStorage.setItem('flyerCount', context.counter)
         location.reload()
       }
-
-    }
-  },
+    },
     click () {
       var url = 'http://localhost:8000/questions?auth='
       if (title.value === '') alert('Fill the title')
@@ -178,7 +177,6 @@ export default {
       else if (enddate.value === '') alert('Fill the enddate')
       url = url + '&title=' + title.value + '&description=' + description.value + '&image_url=' + image_url.value + '&start-date=' + startdate.value + '&end-date=' + enddate.value
       console.log(url)
-
     }
   }
 }
@@ -286,7 +284,7 @@ div#columns:hover figure:not(:hover) {
 @media screen and (max-width: 750px) {
   #columns { column-gap: 0px; }
   #columns figure { width: 100%; }
-
+}
 .modal-content {
     background-color: #fefefe;
     margin: auto;
