@@ -1,80 +1,11 @@
 <template>
   <div class="home">
-<<<<<<< HEAD
    <div class="topnav">
-=======
-    <div class="topnav">
->>>>>>> baa9d05efce0a740ff5a0146e77ac07375f0d75e
       <router-link class="active" to="/home" tag="a">Home</router-link>
-      <router-link to="/about" tag="a">About</router-link>
-      <router-link to="/contact" tag="a">Contact</router-link>
-      <router-link to="/settings" tag="a">Settings</router-link>
-
        <button id="show-modal" @click="showModal = true">Create a flyer</button>
-
       <img src="../assets/icon.svg">
     </div>
 
-<<<<<<< HEAD
-=======
-    <h1>{{msg}}</h1>
-    <div id="columns">
-      <!-- title1 is set in getFlyerImage to the corresponding title -->
-      <figure>
-        <img :src="getFlyerImage(0)">
-        <figcaption>{{title1}}</figcaption>
-      </figure>
-      <figure>
-        <img :src="getFlyerImage(1)">
-        <figcaption>{{title1}}</figcaption>
-      </figure>
-      <figure>
-        <img :src="getFlyerImage(2)">
-        <figcaption>{{title1}}</figcaption>
-      </figure>
-      <figure>
-        <img :src="getFlyerImage(3)">
-        <figcaption>{{title1}}</figcaption>
-      </figure>
-      <figure>
-        <img :src="getFlyerImage(4)">
-        <figcaption>{{title1}}</figcaption>
-      </figure>
-      <figure>
-        <img :src="getFlyerImage(5)">
-        <figcaption>{{title1}}</figcaption>
-      </figure>
-
-      <figure>
-        <img :src="getFlyerImage(6)">
-        <figcaption>{{title1}}</figcaption>
-      </figure>
-
-      <figure>
-        <img :src="getFlyerImage(7)">
-        <figcaption>{{title1}}</figcaption>
-      </figure>
-
-      <figure>
-        <img :src="getFlyerImage(8)">
-        <figcaption>{{title1}}</figcaption>
-      </figure>
-
-      <figure>
-        <img :src="getFlyerImage(9)">
-        <figcaption>{{title1}}</figcaption>
-      </figure>
-    </div>
-    <div>
-      <button v-on:click="prevPage">
-          Previous
-      </button>
-      <button v-on:click="nextPage">
-          Next
-      </button>
-    </div>
-
->>>>>>> baa9d05efce0a740ff5a0146e77ac07375f0d75e
     <modal v-if="showModal" @close="showModal = false">
       <div class="modal-content">
         <form>
@@ -163,26 +94,14 @@
 
 <script>
 import axios from 'axios'
-<<<<<<< HEAD
-=======
-
->>>>>>> baa9d05efce0a740ff5a0146e77ac07375f0d75e
 export default {
-  showModal: false,
   name: 'Welcome',
   data () {
     return {
-<<<<<<< HEAD
       msg: 'Home Page',
       listOfFlyers: [],
       currentFlyers: [],
       showModal: false,
-=======
-
-      msg: 'Home Page',
-      listOfFlyers: [],
-      currentFlyers: [],
->>>>>>> baa9d05efce0a740ff5a0146e77ac07375f0d75e
       counter: 0
     }
   },
@@ -240,13 +159,7 @@ export default {
         sessionStorage.setItem('flyerCount', context.counter)
         location.reload()
       }
-<<<<<<< HEAD
     },
-=======
-
-    }
-  },
->>>>>>> baa9d05efce0a740ff5a0146e77ac07375f0d75e
     click () {
       var auth = localStorage.getItem('auth', null)
       var url = 'http://localhost:8000/createflyer?auth='
@@ -257,9 +170,9 @@ export default {
       else if (enddate.value === '') alert('Fill the enddate')
       url = url + '&title=' + title.value + '&description=' + description.value + '&image_url=' + image_url.value + '&start-date=' + startdate.value + '&end-date=' + enddate.value
       console.log(url)
-
     }
   }
+}
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
@@ -307,72 +220,12 @@ img {
   height: 4%;
   width: 4%;
 }
-#columns {
-  column-width: 320px;
-  column-gap: 15px;
-  width: 90%;
-  max-width: 1500px;
-  margin: 50px auto;
-  column-fill: balance;
-}
-
-div#columns figure {
-  /*
-    background below changes the color inside each flyer box
-  */
-  background: rgba(23, 137, 222, 1);
-  border: 2px solid #fcfcfc;
-  box-shadow: 0 1px 2px rgba(34, 25, 25, 0.4);
-  margin: 0 2px 15px;
-  padding: 15px;
-  column-fill: balance;
-  padding-bottom: 10px;
-  display: inline-block;
-  column-break-inside: avoid;
-}
-
-div#columns figure img {
-  width: 100%; height: auto;
-  border-bottom: 1px solid #ccc;
-  padding-bottom: 15px;
-  margin-bottom: 5px;
-}
-
-div#columns figure p {
-  font-size: .9rem;
-  color: #444;
-  line-height: 1.5;
-}
-
-div#columns small {
-  font-size: 1rem;
-  float: right;
-  text-transform: uppercase;
-  color: #aaa;
-}
-
-div#columns small a {
-  color: #666;
-  text-decoration: none;
-  transition: .4s color;
-}
-
-div#columns:hover figure:not(:hover) {
-
-}
-
-@media screen and (max-width: 750px) {
-  #columns { column-gap: 0px; }
-  #columns figure { width: 100%; }
-}
-
 .modal-content {
     background-color: #fefefe;
     margin: auto;
     padding: 20px;
     border: 1px solid #888;
     width: 80%;
-
 }
 #columns {
   column-width: 320px;
