@@ -1,10 +1,11 @@
 <template>
-  <div class="hello">
-    <div class="topnav">
+  <div class="home">
+   <div class="topnav">
       <router-link class="active" to="/home" tag="a">Home</router-link>
        <button id="show-modal" @click="showModal = true">Create a flyer</button>
       <img src="../assets/icon.svg">
     </div>
+
     <modal v-if="showModal" @close="showModal = false">
       <div class="modal-content">
         <form>
@@ -32,19 +33,136 @@
         </form>
       </div>
     </modal>
+
+    <div id="columns">
+      <!-- title1 is set in getFlyerImage to the corresponding title -->
+      <figure>
+        <img :src="getFlyerImage(0)">
+        <figcaption>{{title1}}</figcaption>
+      </figure>
+      <figure>
+        <img :src="getFlyerImage(1)">
+        <figcaption>{{title1}}</figcaption>
+      </figure>
+      <figure>
+        <img :src="getFlyerImage(2)">
+        <figcaption>{{title1}}</figcaption>
+      </figure>
+      <figure>
+        <img :src="getFlyerImage(3)">
+        <figcaption>{{title1}}</figcaption>
+      </figure>
+      <figure>
+        <img :src="getFlyerImage(4)">
+        <figcaption>{{title1}}</figcaption>
+      </figure>
+      <figure>
+        <img :src="getFlyerImage(5)">
+        <figcaption>{{title1}}</figcaption>
+      </figure>
+
+      <figure>
+        <img :src="getFlyerImage(6)">
+        <figcaption>{{title1}}</figcaption>
+      </figure>
+
+      <figure>
+        <img :src="getFlyerImage(7)">
+        <figcaption>{{title1}}</figcaption>
+      </figure>
+
+      <figure>
+        <img :src="getFlyerImage(8)">
+        <figcaption>{{title1}}</figcaption>
+      </figure>
+
+      <figure>
+        <img :src="getFlyerImage(9)">
+        <figcaption>{{title1}}</figcaption>
+      </figure>
+    </div>
+    <div>
+      <button v-on:click="prevPage">
+          Previous
+      </button>
+      <button v-on:click="nextPage">
+          Next
+      </button>
+    </div>
   </div>
 </template>
+
 <script>
+import axios from 'axios'
 export default {
   name: 'Welcome',
   data () {
     return {
-      showModal: false
+      msg: 'Home Page',
+      listOfFlyers: [],
+      currentFlyers: [],
+      showModal: false,
+      counter: 0
     }
   },
+  created () {
+    this.getflyers()
+  },
   methods: {
+    getflyers () {
+      const context = this
+      context.message = 'yoo'
+      axios.post(`http://localhost:5000/getflyers`, this.credentials).then(res => {
+        context.listOfFlyers = res.data.flyers
+        context.len = res.data.flyers.length
+        console.log('Total flyer #: ' + res.data.flyers.length)
+      })
+        .catch(function (error) {
+          context.msg = 'an error occurred.' + error
+        })
+    },
+    getFlyerImage (pos) {
+      const context = this
+      if (context === null) {
+        console.log('context null')
+        return
+      }
+      if (pos >= context.len) {
+        console.log('array out of bounds')
+        context.title1 = 'oopsies'
+        return 'https://i2.wp.com/bibletruthandprophecy.com/wp-content/uploads/2016/01/unavailable.jpg?fit=522%2C315'
+      }
+      pos += parseInt(sessionStorage.getItem('flyerCount'))
+      console.log('session Store: ' + pos)
+      if (pos > context.len) {
+        context.title1 = 'null title'
+        return 'https://i2.wp.com/bibletruthandprophecy.com/wp-content/uploads/2016/01/unavailable.jpg?fit=522%2C315'
+      }
+      if (context.listOfFlyers[pos] == null) {
+        context.title1 = 'null title'
+        return 'https://i2.wp.com/bibletruthandprophecy.com/wp-content/uploads/2016/01/unavailable.jpg?fit=522%2C315'
+      }
+      context.title1 = context.listOfFlyers[pos].title
+      return context.listOfFlyers[pos].image_url
+    },
+    nextPage () {
+      const context = this
+      context.counter = parseInt(sessionStorage.getItem('flyerCount')) + 10
+      sessionStorage.setItem('flyerCount', context.counter)
+      location.reload()
+    },
+    prevPage () {
+      const context = this
+      context.counter = parseInt(sessionStorage.getItem('flyerCount'))
+      if (context.counter > 9) {
+        context.counter = parseInt(sessionStorage.getItem('flyerCount')) - 10
+        sessionStorage.setItem('flyerCount', context.counter)
+        location.reload()
+      }
+    },
     click () {
-      var url = 'http://localhost:8000/questions?auth='
+      var auth = localStorage.getItem('auth', null)
+      var url = 'http://localhost:8000/createflyer?auth='
       if (title.value === '') alert('Fill the title')
       else if (description.value === '') alert('Fill the description')
       else if (image_url.value === '') alert('Fill the image url')
@@ -59,11 +177,20 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+html, body {
+  height: 100%;
+  width: 100%;
+}
 h1, h2 {
-  font-weight: normal;
+  font-size: 2em;
 }
 a {
   color: #42b983;
+}
+figure {
+  display: block;
+  border: 100px;
+  border-color: darkgrey
 }
 .topnav {
     overflow: hidden;
@@ -81,6 +208,14 @@ a {
     text-decoration: none;
     font-size: 17px;
 }
+.home {
+  background-image: url(http://maxpixel.freegreatpicture.com/static/photo/1x/Background-Bulletin-Backdrop-Blank-Brown-Board-72250.jpg);
+  font-family: Calluna, Arial, sans-serif;
+  background-size: cover;
+  color: black;
+  height: 100%;
+  width: 100%;
+}
 img {
   height: 4%;
   width: 4%;
@@ -91,5 +226,55 @@ img {
     padding: 20px;
     border: 1px solid #888;
     width: 80%;
+}
+#columns {
+  column-width: 320px;
+  column-gap: 15px;
+  width: 90%;
+  max-width: 1500px;
+  margin: 50px auto;
+  column-fill: balance;
+}
+div#columns figure {
+  /*
+    background below changes the color inside each flyer box
+  */
+  background: rgba(23, 137, 222, 1);
+  border: 2px solid #fcfcfc;
+  box-shadow: 0 1px 2px rgba(34, 25, 25, 0.4);
+  margin: 0 2px 15px;
+  padding: 15px;
+  column-fill: balance;
+  padding-bottom: 10px;
+  display: inline-block;
+  column-break-inside: avoid;
+}
+div#columns figure img {
+  width: 100%; height: auto;
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 15px;
+  margin-bottom: 5px;
+}
+div#columns figure p {
+  font-size: .9rem;
+  color: #444;
+  line-height: 1.5;
+}
+div#columns small {
+  font-size: 1rem;
+  float: right;
+  text-transform: uppercase;
+  color: #aaa;
+}
+div#columns small a {
+  color: #666;
+  text-decoration: none;
+  transition: .4s color;
+}
+div#columns:hover figure:not(:hover) {
+}
+@media screen and (max-width: 750px) {
+  #columns { column-gap: 0px; }
+  #columns figure { width: 100%; }
 }
 </style>
