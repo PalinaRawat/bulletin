@@ -96,17 +96,10 @@
 <script>
 import axios from 'axios'
 export default {
-<<<<<<< HEAD
   showModal: false,
   name: 'Welcome',
   data () {
     return {
-
-=======
-  name: 'Welcome',
-  data () {
-    return {
->>>>>>> origin/master
       msg: 'Home Page',
       listOfFlyers: [],
       currentFlyers: [],
@@ -285,7 +278,6 @@ div#columns:hover figure:not(:hover) {
 @media screen and (max-width: 750px) {
   #columns { column-gap: 0px; }
   #columns figure { width: 100%; }
-<<<<<<< HEAD
 }
 .modal-content {
     background-color: #fefefe;
@@ -294,7 +286,5 @@ div#columns:hover figure:not(:hover) {
     border: 1px solid #888;
     width: 80%;
 
-=======
->>>>>>> origin/master
 }
 </style>
