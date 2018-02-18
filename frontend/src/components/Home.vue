@@ -1,17 +1,39 @@
 <template>
   <div class="home">
-    <div class="topnav">
+   <div class="topnav">
       <router-link class="active" to="/home" tag="a">Home</router-link>
-      <router-link to="/about" tag="a">About</router-link>
-      <router-link to="/contact" tag="a">Contact</router-link>
-      <router-link to="/settings" tag="a">Settings</router-link>
-
        <button id="show-modal" @click="showModal = true">Create a flyer</button>
-
       <img src="../assets/icon.svg">
     </div>
 
-    <h1>{{msg}}</h1>
+    <modal v-if="showModal" @close="showModal = false">
+      <div class="modal-content">
+        <form>
+           Title:<br>
+          <input type="text" id="title" value="">
+          <br>
+          <br>
+           Description:<br>
+          <input type="text" id="description" value="">
+          <br>
+          <br>
+           image url:<br>
+          <input type="text" id="image_url" value="">
+          <br>
+          <br>
+           Start date of the event<br>
+          <input type="date" id="startdate" value="">
+           <br>
+           <br>
+           End date of the event<br>
+          <input type="date" id="enddate" value="">
+          <br>
+          <br>
+          <button id="submit" type="button"  v-on:click="click"> Submit </button>
+        </form>
+      </div>
+    </modal>
+
     <div id="columns">
       <!-- title1 is set in getFlyerImage to the corresponding title -->
       <figure>
@@ -67,48 +89,19 @@
           Next
       </button>
     </div>
-
-    <modal v-if="showModal" @close="showModal = false">
-      <div class="modal-content">
-        <form>
-           Title:<br>
-          <input type="text" id="title" value="">
-          <br>
-          <br>
-           Description:<br>
-          <input type="text" id="description" value="">
-          <br>
-          <br>
-           image url:<br>
-          <input type="text" id="image_url" value="">
-          <br>
-          <br>
-           Start date of the event<br>
-          <input type="date" id="startdate" value="">
-           <br>
-           <br>
-           End date of the event<br>
-          <input type="date" id="enddate" value="">
-          <br>
-          <br>
-          <button id="submit" type="button"  v-on:click="click"> Submit </button>
-        </form>
-      </div>
-    </modal>
   </div>
 </template>
+
 <script>
 import axios from 'axios'
-
 export default {
-  showModal: false,
   name: 'Welcome',
   data () {
     return {
-
       msg: 'Home Page',
       listOfFlyers: [],
       currentFlyers: [],
+      showModal: false,
       counter: 0
     }
   },
@@ -166,11 +159,10 @@ export default {
         sessionStorage.setItem('flyerCount', context.counter)
         location.reload()
       }
-
-    }
-  },
+    },
     click () {
-      var url = 'http://localhost:8000/questions?auth='
+      var auth = localStorage.getItem('auth', null)
+      var url = 'http://localhost:8000/createflyer?auth='
       if (title.value === '') alert('Fill the title')
       else if (description.value === '') alert('Fill the description')
       else if (image_url.value === '') alert('Fill the image url')
@@ -178,9 +170,9 @@ export default {
       else if (enddate.value === '') alert('Fill the enddate')
       url = url + '&title=' + title.value + '&description=' + description.value + '&image_url=' + image_url.value + '&start-date=' + startdate.value + '&end-date=' + enddate.value
       console.log(url)
-
     }
   }
+}
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
@@ -228,6 +220,13 @@ img {
   height: 4%;
   width: 4%;
 }
+.modal-content {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+}
 #columns {
   column-width: 320px;
   column-gap: 15px;
@@ -236,7 +235,6 @@ img {
   margin: 50px auto;
   column-fill: balance;
 }
-
 div#columns figure {
   /*
     background below changes the color inside each flyer box
@@ -251,48 +249,32 @@ div#columns figure {
   display: inline-block;
   column-break-inside: avoid;
 }
-
 div#columns figure img {
   width: 100%; height: auto;
   border-bottom: 1px solid #ccc;
   padding-bottom: 15px;
   margin-bottom: 5px;
 }
-
 div#columns figure p {
   font-size: .9rem;
   color: #444;
   line-height: 1.5;
 }
-
 div#columns small {
   font-size: 1rem;
   float: right;
   text-transform: uppercase;
   color: #aaa;
 }
-
 div#columns small a {
   color: #666;
   text-decoration: none;
   transition: .4s color;
 }
-
 div#columns:hover figure:not(:hover) {
-
 }
-
 @media screen and (max-width: 750px) {
   #columns { column-gap: 0px; }
   #columns figure { width: 100%; }
-}
-
-.modal-content {
-    background-color: #fefefe;
-    margin: auto;
-    padding: 20px;
-    border: 1px solid #888;
-    width: 80%;
-
 }
 </style>
