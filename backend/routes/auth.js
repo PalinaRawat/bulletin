@@ -1,10 +1,9 @@
+require('dotenv').config();
 var MongoClient	= require('mongodb').MongoClient
-var MongoURL		= 'mongodb://admin:password@ds227168.mlab.com:27168/bulletin'
+var MongoURL		= process.env.MONGO_URL
 var bcrypt			= require('bcryptjs')
 var jwt					= require('jsonwebtoken')
-
-//TODO: Hide in config
-var jwtsecret = 'Thismasecret'
+var jwtsecret = process.env.JWTSECRET
 
 // validates and creates a new account
 var signup = function ( req, res ) {
