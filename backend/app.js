@@ -1,3 +1,4 @@
+require('dotenv').config();
 var express			= require('express')
 var app					= express()
 var bodyParser	= require('body-parser')
@@ -15,4 +16,8 @@ app.use(function(req, res, next) {
 
 app.use('/', routes)
 
-app.listen(port, () => { console.log('Server listening on port ' + port) })
+var server = app.listen(port, () => { console.log('Server listening on port ' + port) })
+
+module.exports.closeServer = function () {
+	server.close();
+}
