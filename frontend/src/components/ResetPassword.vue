@@ -7,15 +7,6 @@
     <div>
       <input type="email" v-model="credentials.email" placeholder="Username" name="psw"/>
     </div>
-    <div>
-      <input type="password" v-model="credentials.oldPassword" placeholder="Old Password" name="psw"/>
-    </div>
-    <div>
-      <input type="password" v-model="credentials.newPassword" placeholder="New Password" name="psw"/>
-   </div>
-   <div>
-     <input type="password" v-model="credentials.confirmPassword" placeholder="Confirm Password" name="psw"/>
-  </div>
     <button v-on:click="reset">
       Reset Password
     </button>
@@ -31,9 +22,6 @@ export default {
       data: [],
       message: '',
       credentials: {
-        oldPassword: '',
-        newPassword: '',
-        confirmPassword: '',
         email: ''
       },
       success: false
@@ -46,15 +34,13 @@ export default {
         if (res.data.success) {
           context.message = 'Successfully Reset Password!'
           context.success = true
-          this.$router.push('home')
+          alert(res.data.message)
+          this.$router.push('login')
         } else {
           context.message = res.data.message
         }
       })
       this.credentials = {
-        oldPassword: '',
-        newPassword: '',
-        confirmPassword: '',
         email: ''
       }
     }
