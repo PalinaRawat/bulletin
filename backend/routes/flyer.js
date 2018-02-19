@@ -21,6 +21,7 @@ var create = function ( req, res ) {
   MongoClient.connect(MongoURL, function(err, db) {
     var flyers = db.collection('flyers')
 
+    /*
     var bucket = gcs.bucket('bulletin');
 
     bucket.upload(req.file.path, function(err, file) {
@@ -36,14 +37,15 @@ var create = function ( req, res ) {
             throw error;
           }
         });
-
+        */
         var flyer = {
           title: req.body.title,
           description: req.body.description,
           startdate: req.body.startdate,
           enddate: req.body.enddate,
     			flags: 0,
-          image_url: 'http://storage.googleapis.com/bulletin/' + req.file.filename,
+          image_url: req.body.image_url,
+          //image_url: 'http://storage.googleapis.com/bulletin/' + req.file.filename,
           owner: req.decoded.email
         }
 
