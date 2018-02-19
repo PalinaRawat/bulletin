@@ -3,6 +3,7 @@
   <div class="home">
    <div class="topnav">
       <router-link class="active" to="/home" tag="a">Home</router-link>
+      <router-link class="active" to="/settings" tag="a">Settings</router-link>
        <button id="show-modal" @click="showModal = true">Create a flyer</button>
       <img src="../assets/icon.svg">
     </div>
@@ -163,15 +164,15 @@ export default {
       }
     },
     click () {
-      var auth = localStorage.getItem('auth', null)
-      var url = 'http://localhost:8000/createflyer?auth='
-      if (title.value === '') alert('Fill the title')
-      else if (description.value === '') alert('Fill the description')
-      else if (image_url.value === '') alert('Fill the image url')
-      else if (startdate.value === '') alert('Fill the startdate')
-      else if (enddate.value === '') alert('Fill the enddate')
-      url = url + '&title=' + title.value + '&description=' + description.value + '&image_url=' + image_url.value + '&start-date=' + startdate.value + '&end-date=' + enddate.value
-      console.log(url)
+      // var auth = localStorage.getItem('auth', null)
+      // var url = 'http://localhost:8000/createflyer?auth='
+      // if (title.value === '') alert('Fill the title')
+      // else if (description.value === '') alert('Fill the description')
+      // else if (image_url.value === '') alert('Fill the image url')
+      // else if (startdate.value === '') alert('Fill the startdate')
+      // else if (enddate.value === '') alert('Fill the enddate')
+      // url = url + '&title=' + title.value + '&description=' + description.value + '&image_url=' + image_url.value + '&start-date=' + startdate.value + '&end-date=' + enddate.value
+      // console.log(url)
     }
   }
 }
