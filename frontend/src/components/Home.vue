@@ -3,6 +3,7 @@
   <div class="home">
    <div class="topnav">
       <router-link class="active" to="/home" tag="a">Home</router-link>
+      <router-link class="active" to="/settings" tag="a">Settings</router-link>
        <button id="show-modal" @click="showModal = true">Create a flyer</button>
       <img src="../assets/icon.svg">
     </div>
