@@ -43,7 +43,7 @@ export default {
           context.message = 'Successfully signed up!'
           context.success = true
           var auth = res.authToken
-          localStorageSet('auth', auth)
+          localStorage.setItem('auth', auth)
         } else {
           context.message = res.data.message
         }
