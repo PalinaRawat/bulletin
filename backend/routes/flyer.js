@@ -54,9 +54,9 @@ var create = function ( req, res ) {
             return res.json({ success: false, message: 'Error sending data to database'})
           return res.json({ success: true, message: 'Created new flyer' })
         })
-      }
-    });
-  })
+      })
+//    });
+//  })
 }
 
 var flag = function ( req, res ) {
