@@ -68,15 +68,16 @@ var flag = function ( req, res ) {
       if (err)
         return res.json({ success: false, message: 'Error finding flyer in database'})
 
-        //if (result.owner == req.decoded.email) {
-        //  flyers.remove({ "_id" : req.body.flyer })
-        //  return res.json({ success: true, message: 'Deleted own flyer' })
-        //}
+      if (result.users_flagged.includes(req.decoded.email)) {
+          flyers.update({_id : new ObjectId(req.body.flyer)}, {$set:{'flags' : parseInt(result.flags) - 1}, $pull:{'users_flagged': req.decoded.email }})
+          return res.json({ success: true, message: 'Unflagged Flyer' })
+      }
+
       if (result.flags == 4) {
         flyers.remove({_id : new ObjectId(req.body.flyer)})
         return res.json({ success: true, message: 'Flagged flyer and deleted' })
       } else {
-        flyers.update({_id : new ObjectId(req.body.flyer)}, {$set:{'flags' : parseInt(result.flags) + 1}})
+        flyers.update({_id : new ObjectId(req.body.flyer)}, {$set:{'flags' : parseInt(result.flags) + 1}, $push:{'users_flagged': req.decoded.email }})
         return res.json({ success: true, message: 'Flagged flyer' })        }
       })
     })
@@ -116,6 +117,13 @@ var getflyers = function ( req, res ) {
       if (err)
         return res.json({ success: false, message: 'Error finding flyers in database'})
 
+      for (var i in result) {
+        try {
+          if (result[i].hasOwnProperty('users_flagged'))
+          if (result[i].users_flagged.includes(req.decoded.email))
+            result.splice(i, 1)
+        } catch (error) { console.log(error) }
+      }
 
       return res.json({success: true , flyers:result})
     })
