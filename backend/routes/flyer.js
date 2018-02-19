@@ -60,7 +60,7 @@ var getinfo = function ( req, res ) {
     MongoClient.connect(MongoURL, function(err, db) {
       var flyers = db.collection('flyers')
 
-      console.log(req.body.flyer)
+      //console.log(req.body.flyer)
 
       flyers.find( {_id : new ObjectId(req.body.flyer)}).toArray(function(err, result) {
         if (err)
