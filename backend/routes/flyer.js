@@ -72,7 +72,7 @@ var flag = function ( req, res ) {
       if (result.users_flagged.includes(req.decoded.email)) {
           flyers.update({_id : new ObjectId(req.body.flyer)}, {$set:{'flags' : parseInt(result.flags) - 1}, $pull:{'users_flagged': req.decoded.email }})
           return res.json({ success: true, message: 'Unflagged Flyer' })
-
+      }
       if (result.owner == req.decoded.email) {
         flyers.remove({_id : new ObjectId(req.body.flyer)})
         return res.json({ success: true, message: 'Deleted own flyer' })
@@ -84,7 +84,7 @@ var flag = function ( req, res ) {
       } else {
         flyers.update({_id : new ObjectId(req.body.flyer)}, {$set:{'flags' : parseInt(result.flags) + 1}, $push:{'users_flagged': req.decoded.email }})
         return res.json({ success: true, message: 'Flagged flyer' })        }
-      })
+      )
     })
 
 	//return res.json({ success: true, message: "test" })
