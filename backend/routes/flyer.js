@@ -50,9 +50,11 @@ var create = function ( req, res ) {
         }
 
         flyers.insert(flyer, function(err, result) {
+          flyerid = result.ops[0];
+
           if (err)
             return res.json({ success: false, message: 'Error sending data to database'})
-          return res.json({ success: true, message: 'Created new flyer' })
+          return res.json({ success: true, message: 'Created new flyer', flyer: flyerid})
         })
       })
 //    });
