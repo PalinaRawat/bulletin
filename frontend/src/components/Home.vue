@@ -1,3 +1,4 @@
+/*global click title:true*/
 <template>
   <div class="home">
    <div class="topnav">
@@ -95,6 +96,7 @@
 <script>
 import axios from 'axios'
 export default {
+  showModal: false,
   name: 'Welcome',
   data () {
     return {
@@ -276,5 +278,13 @@ div#columns:hover figure:not(:hover) {
 @media screen and (max-width: 750px) {
   #columns { column-gap: 0px; }
   #columns figure { width: 100%; }
+}
+.modal-content {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+
 }
 </style>
