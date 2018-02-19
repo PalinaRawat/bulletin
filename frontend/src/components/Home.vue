@@ -115,7 +115,12 @@ export default {
     getflyers () {
       const context = this
       context.message = 'yoo'
-      axios.post(`http://localhost:5000/getflyers`, this.credentials).then(res => {
+      const axiosConfig = {
+        headers: {
+          token: localStorage.getItem('token')
+        }
+      }
+      axios.post(`http://localhost:5000/getflyers`, this.credentials, axiosConfig).then(res => {
         context.listOfFlyers = res.data.flyers
         context.len = res.data.flyers.length
         console.log('Total flyer #: ' + res.data.flyers.length)
