@@ -12,26 +12,26 @@
       <div class="modal-content">
         <form>
            Title:<br>
-          <input type="text" id="title" value="">
+          <input type="text" name="title">
           <br>
           <br>
            Description:<br>
-          <input type="text" id="description" value="">
+          <input type="text" name="description">
           <br>
           <br>
            image url:<br>
-          <input type="text" id="image_url" value="">
+          <input type="text" name="imageurl">
           <br>
           <br>
            Start date of the event<br>
-          <input type="date" id="startdate" value="">
+          <input type="date" name="startdate">
            <br>
            <br>
            End date of the event<br>
-          <input type="date" id="enddate" value="">
+          <input type="date" name="enddate">
           <br>
           <br>
-          <button id="submit" type="button"  v-on:click="click"> Submit </button>
+          <button id="submit" type="button" v-on:click="click" @click="showModal = false"> Submit </button>
         </form>
       </div>
     </modal>
@@ -164,15 +164,28 @@ export default {
       }
     },
     click () {
-      // var auth = localStorage.getItem('auth', null)
-      // var url = 'http://localhost:8000/createflyer?auth='
-      // if (title.value === '') alert('Fill the title')
-      // else if (description.value === '') alert('Fill the description')
-      // else if (image_url.value === '') alert('Fill the image url')
-      // else if (startdate.value === '') alert('Fill the startdate')
-      // else if (enddate.value === '') alert('Fill the enddate')
-      // url = url + '&title=' + title.value + '&description=' + description.value + '&image_url=' + image_url.value + '&start-date=' + startdate.value + '&end-date=' + enddate.value
-      // console.log(url)
+      var auth = localStorage.getItem('auth', null)
+      var url = 'http://localhost:8000/createflyer?auth=' + auth
+      var title = document.querySelector('input[name=title]').value
+      var description = document.querySelector('input[name=description]').value
+      var imageurl = document.querySelector('input[name=imageurl]').value
+      var startdate = document.querySelector('input[name=startdate]').value
+      var enddate = document.querySelector('input[name=enddate]').value
+      if (title === '') alert('Fill the title')
+      else if (description === '') alert('Fill the description')
+      else if (imageurl === '') alert('Fill the image url')
+      else if (startdate === '') alert('Fill the startdate')
+      else if (enddate === '') alert('Fill the enddate')
+      else {
+        url = url + '&title=' + title + '&description=' + description + '&imageurl=' + imageurl + '&start-date=' + startdate + '&end-date=' + enddate.value
+        axios.post(url)
+          .then(function (response) {
+            console.log(response)
+          })
+          .catch(function (error) {
+            console.log(error)
+          })
+      }
     }
   }
 }
@@ -212,7 +225,6 @@ figure {
     font-size: 17px;
 }
 .home {
-  background-image: url(http://maxpixel.freegreatpicture.com/static/photo/1x/Background-Bulletin-Backdrop-Blank-Brown-Board-72250.jpg);
   font-family: Calluna, Arial, sans-serif;
   background-size: cover;
   color: black;
