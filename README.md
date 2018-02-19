@@ -1,4 +1,5 @@
-# bulletin' : Group 19
+# bulletin'
+#### Group 19
 
 *A web application designed to provide students with a virtual bulletin board.*
 
