@@ -2,6 +2,8 @@ var MongoClient	= require('mongodb').MongoClient
 var MongoURL		= 'mongodb://admin:password@ds227168.mlab.com:27168/bulletin'
 var bcrypt			= require('bcryptjs')
 var jwt					= require('jsonwebtoken')
+var nodemailer = require('nodemailer');
+
 
 //TODO: Hide in config
 var jwtsecret = 'Thismasecret'
@@ -96,14 +98,14 @@ var login = function ( req, res ) {
 
 // validates current password and resets it to new password
 var reset = function ( req, res ) {
-	if (!req.body.email || !req.body.oldPassword || !req.body.newPassword || !req.body.confirmPassword)
+	if (!req.body.email)
 		return res.json({ success: false, message: 'Insufficient login information' })
 
-	if (req.body.newPassword.length < 8)
-		return res.json({ success: false, message: 'New Password is too short' })
-
-	if (req.body.newPassword !== req.body.confirmPassword)
-		return res.json({ success: false, message: 'New Passwords Do Not Match' })
+	// if (req.body.newPassword.length < 8)
+	// 	return res.json({ success: false, message: 'New Password is too short' })
+  //
+	// if (req.body.newPassword !== req.body.confirmPassword)
+	// 	return res.json({ success: false, message: 'New Passwords Do Not Match' })
 
 	MongoClient.connect(MongoURL, function(err, db) {
 		var users = db.collection('users')
@@ -112,26 +114,51 @@ var reset = function ( req, res ) {
 				return res.json({ success: false, message: 'Error connecting to database' })
 			if (result.length === 0)
 				return res.json({ success: false, message: 'Invalid login information' })
-			bcrypt.compare(req.body.oldPassword, result[0].password, function(err, match) {
-				if (err)
-					return res.json({ success: false, message: 'Error comparing passwords' })
 
-				//console.log(result[0].password, req.body.oldPassword)
+			let transporter = nodemailer.createTransport({
+	      host: 'smtp.office365.com',
+	      port: '587',
+	      secure: false,
+	      auth: {
+	          user: 'bulletin.purdue@gmail.com',
+	          pass: 'purdue.bulletin'
+	      },
+				tls: {
+            ciphers: 'SSLv3'
+						// rejectUnauthorized: false
+        }
+				// requireTLS: true
+      })
+			//New randomized password
+			const newPassword = Math.random().toString(36).slice(-8)
 
-				if (!match)
-					return res.json({ success: false, message: 'Invalid login information' })
+      let mailOptions = {
+          from: '"Bulletin" <bulletin.purdue@gmail.com>', // sender address
+          to: req.body.email, // list of receivers
+          subject: 'Reset Password', // Subject line
+          text: 'your new password is ' + newPassword, // plain text body
+          html: '<b>' + newPassword + '</b><br/><p>Reset password once logged into account!</p>' // html body
+      }
 
-				else {
-					bcrypt.hash(req.body.confirmPassword, 10, function(err, hash) {
-						if (err)
-							return res.json({ success: false, message: 'Error encrypting password' })
+      transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+						console.log(error);
+            return res.json({ success: false, message: 'Error e-mailing new password' });
+        }
+        console.log('Message %s sent: %s', info.messageId, info.response);
 
-							users.findOneAndUpdate( { email: req.body.email }, { $set: { password: hash } }, function (err, result2) {
-								return res.json({ success: true, message: 'Successfully Changed Password!'});
-							})
-					})
-				}
-			})
+				bcrypt.hash(newPassword, 10, function(err, hash) {
+					if (err)
+						return res.json({ success: false, message: 'Error encrypting password' })
+
+						users.findOneAndUpdate( { email: req.body.email }, { $set: { password: hash } }, function (err, result2) {
+							return res.json({ success: true, message: 'Successfully Changed Password!'});
+						})
+				})
+
+        return res.json({ success: false, message: 'Successfully Reset Password' });
+      })
+
 		})
 	})
 }
