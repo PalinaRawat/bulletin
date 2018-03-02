@@ -39,46 +39,56 @@
     <div id="columns">
       <!-- title1 is set in getFlyerImage to the corresponding title -->
       <figure>
+        <button v-on:click="saveFlyer(0)">Save</button>
         <img :src="getFlyerImage(0)">
         <figcaption>{{title1}}</figcaption>
       </figure>
       <figure>
+        <button v-on:click="saveFlyer(1)">Save</button>
         <img :src="getFlyerImage(1)">
         <figcaption>{{title1}}</figcaption>
       </figure>
       <figure>
+        <button v-on:click="saveFlyer(2)">Save</button>
         <img :src="getFlyerImage(2)">
         <figcaption>{{title1}}</figcaption>
       </figure>
       <figure>
+        <button v-on:click="saveFlyer(3)">Save</button>
         <img :src="getFlyerImage(3)">
         <figcaption>{{title1}}</figcaption>
       </figure>
       <figure>
+        <button v-on:click="saveFlyer(4)">Save</button>
         <img :src="getFlyerImage(4)">
         <figcaption>{{title1}}</figcaption>
       </figure>
       <figure>
+        <button v-on:click="saveFlyer(5)">Save</button>
         <img :src="getFlyerImage(5)">
         <figcaption>{{title1}}</figcaption>
       </figure>
 
       <figure>
+        <button v-on:click="saveFlyer(6)">Save</button>
         <img :src="getFlyerImage(6)">
         <figcaption>{{title1}}</figcaption>
       </figure>
 
       <figure>
+        <button v-on:click="saveFlyer(7)">Save</button>
         <img :src="getFlyerImage(7)">
         <figcaption>{{title1}}</figcaption>
       </figure>
 
       <figure>
+        <button v-on:click="saveFlyer(8)">Save</button>
         <img :src="getFlyerImage(8)">
         <figcaption>{{title1}}</figcaption>
       </figure>
 
       <figure>
+        <button v-on:click="saveFlyer(9)">Save</button>
         <img :src="getFlyerImage(9)">
         <figcaption>{{title1}}</figcaption>
       </figure>
@@ -191,6 +201,15 @@ export default {
             console.log(error)
           })
       }
+    },
+    saveFlyer(pos) {
+      const context = this
+      context.counter = parseInt(sessionStorage.getItem('flyerCount'))
+      var flyer = context.listOfFlyers[context.counter + pos]
+      console.log("flyer: " + pos)
+      /*
+        backend call using info from "flyer"
+      */
     }
   }
 }
