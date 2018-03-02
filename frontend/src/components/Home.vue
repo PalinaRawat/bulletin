@@ -1,17 +1,41 @@
+/*global click title:true*/
 <template>
   <div class="home">
-    <div class="topnav">
+   <div class="topnav">
       <router-link class="active" to="/home" tag="a">Home</router-link>
-      <router-link to="/about" tag="a">About</router-link>
-      <router-link to="/contact" tag="a">Contact</router-link>
-      <router-link to="/settings" tag="a">Settings</router-link>
-
+      <router-link class="active" to="/settings" tag="a">Settings</router-link>
        <button id="show-modal" @click="showModal = true">Create a flyer</button>
-
       <img src="../assets/icon.svg">
     </div>
 
-    <h1>{{msg}}</h1>
+    <modal v-if="showModal" @close="showModal = false">
+      <div class="modal-content">
+        <form>
+           Title:<br>
+          <input type="text" name="title">
+          <br>
+          <br>
+           Description:<br>
+          <input type="text" name="description">
+          <br>
+          <br>
+           image url:<br>
+          <input type="text" name="imageurl">
+          <br>
+          <br>
+           Start date of the event<br>
+          <input type="date" name="startdate">
+           <br>
+           <br>
+           End date of the event<br>
+          <input type="date" name="enddate">
+          <br>
+          <br>
+          <button id="submit" type="button" v-on:click="click" @click="showModal = false"> Submit </button>
+        </form>
+      </div>
+    </modal>
+
     <div id="columns">
       <!-- title1 is set in getFlyerImage to the corresponding title -->
       <figure>
@@ -67,48 +91,20 @@
           Next
       </button>
     </div>
-
-    <modal v-if="showModal" @close="showModal = false">
-      <div class="modal-content">
-        <form>
-           Title:<br>
-          <input type="text" id="title" value="">
-          <br>
-          <br>
-           Description:<br>
-          <input type="text" id="description" value="">
-          <br>
-          <br>
-           image url:<br>
-          <input type="text" id="image_url" value="">
-          <br>
-          <br>
-           Start date of the event<br>
-          <input type="date" id="startdate" value="">
-           <br>
-           <br>
-           End date of the event<br>
-          <input type="date" id="enddate" value="">
-          <br>
-          <br>
-          <button id="submit" type="button"  v-on:click="click"> Submit </button>
-        </form>
-      </div>
-    </modal>
   </div>
 </template>
+
 <script>
 import axios from 'axios'
-
 export default {
   showModal: false,
   name: 'Welcome',
   data () {
     return {
-
       msg: 'Home Page',
       listOfFlyers: [],
       currentFlyers: [],
+      showModal: false,
       counter: 0
     }
   },
@@ -119,7 +115,12 @@ export default {
     getflyers () {
       const context = this
       context.message = 'yoo'
-      axios.post(`http://localhost:5000/getflyers`, this.credentials).then(res => {
+      const axiosConfig = {
+        headers: {
+          token: localStorage.getItem('token')
+        }
+      }
+      axios.post(`http://localhost:5000/getflyers`, this.credentials, axiosConfig).then(res => {
         context.listOfFlyers = res.data.flyers
         context.len = res.data.flyers.length
         console.log('Total flyer #: ' + res.data.flyers.length)
@@ -166,21 +167,33 @@ export default {
         sessionStorage.setItem('flyerCount', context.counter)
         location.reload()
       }
-
-    }
-  },
+    },
     click () {
-      var url = 'http://localhost:8000/questions?auth='
-      if (title.value === '') alert('Fill the title')
-      else if (description.value === '') alert('Fill the description')
-      else if (image_url.value === '') alert('Fill the image url')
-      else if (startdate.value === '') alert('Fill the startdate')
-      else if (enddate.value === '') alert('Fill the enddate')
-      url = url + '&title=' + title.value + '&description=' + description.value + '&image_url=' + image_url.value + '&start-date=' + startdate.value + '&end-date=' + enddate.value
-      console.log(url)
-
+      var auth = localStorage.getItem('auth', null)
+      var url = 'http://localhost:8000/createflyer?auth=' + auth
+      var title = document.querySelector('input[name=title]').value
+      var description = document.querySelector('input[name=description]').value
+      var imageurl = document.querySelector('input[name=imageurl]').value
+      var startdate = document.querySelector('input[name=startdate]').value
+      var enddate = document.querySelector('input[name=enddate]').value
+      if (title === '') alert('Fill the title')
+      else if (description === '') alert('Fill the description')
+      else if (imageurl === '') alert('Fill the image url')
+      else if (startdate === '') alert('Fill the startdate')
+      else if (enddate === '') alert('Fill the enddate')
+      else {
+        url = url + '&title=' + title + '&description=' + description + '&imageurl=' + imageurl + '&start-date=' + startdate + '&end-date=' + enddate.value
+        axios.post(url)
+          .then(function (response) {
+            console.log(response)
+          })
+          .catch(function (error) {
+            console.log(error)
+          })
+      }
     }
   }
+}
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
@@ -217,7 +230,6 @@ figure {
     font-size: 17px;
 }
 .home {
-  background-image: url(http://maxpixel.freegreatpicture.com/static/photo/1x/Background-Bulletin-Backdrop-Blank-Brown-Board-72250.jpg);
   font-family: Calluna, Arial, sans-serif;
   background-size: cover;
   color: black;
@@ -228,6 +240,13 @@ img {
   height: 4%;
   width: 4%;
 }
+.modal-content {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+}
 #columns {
   column-width: 320px;
   column-gap: 15px;
@@ -236,7 +255,6 @@ img {
   margin: 50px auto;
   column-fill: balance;
 }
-
 div#columns figure {
   /*
     background below changes the color inside each flyer box
@@ -251,42 +269,34 @@ div#columns figure {
   display: inline-block;
   column-break-inside: avoid;
 }
-
 div#columns figure img {
   width: 100%; height: auto;
   border-bottom: 1px solid #ccc;
   padding-bottom: 15px;
   margin-bottom: 5px;
 }
-
 div#columns figure p {
   font-size: .9rem;
   color: #444;
   line-height: 1.5;
 }
-
 div#columns small {
   font-size: 1rem;
   float: right;
   text-transform: uppercase;
   color: #aaa;
 }
-
 div#columns small a {
   color: #666;
   text-decoration: none;
   transition: .4s color;
 }
-
 div#columns:hover figure:not(:hover) {
-
 }
-
 @media screen and (max-width: 750px) {
   #columns { column-gap: 0px; }
   #columns figure { width: 100%; }
 }
-
 .modal-content {
     background-color: #fefefe;
     margin: auto;
