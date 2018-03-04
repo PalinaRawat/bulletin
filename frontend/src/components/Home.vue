@@ -138,6 +138,8 @@ export default {
       const context = this
       context.message = 'yoo'
       context.filter = sessionStorage.getItem('filter')
+      var dateObj = new Date()
+      console.log('date: ' + dateObj)
       const axiosConfig = {
         headers: {
           token: localStorage.getItem('token')
