@@ -4,7 +4,7 @@
    <div class="topnav">
       <router-link class="active" to="/home" tag="a">Home</router-link>
       <router-link class="active" to="/settings" tag="a">Settings</router-link>
-       <button id="show-modal" @click="showModal = true">Create a flyer</button>
+      <button id="show-modal" @click="showModal = true">Create a flyer</button>
       <img src="../assets/icon.svg">
     </div>
 
@@ -35,6 +35,17 @@
         </form>
       </div>
     </modal>
+    <div id="filterDiv">
+        <p>Filter by: {{filter}}</p>
+        <select name ="selectFilter" v-model="filter">
+          <option value="All" selected>All</option>
+          <option value="Day">Day</option>
+          <option value="Week">Week</option>
+          <option value="Month">Month</option>
+          <option value="Collected">Collected</option>
+        </select>
+        <button v-on:click="updateFilter">Confirm</button>
+    </div>
 
     <div id="columns">
       <!-- title1 is set in getFlyerImage to the corresponding title -->
@@ -109,6 +120,7 @@ import axios from 'axios'
 export default {
   showModal: false,
   name: 'Welcome',
+  filter: 'all',
   data () {
     return {
       msg: 'Home Page',
@@ -125,6 +137,7 @@ export default {
     getflyers () {
       const context = this
       context.message = 'yoo'
+      context.filter = sessionStorage.getItem('filter')
       const axiosConfig = {
         headers: {
           token: localStorage.getItem('token')
@@ -202,14 +215,19 @@ export default {
           })
       }
     },
-    saveFlyer(pos) {
+    saveFlyer (pos) {
       const context = this
       context.counter = parseInt(sessionStorage.getItem('flyerCount'))
-      var flyer = context.listOfFlyers[context.counter + pos]
-      console.log("flyer: " + pos)
+      // var flyer = context.listOfFlyers[context.counter + pos]
       /*
         backend call using info from "flyer"
       */
+    },
+    updateFilter () {
+      const context = this
+      sessionStorage.setItem('filter', context.filter)
+      console.log(context.filter)
+      location.reload()
     }
   }
 }
@@ -222,6 +240,7 @@ html, body {
   width: 100%;
 }
 h1, h2 {
+  display: inline-block;
   font-size: 2em;
 }
 a {
@@ -231,6 +250,9 @@ figure {
   display: block;
   border: 100px;
   border-color: darkgrey
+}
+.filterDiv {
+  display: inline-block;
 }
 .topnav {
     overflow: hidden;
