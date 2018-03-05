@@ -107,8 +107,7 @@ var getinfo = function ( req, res ) {
         if (err)
           return res.json({ success: false, message: 'Error finding flyer in database'})
 
-          console.log(result)
-
+        console.log(result)
         return res.json({result})
       })
     })
@@ -118,11 +117,19 @@ var getinfo = function ( req, res ) {
 var getflyers = function ( req, res ) {
   //if (!req.body.start || !req.body.end)  WE WILL NEED THIS WHEN WE ADD FILTERS : TO KNOW
   //  return res.json({ success: false, message: 'Insufficient information' })
+  var startdate = new Date()
+  var enddate = new Date(new Date().setFullYear(new Date().getFullYear() + 1))
+  if (req.body.startdate)
+    startdate = req.body.startdate
+  if (req.body.enddate)
+    enddate = req.body.enddate
+
+
 
   MongoClient.connect(MongoURL, function(err, db) {
     var flyers = db.collection('flyers')
 
-    flyers.find({}).toArray(function (err, result) {
+    flyers.find({startdate: {"$gte": req.body.startdate}, enddate: {"$lte": req.body.enddate}}).toArray(function (err, result) {
       if (err)
         return res.json({ success: false, message: 'Error finding flyers in database'})
 
