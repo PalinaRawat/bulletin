@@ -21,23 +21,22 @@ var create = function ( req, res ) {
   MongoClient.connect(MongoURL, function(err, db) {
     var flyers = db.collection('flyers')
 
-    /*
+
     var bucket = gcs.bucket('bulletin');
 
     bucket.upload(req.file.path, function(err, file) {
       if (err) {
         res.send({ success: false, message: err })
-
+        return;
         //res.send({ success: true, message: "Image uploaded", image_url:  'http://storage.googleapis.com/bulletin/' + req.file.filename })
       }
       else {
-
         fs.unlink(req.file.path, function(error) {
           if (error) {
             throw error;
           }
         });
-        */
+
         var flyer = {
           title: req.body.title,
           description: req.body.description,
@@ -58,7 +57,7 @@ var create = function ( req, res ) {
         })
       })
 //    });
-//  })
+  })
 }
 
 var flag = function ( req, res ) {
@@ -78,6 +77,12 @@ var flag = function ( req, res ) {
           return res.json({ success: true, message: 'Unflagged Flyer' })
         }
 */
+
+      //if (result.users_flagged.includes(req.decoded.email)) {
+      //    flyers.update({_id : new ObjectId(req.body.flyer)}, {$set:{'flags' : parseInt(result.flags) - 1}, $pull:{'users_flagged': req.decoded.email }})
+      //    return res.json({ success: true, message: 'Unflagged Flyer' })
+      //  }
+
       if (result.owner == req.decoded.email) {
         flyers.remove({_id : new ObjectId(req.body.flyer)})
         return res.json({ success: true, message: 'Deleted own flyer' })
@@ -94,6 +99,46 @@ var flag = function ( req, res ) {
 	//return res.json({ success: true, message: "test" })
 }
 
+var collect = function ( req, res ) {
+  if (!req.body.flyer)
+    return res.json({ success: false, message: 'Insufficient information' })
+
+  MongoClient.connect(MongoURL, function(err, db) {
+    var flyers = db.collection('users')
+
+    flyers.findOne( {email : req.decoded.email}, function(err, result) {
+      if (err)
+        return res.json({ success: false, message: 'Error finding user in database'})
+
+
+        flyers.update({email : req.decoded.email}, {$addToSet:{'collected' : req.body.flyer}})
+        return res.json({ success: true, message: 'Collected flyer' })
+    })
+  })
+	//return res.json({ success: true, message: "test" })
+}
+
+var getuser = function ( req, res ) {
+  if (!req.body.email)
+    return res.json({ success: false, message: 'Insufficient information' })
+
+    MongoClient.connect(MongoURL, function(err, db) {
+      var flyers = db.collection('users')
+
+      //console.log(req.body.flyer)
+
+      flyers.find( { email : req.body.email}).toArray(function(err, result) {
+        if (err)
+          return res.json({ success: false, message: 'Error finding flyer in database'})
+
+          console.log(result)
+
+        return res.json({result})
+      })
+    })
+
+}
+
 var getinfo = function ( req, res ) {
   if (!req.body.flyer)
     return res.json({ success: false, message: 'Insufficient information' })
@@ -107,8 +152,7 @@ var getinfo = function ( req, res ) {
         if (err)
           return res.json({ success: false, message: 'Error finding flyer in database'})
 
-          console.log(result)
-
+        console.log(result)
         return res.json({result})
       })
     })
@@ -118,21 +162,21 @@ var getinfo = function ( req, res ) {
 var getflyers = function ( req, res ) {
   //if (!req.body.start || !req.body.end)  WE WILL NEED THIS WHEN WE ADD FILTERS : TO KNOW
   //  return res.json({ success: false, message: 'Insufficient information' })
+  var startdate = new Date()
+  var enddate = new Date(new Date().setFullYear(new Date().getFullYear() + 1))
+  var owner;
+  if (req.body.startdate)
+    startdate = req.body.startdate
+  if (req.body.enddate)
+    enddate = req.body.enddate
+
 
   MongoClient.connect(MongoURL, function(err, db) {
     var flyers = db.collection('flyers')
 
-    flyers.find({}).toArray(function (err, result) {
+    flyers.find({startdate: {"$gte": req.body.startdate}, enddate: {"$lte": req.body.enddate}}).toArray(function (err, result) {
       if (err)
         return res.json({ success: false, message: 'Error finding flyers in database'})
-
-      for (var i in result) {
-        try {
-          if (result[i].hasOwnProperty('users_flagged'))
-          if (result[i].users_flagged.includes(req.decoded.email))
-            result.splice(i, 1)
-        } catch (error) { console.log(error) }
-      }
 
       return res.json({success: true , flyers:result})
     })
@@ -143,7 +187,9 @@ var functions = {
   create: create,
   flag: flag,
   getinfo: getinfo,
-  getflyers: getflyers
+  getflyers: getflyers,
+  collect: collect,
+  getuser: getuser
 }
 
 module.exports = functions
