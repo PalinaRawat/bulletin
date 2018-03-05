@@ -30,7 +30,6 @@ var create = function ( req, res ) {
         //res.send({ success: true, message: "Image uploaded", image_url:  'http://storage.googleapis.com/bulletin/' + req.file.filename })
       }
       else {
-
         fs.unlink(req.file.path, function(error) {
           if (error) {
             throw error;
@@ -109,11 +108,11 @@ var getflyers = function ( req, res ) {
   //  return res.json({ success: false, message: 'Insufficient information' })
   var startdate = new Date()
   var enddate = new Date(new Date().setFullYear(new Date().getFullYear() + 1))
+  var owner;
   if (req.body.startdate)
     startdate = req.body.startdate
   if (req.body.enddate)
     enddate = req.body.enddate
-
 
 
   MongoClient.connect(MongoURL, function(err, db) {
