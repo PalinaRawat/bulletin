@@ -136,7 +136,6 @@ export default {
   methods: {
     getflyers () {
       const context = this
-      context.message = 'yoo'
       context.filter = sessionStorage.getItem('filter')
       console.log('current filter: ' + context.filter)
       var dateObj = new Date()
@@ -144,16 +143,12 @@ export default {
       if (context.filter === 'All') {
         console.log('print all')
         end.setFullYear(dateObj.getFullYear() + 1)
-      }
-      else if (context.filter === 'Day') {
+      } else if (context.filter === 'Day') {
         console.log('filter by day')
-      }
-
-      else if (context.filter === 'Week') {
+      } else if (context.filter === 'Week') {
         end.setDate(dateObj.getDate() + 7)
         console.log('filter by week')
-      }
-      else if (context.filter === 'Month') {
+      } else if (context.filter === 'Month') {
         end.setMonth(dateObj.getMonth() + 1)
       }
       console.log('start date: ' + dateObj)
@@ -247,10 +242,17 @@ export default {
     saveFlyer (pos) {
       const context = this
       context.counter = parseInt(sessionStorage.getItem('flyerCount'))
-      // var flyer = context.listOfFlyers[context.counter + pos]
-      /*
-        backend call using info from "flyer"
-      */
+      var flyer = context.listOfFlyers[context.counter + pos]
+      var id = flyer._id
+      var auth = localStorage.getItem('auth', null)
+      var url = 'http://localhost:8000/collect?auth=' + auth + 'flyer=' + id
+      axios.post(url)
+        .then(function (response) {
+          console.log(response)
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
     },
     updateFilter () {
       const context = this
