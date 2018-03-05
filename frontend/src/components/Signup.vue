@@ -42,6 +42,8 @@ export default {
         if (res.data.success) {
           context.message = 'Successfully signed up!'
           context.success = true
+          var auth = res.authToken
+          localStorage.setItem('auth', auth)
         } else {
           context.message = res.data.message
         }
@@ -89,22 +91,5 @@ input {
     font-size: 15px;
     text-align: center;
     outline-width: 1px;
-}
-
-button {
-    background-color: #ADD8E6;
-    color: black;
-    font-size: 15px;
-    padding: 14px 20px;
-    margin: 8px 0;
-    border: none;
-    cursor: pointer;
-    width: 20%;
-    min-width: 150px;
-}
-
-button:hover {
-    background-color: #ADD2E6;
-
 }
 </style>

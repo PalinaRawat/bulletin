@@ -5,6 +5,8 @@ import Signup from '@/components/Signup'
 import Login from '@/components/Login'
 import Home from '@/components/Home'
 import ResetPassword from '@/components/ResetPassword'
+import Settings from '@/components/Settings'
+import ChangePassword from '@/components/ChangePassword'
 
 Vue.use(Router)
 
@@ -36,6 +38,18 @@ var router = new Router({
       path: '/reset',
       name: 'ResetPassword',
       component: ResetPassword
+    },
+    {
+      path: '/settings',
+      name: 'Settings',
+      component: Settings,
+      meta: { requiresAuth: true }
+    },
+    {
+      path: '/change',
+      name: 'ChangePassword',
+      component: ChangePassword,
+      meta: { requiresAuth: true }
     }
   ]
 })

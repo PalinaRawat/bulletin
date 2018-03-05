@@ -42,6 +42,7 @@ export default {
   methods: {
     login () {
       const context = this
+      sessionStorage.setItem('flyerCount', 0)
       axios.post(`http://localhost:5000/login`, this.credentials).then(res => {
         if (res.data.success) {
           context.message = 'Successfully logged in!'
@@ -96,21 +97,5 @@ input {
 #login{
   font-size: 25px;
   margin-bottom: 0px;
-}
-
-button {
-    background-color: #ADD8E6;
-    color: black;
-    font-size: 15px;
-    padding: 14px 20px;
-    margin: 8px 0;
-    border: none;
-    cursor: pointer;
-    width: 20%;
-    min-width: 150px;
-}
-button:hover {
-    background-color: #ADD2E6;
-
 }
 </style>
