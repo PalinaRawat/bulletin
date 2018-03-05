@@ -132,8 +132,6 @@ var getflyers = function ( req, res ) {
       if (err)
         return res.json({ success: false, message: 'Error finding flyers in database'})
 
-<<<<<<< HEAD
-=======
       for (var i in result) {
         try {
           if (result[i].hasOwnProperty('users_flagged'))
@@ -142,7 +140,6 @@ var getflyers = function ( req, res ) {
         } catch (error) { console.log(error) }
       }
 
->>>>>>> master
       return res.json({success: true , flyers:result})
     })
   })
