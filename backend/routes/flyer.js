@@ -21,13 +21,13 @@ var create = function ( req, res ) {
   MongoClient.connect(MongoURL, function(err, db) {
     var flyers = db.collection('flyers')
 
-    /*
+
     var bucket = gcs.bucket('bulletin');
 
     bucket.upload(req.file.path, function(err, file) {
       if (err) {
         res.send({ success: false, message: err })
-
+        return;
         //res.send({ success: true, message: "Image uploaded", image_url:  'http://storage.googleapis.com/bulletin/' + req.file.filename })
       }
       else {
@@ -36,7 +36,7 @@ var create = function ( req, res ) {
             throw error;
           }
         });
-        */
+
         var flyer = {
           title: req.body.title,
           description: req.body.description,
@@ -57,7 +57,7 @@ var create = function ( req, res ) {
         })
       })
 //    });
-//  })
+  })
 }
 
 var flag = function ( req, res ) {
@@ -131,14 +131,6 @@ var getflyers = function ( req, res ) {
     flyers.find({startdate: {"$gte": req.body.startdate}, enddate: {"$lte": req.body.enddate}}).toArray(function (err, result) {
       if (err)
         return res.json({ success: false, message: 'Error finding flyers in database'})
-
-      for (var i in result) {
-        try {
-          if (result[i].hasOwnProperty('users_flagged'))
-          if (result[i].users_flagged.includes(req.decoded.email))
-            result.splice(i, 1)
-        } catch (error) { console.log(error) }
-      }
 
       return res.json({success: true , flyers:result})
     })
