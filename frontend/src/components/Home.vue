@@ -138,14 +138,37 @@ export default {
       const context = this
       context.message = 'yoo'
       context.filter = sessionStorage.getItem('filter')
+      console.log('current filter: ' + context.filter)
       var dateObj = new Date()
-      console.log('date: ' + dateObj)
+      var end = new Date()
+      if (context.filter === 'All') {
+        console.log('print all')
+        end.setFullYear(dateObj.getFullYear() + 1)
+      }
+      else if (context.filter === 'Day') {
+        console.log('filter by day')
+      }
+
+      else if (context.filter === 'Week') {
+        end.setDate(dateObj.getDate() + 7)
+        console.log('filter by week')
+      }
+      else if (context.filter === 'Month') {
+        end.setMonth(dateObj.getMonth() + 1)
+      }
+      console.log('start date: ' + dateObj)
+      console.log('end date: ' + end)
       const axiosConfig = {
         headers: {
           token: localStorage.getItem('token')
+        },
+        body: {
+          startdate: dateObj,
+          enddate: end
         }
+
       }
-      axios.post(`http://localhost:5000/getflyers`, this.credentials, axiosConfig).then(res => {
+      axios.post('http://localhost:5000/getflyers?startdate=' + dateObj + '&enddate=' + end, this.credentials, axiosConfig).then(res => {
         context.listOfFlyers = res.data.flyers
         context.len = res.data.flyers.length
         console.log('Total flyer #: ' + res.data.flyers.length)
@@ -180,6 +203,10 @@ export default {
     },
     nextPage () {
       const context = this
+      if (context.counter + 10 > context.len) {
+        console.log('end of flyers')
+        return
+      }
       context.counter = parseInt(sessionStorage.getItem('flyerCount')) + 10
       sessionStorage.setItem('flyerCount', context.counter)
       location.reload()
