@@ -4,7 +4,7 @@
    <div class="topnav">
       <router-link class="active" to="/home" tag="a">Home</router-link>
       <router-link class="active" to="/settings" tag="a">Settings</router-link>
-       <button id="show-modal" @click="showModal = true">Create a flyer</button>
+      <button id="show-modal" @click="showModal = true">Create a flyer</button>
       <img src="../assets/icon.svg">
     </div>
 
@@ -35,50 +35,71 @@
         </form>
       </div>
     </modal>
+    <div id="filterDiv">
+        <p>Filter by: {{filter}}</p>
+        <select name ="selectFilter" v-model="filter">
+          <option value="All" selected>All</option>
+          <option value="Day">Day</option>
+          <option value="Week">Week</option>
+          <option value="Month">Month</option>
+          <option value="Collected">Collected</option>
+        </select>
+        <button v-on:click="updateFilter">Confirm</button>
+    </div>
 
     <div id="columns">
       <!-- title1 is set in getFlyerImage to the corresponding title -->
       <figure>
+        <button v-on:click="saveFlyer(0)">Save</button>
         <img :src="getFlyerImage(0)">
         <figcaption>{{title1}}</figcaption>
       </figure>
       <figure>
+        <button v-on:click="saveFlyer(1)">Save</button>
         <img :src="getFlyerImage(1)">
         <figcaption>{{title1}}</figcaption>
       </figure>
       <figure>
+        <button v-on:click="saveFlyer(2)">Save</button>
         <img :src="getFlyerImage(2)">
         <figcaption>{{title1}}</figcaption>
       </figure>
       <figure>
+        <button v-on:click="saveFlyer(3)">Save</button>
         <img :src="getFlyerImage(3)">
         <figcaption>{{title1}}</figcaption>
       </figure>
       <figure>
+        <button v-on:click="saveFlyer(4)">Save</button>
         <img :src="getFlyerImage(4)">
         <figcaption>{{title1}}</figcaption>
       </figure>
       <figure>
+        <button v-on:click="saveFlyer(5)">Save</button>
         <img :src="getFlyerImage(5)">
         <figcaption>{{title1}}</figcaption>
       </figure>
 
       <figure>
+        <button v-on:click="saveFlyer(6)">Save</button>
         <img :src="getFlyerImage(6)">
         <figcaption>{{title1}}</figcaption>
       </figure>
 
       <figure>
+        <button v-on:click="saveFlyer(7)">Save</button>
         <img :src="getFlyerImage(7)">
         <figcaption>{{title1}}</figcaption>
       </figure>
 
       <figure>
+        <button v-on:click="saveFlyer(8)">Save</button>
         <img :src="getFlyerImage(8)">
         <figcaption>{{title1}}</figcaption>
       </figure>
 
       <figure>
+        <button v-on:click="saveFlyer(9)">Save</button>
         <img :src="getFlyerImage(9)">
         <figcaption>{{title1}}</figcaption>
       </figure>
@@ -99,6 +120,7 @@ import axios from 'axios'
 export default {
   showModal: false,
   name: 'Welcome',
+  filter: 'all',
   data () {
     return {
       msg: 'Home Page',
@@ -115,6 +137,9 @@ export default {
     getflyers () {
       const context = this
       context.message = 'yoo'
+      context.filter = sessionStorage.getItem('filter')
+      var dateObj = new Date()
+      console.log('date: ' + dateObj)
       const axiosConfig = {
         headers: {
           token: localStorage.getItem('token')
@@ -191,6 +216,20 @@ export default {
             console.log(error)
           })
       }
+    },
+    saveFlyer (pos) {
+      const context = this
+      context.counter = parseInt(sessionStorage.getItem('flyerCount'))
+      // var flyer = context.listOfFlyers[context.counter + pos]
+      /*
+        backend call using info from "flyer"
+      */
+    },
+    updateFilter () {
+      const context = this
+      sessionStorage.setItem('filter', context.filter)
+      console.log(context.filter)
+      location.reload()
     }
   }
 }
@@ -203,6 +242,7 @@ html, body {
   width: 100%;
 }
 h1, h2 {
+  display: inline-block;
   font-size: 2em;
 }
 a {
@@ -212,6 +252,9 @@ figure {
   display: block;
   border: 100px;
   border-color: darkgrey
+}
+.filterDiv {
+  display: inline-block;
 }
 .topnav {
     overflow: hidden;
