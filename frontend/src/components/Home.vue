@@ -4,6 +4,7 @@
    <div class="topnav">
       <router-link class="active" to="/home" tag="a">Home</router-link>
       <router-link class="active" to="/settings" tag="a">Settings</router-link>
+      <router-link class="active" to="/collected" tag="a">Collected</router-link>
       <button id="show-modal" @click="showModal = true">Create a flyer</button>
       <img src="../assets/icon.svg">
     </div>
@@ -36,15 +37,18 @@
       </div>
     </modal>
     <div id="filterDiv">
-        <p>Filter by: {{filter}}</p>
-        <select name ="selectFilter" v-model="filter">
+        <p style="display:block">Filter by: {{filter}}</p>
+        <p style="display:inline-block">Collected only</p>
+        <input id="collectedBox" type="checkbox" style="display:inline-block"/>
+        <select style="display:inline-block" name ="selectFilter" v-model="filter">
           <option value="All" selected>All</option>
           <option value="Day">Day</option>
           <option value="Week">Week</option>
           <option value="Month">Month</option>
           <option value="Collected">Collected</option>
         </select>
-        <button v-on:click="updateFilter">Confirm</button>
+        <button style="display:inline-block" v-on:click="updateFilter">Confirm</button>
+
     </div>
 
     <div id="columns">
@@ -136,7 +140,13 @@ export default {
   methods: {
     getflyers () {
       const context = this
+      var collected = false
       context.filter = sessionStorage.getItem('filter')
+      var collectedStr = sessionStorage.getItem('collected')
+      if (collectedStr === 'true') {
+        collected = true
+      }
+      console.log('collected? ' + collected)
       console.log('current filter: ' + context.filter)
       var dateObj = new Date()
       var end = new Date()
@@ -163,7 +173,7 @@ export default {
         }
 
       }
-      axios.post('http://localhost:5000/getflyers?startdate=' + dateObj + '&enddate=' + end, this.credentials, axiosConfig).then(res => {
+      axios.post('http://localhost:5000/getflyers?collected' + collected + '&startdate=' + dateObj + '&enddate=' + end, this.credentials, axiosConfig).then(res => {
         context.listOfFlyers = res.data.flyers
         context.len = res.data.flyers.length
         console.log('Total flyer #: ' + res.data.flyers.length)
@@ -216,8 +226,8 @@ export default {
       }
     },
     click () {
-      var auth = localStorage.getItem('auth', null)
-      var url = 'http://localhost:8000/createflyer?auth=' + auth
+      // var token = localStorage.getItem('token', null)
+      var url = 'http://localhost:5000/create?'
       var title = document.querySelector('input[name=title]').value
       var description = document.querySelector('input[name=description]').value
       var imageurl = document.querySelector('input[name=imageurl]').value
@@ -257,6 +267,12 @@ export default {
     updateFilter () {
       const context = this
       sessionStorage.setItem('filter', context.filter)
+      var x = document.getElementById('collectedBox').checked
+      if (x === true) {
+        sessionStorage.setItem('collected', 'true')
+      } else {
+        sessionStorage.setItem('collected', 'false')
+      }
       console.log(context.filter)
       location.reload()
     }
@@ -283,7 +299,8 @@ figure {
   border-color: darkgrey
 }
 .filterDiv {
-  display: inline-block;
+  display: block;
+  width: 100%;
 }
 .topnav {
     overflow: hidden;
