@@ -112,6 +112,46 @@ var getinfo = function ( req, res ) {
 
 }
 
+var collect = function ( req, res ) {
+  if (!req.body.flyer)
+    return res.json({ success: false, message: 'Insufficient information' })
+
+  MongoClient.connect(MongoURL, function(err, db) {
+    var flyers = db.collection('users')
+
+    flyers.findOne( {email : req.decoded.email}, function(err, result) {
+      if (err)
+        return res.json({ success: false, message: 'Error finding user in database'})
+
+
+        flyers.update({email : req.decoded.email}, {$addToSet:{'collected' : req.body.flyer}})
+        return res.json({ success: true, message: 'Collected flyer' })
+    })
+  })
+	//return res.json({ success: true, message: "test" })
+}
+
+var getuser = function ( req, res ) {
+  if (!req.body.email)
+    return res.json({ success: false, message: 'Insufficient information' })
+
+    MongoClient.connect(MongoURL, function(err, db) {
+      var flyers = db.collection('users')
+
+      //console.log(req.body.flyer)
+
+      flyers.find( { email : req.body.email}).toArray(function(err, result) {
+        if (err)
+          return res.json({ success: false, message: 'Error finding flyer in database'})
+
+          console.log(result)
+
+        return res.json({result})
+      })
+    })
+
+}
+
 var getflyers = function ( req, res ) {
   //if (!req.body.start || !req.body.end)  WE WILL NEED THIS WHEN WE ADD FILTERS : TO KNOW
   //  return res.json({ success: false, message: 'Insufficient information' })
@@ -140,7 +180,9 @@ var functions = {
   create: create,
   flag: flag,
   getinfo: getinfo,
-  getflyers: getflyers
+  getflyers: getflyers,
+  getuser: getuser,
+  collect: collect
 }
 
 module.exports = functions

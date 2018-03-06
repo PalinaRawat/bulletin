@@ -19,5 +19,7 @@ router.post('/flagflyer', flyer.flag)
 router.post('/getflyerinfo', flyer.getinfo)
 router.post('/getflyers', flyer.getflyers)
 router.post('/change', auth.change)
+router.post('/getuserinfo', flyer.getuser)
+
 
 module.exports = router
