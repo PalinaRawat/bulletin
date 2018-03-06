@@ -77,7 +77,6 @@
           <option value="Day">Day</option>
           <option value="Week">Week</option>
           <option value="Month">Month</option>
-          <option value="Collected">Collected</option>
         </select>
         <button style="display:inline-block" v-on:click="updateFilter">Confirm</button>
 
@@ -86,42 +85,42 @@
     <div id="columns">
       <!-- title1 is set in getFlyerImage to the corresponding title -->
       <figure>
-        <button v-on:click="saveFlyer(0)">Save</button>
-        <input type="submit" v-on:click="click" value="Flag">
-        <input type="button" v-on:click="get_info(1)" value="More information">
+        <input type="button" v-on:click="saveFlyer(0)" value="Save">
+        <input type="submit" v-on:click="delete_flyer(0)" value="Flag">
+        <input type="button" v-on:click="get_info(0)" value="More information">
         <img :src="getFlyerImage(0)">
         <figcaption>{{title1}}</figcaption>
       </figure>
       <figure>
-        <button v-on:click="saveFlyer(1)">Save</button>
+        <input type="button" v-on:click="saveFlyer(1)" value="Save">
         <input type="submit" v-on:click="delete_flyer(1)" value="Flag">
         <input type="button" v-on:click="get_info(1)" value="More information">
         <img :src="getFlyerImage(1)">
         <figcaption>{{title1}}</figcaption>
       </figure>
       <figure>
-        <button v-on:click="saveFlyer(2)">Save</button>
+        <input type="button" v-on:click="saveFlyer(2)" value="Save">
         <input type="submit" v-on:click="delete_flyer(1)" value="Flag">
         <input type="button" v-on:click="get_info(1)" value="More information">
         <img :src="getFlyerImage(2)">
         <figcaption>{{title1}}</figcaption>
       </figure>
       <figure>
-        <button v-on:click="saveFlyer(3)">Save</button>
+        <input type="button" v-on:click="saveFlyer(3)" value="Save">
         <input type="submit" v-on:click="delete_flyer(1)" value="Flag">
         <input type="button" v-on:click="get_info(1)" value="More information">
         <img :src="getFlyerImage(3)">
         <figcaption>{{title1}}</figcaption>
       </figure>
       <figure>
-        <button v-on:click="saveFlyer(4)">Save</button>
+        <input type="button" v-on:click="saveFlyer(4)" value="Save">
         <input type="submit" v-on:click="delete_flyer(1)" value="Flag">
         <input type="button" v-on:click="get_info(1)" value="More information">
         <img :src="getFlyerImage(4)">
         <figcaption>{{title1}}</figcaption>
       </figure>
       <figure>
-        <button v-on:click="saveFlyer(5)">Save</button>
+        <input type="button" v-on:click="saveFlyer(5)" value="Save">
         <input type="submit" v-on:click="delete_flyer(1)" value="Flag">
         <input type="button" v-on:click="get_info(1)" value="More information">
         <img :src="getFlyerImage(5)">
@@ -129,7 +128,7 @@
       </figure>
 
       <figure>
-        <button v-on:click="saveFlyer(6)">Save</button>
+        <input type="button" v-on:click="saveFlyer(6)" value="Save">
         <input type="submit" v-on:click="delete_flyer(1)" value="Flag">
         <input type="button" v-on:click="get_info(1)" value="More information">
         <img :src="getFlyerImage(6)">
@@ -137,7 +136,7 @@
       </figure>
 
       <figure>
-        <button v-on:click="saveFlyer(7)">Save</button>
+        <input type="button" v-on:click="saveFlyer(7)" value="Save">
         <input type="submit" v-on:click="delete_flyer(1)" value="Flag">
         <input type="button" v-on:click="get_info(1)" value="More information">
         <img :src="getFlyerImage(7)">
@@ -145,7 +144,7 @@
       </figure>
 
       <figure>
-        <button v-on:click="saveFlyer(8)">Save</button>
+        <input type="button" v-on:click="saveFlyer(8)" value="Save">
         <input type="submit" v-on:click="delete_flyer(1)" value="Flag">
         <input type="button" v-on:click="get_info(1)" value="More information">
         <img :src="getFlyerImage(8)">
@@ -153,8 +152,8 @@
       </figure>
 
       <figure>
-        <button v-on:click="saveFlyer(9)">Save</button>
-        <input type="submit" v-on:click="delete_flyer(1)" value="Delete">
+        <input type="button" v-on:click="saveFlyer(9)" value="Save">
+        <input type="submit" v-on:click="delete_flyer(1)" value="Flag">
         <input type="button" v-on:click="get_info(1)" value="More information">
         <img :src="getFlyerImage(9)">
         <figcaption>{{title1}}</figcaption>
@@ -284,6 +283,10 @@ export default {
     },
     delete_flyer (pos) {
       const context = this
+      if (context.counter + pos >= context.len) {
+        console.log('cannot flag empty flyer')
+        return
+      }
       var url = 'http://localhost:5000/flagflyer?'
       url = url + '&flyer=' + context.listOfFlyers[pos]._id
       console.log(context.listOfFlyers[pos]._id)
@@ -302,6 +305,10 @@ export default {
     },
     get_info (pos) {
       const context = this
+      if (context.counter + pos >= context.len) {
+        console.log('cannot view empty flyer')
+        return
+      }
       var url = 'http://localhost:5000/getflyerinfo?&flyer=' + context.listOfFlyers[pos]._id
       const axiosConfig = {
         headers: {
@@ -318,14 +325,7 @@ export default {
         })
     },
     click () {
-      // var token = localStorage.getItem('token', null)
       var url = 'http://localhost:5000/createflyer?'
-      const axiosConfig = {
-        headers: {
-          token: localStorage.getItem('token')
-        }
-      }
-
       var title = document.querySelector('input[name=title]').value
       var description = document.querySelector('input[name=description]').value
       var image = document.querySelector('input[name=image]').value
@@ -364,6 +364,11 @@ export default {
     saveFlyer (pos) {
       const context = this
       context.counter = parseInt(sessionStorage.getItem('flyerCount'))
+      if (context.counter + pos >= context.len) {
+        console.log('cannot save empty flyer')
+        return
+      }
+      document.getElementById('saveBtn').value = 'saved'
       var flyer = context.listOfFlyers[context.counter + pos]
       var id = flyer._id
       const axiosConfig = {
@@ -372,7 +377,7 @@ export default {
         }
       }
       var url = 'http://localhost:5000/collect?flyer=' + id
-      axios.post(url)
+      axios.post(url, this.credentials, axiosConfig)
         .then(function (response) {
           console.log(response)
         })
