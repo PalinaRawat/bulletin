@@ -10,6 +10,17 @@
     <div>
       <input type="password" v-model="credentials.password" placeholder="Password" name="psw"/>
     </div>
+    <div>
+      <select type="securityq" v-model="credentials.securityq" placeholder="Select Secutiry Question" name="security-question">
+        <option disabled value="">Please select one</option>
+        <option>What is your mother's maiden name?</option>
+        <option>What was the make of your first car?</option>
+        <option>What was the name of your first pet?</option>
+      </select>
+    </div>
+    <div>
+      <input type="securitya" v-model="credentials.securitya" placeholder="Answer" name="security_answer"/>
+    </div>
     <button v-on:click="signup">
       Signup
     </button>
@@ -30,7 +41,9 @@ export default {
       message: '',
       credentials: {
         email: '',
-        password: ''
+        password: '',
+        securityq: '',
+        securitya: ''
       },
       success: false
     }
@@ -42,7 +55,8 @@ export default {
         if (res.data.success) {
           context.message = 'Successfully signed up!'
           context.success = true
-          localStorage.setItem('token', res.data.token)
+          var token = res.data.token
+          localStorage.setItem('token', token)
         } else {
           context.message = res.data.message
         }
