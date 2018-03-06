@@ -68,40 +68,59 @@
         </form>
       </div>
     </modal>
+    <div id="filterDiv">
+        <p style="display:block">Filter by: {{filter}}</p>
+        <p style="display:inline-block">Collected only</p>
+        <input id="collectedBox" type="checkbox" style="display:inline-block"/>
+        <select style="display:inline-block" name ="selectFilter" v-model="filter">
+          <option value="All" selected>All</option>
+          <option value="Day">Day</option>
+          <option value="Week">Week</option>
+          <option value="Month">Month</option>
+        </select>
+        <button style="display:inline-block" v-on:click="updateFilter">Confirm</button>
+
+    </div>
 
     <div id="columns">
       <!-- title1 is set in getFlyerImage to the corresponding title -->
       <figure>
-        <input type="submit" v-on:click="click" value="Flag">
-        <input type="button" v-on:click="get_info(1)" value="More information">
+        <input type="button" v-on:click="saveFlyer(0)" value="Save">
+        <input type="submit" v-on:click="delete_flyer(0)" value="Flag">
+        <input type="button" v-on:click="get_info(0)" value="More information">
         <img :src="getFlyerImage(0)">
         <figcaption>{{title1}}</figcaption>
       </figure>
       <figure>
+        <input type="button" v-on:click="saveFlyer(1)" value="Save">
         <input type="submit" v-on:click="delete_flyer(1)" value="Flag">
         <input type="button" v-on:click="get_info(1)" value="More information">
         <img :src="getFlyerImage(1)">
         <figcaption>{{title1}}</figcaption>
       </figure>
       <figure>
+        <input type="button" v-on:click="saveFlyer(2)" value="Save">
         <input type="submit" v-on:click="delete_flyer(1)" value="Flag">
         <input type="button" v-on:click="get_info(1)" value="More information">
         <img :src="getFlyerImage(2)">
         <figcaption>{{title1}}</figcaption>
       </figure>
       <figure>
+        <input type="button" v-on:click="saveFlyer(3)" value="Save">
         <input type="submit" v-on:click="delete_flyer(1)" value="Flag">
         <input type="button" v-on:click="get_info(1)" value="More information">
         <img :src="getFlyerImage(3)">
         <figcaption>{{title1}}</figcaption>
       </figure>
       <figure>
+        <input type="button" v-on:click="saveFlyer(4)" value="Save">
         <input type="submit" v-on:click="delete_flyer(1)" value="Flag">
         <input type="button" v-on:click="get_info(1)" value="More information">
         <img :src="getFlyerImage(4)">
         <figcaption>{{title1}}</figcaption>
       </figure>
       <figure>
+        <input type="button" v-on:click="saveFlyer(5)" value="Save">
         <input type="submit" v-on:click="delete_flyer(1)" value="Flag">
         <input type="button" v-on:click="get_info(1)" value="More information">
         <img :src="getFlyerImage(5)">
@@ -109,6 +128,7 @@
       </figure>
 
       <figure>
+        <input type="button" v-on:click="saveFlyer(6)" value="Save">
         <input type="submit" v-on:click="delete_flyer(1)" value="Flag">
         <input type="button" v-on:click="get_info(1)" value="More information">
         <img :src="getFlyerImage(6)">
@@ -116,6 +136,7 @@
       </figure>
 
       <figure>
+        <input type="button" v-on:click="saveFlyer(7)" value="Save">
         <input type="submit" v-on:click="delete_flyer(1)" value="Flag">
         <input type="button" v-on:click="get_info(1)" value="More information">
         <img :src="getFlyerImage(7)">
@@ -123,6 +144,7 @@
       </figure>
 
       <figure>
+        <input type="button" v-on:click="saveFlyer(8)" value="Save">
         <input type="submit" v-on:click="delete_flyer(1)" value="Flag">
         <input type="button" v-on:click="get_info(1)" value="More information">
         <img :src="getFlyerImage(8)">
@@ -130,7 +152,8 @@
       </figure>
 
       <figure>
-        <input type="submit" v-on:click="delete_flyer(1)" value="Delete">
+        <input type="button" v-on:click="saveFlyer(9)" value="Save">
+        <input type="submit" v-on:click="delete_flyer(1)" value="Flag">
         <input type="button" v-on:click="get_info(1)" value="More information">
         <img :src="getFlyerImage(9)">
         <figcaption>{{title1}}</figcaption>
@@ -152,6 +175,7 @@ import axios from 'axios'
 export default {
   showModal: false,
   name: 'Welcome',
+  filter: 'all',
   data () {
     return {
       msg: 'Home Page',
@@ -176,13 +200,35 @@ export default {
     },
     getflyers () {
       const context = this
-      context.message = 'yoo'
+      var collected = false
+      context.filter = sessionStorage.getItem('filter')
+      var collectedStr = sessionStorage.getItem('collected')
+      if (collectedStr === 'true') {
+        collected = true
+      }
+      console.log('collected? ' + collected)
+      console.log('current filter: ' + context.filter)
+      var dateObj = new Date()
+      var end = new Date()
+      if (context.filter === 'All') {
+        console.log('print all')
+        end.setFullYear(dateObj.getFullYear() + 1)
+      } else if (context.filter === 'Day') {
+        console.log('filter by day')
+      } else if (context.filter === 'Week') {
+        end.setDate(dateObj.getDate() + 7)
+        console.log('filter by week')
+      } else if (context.filter === 'Month') {
+        end.setMonth(dateObj.getMonth() + 1)
+      }
+      console.log('start date: ' + dateObj)
+      console.log('end date: ' + end)
       const axiosConfig = {
         headers: {
           token: localStorage.getItem('token')
         }
       }
-      axios.post(`http://localhost:5000/getflyers`, this.credentials, axiosConfig).then(res => {
+      axios.post('http://localhost:5000/getflyers?collected' + collected + '&startdate=' + dateObj + '&enddate=' + end, this.credentials, axiosConfig).then(res => {
         context.listOfFlyers = res.data.flyers
         context.len = res.data.flyers.length
         console.log('Total flyer #: ' + res.data.flyers.length)
@@ -218,6 +264,10 @@ export default {
     },
     nextPage () {
       const context = this
+      if (context.counter + 10 > context.len) {
+        console.log('end of flyers')
+        return
+      }
       context.counter = parseInt(sessionStorage.getItem('flyerCount')) + 10
       sessionStorage.setItem('flyerCount', context.counter)
       location.reload()
@@ -233,6 +283,10 @@ export default {
     },
     delete_flyer (pos) {
       const context = this
+      if (context.counter + pos >= context.len) {
+        console.log('cannot flag empty flyer')
+        return
+      }
       var url = 'http://localhost:5000/flagflyer?'
       url = url + '&flyer=' + context.listOfFlyers[pos]._id
       console.log(context.listOfFlyers[pos]._id)
@@ -251,6 +305,10 @@ export default {
     },
     get_info (pos) {
       const context = this
+      if (context.counter + pos >= context.len) {
+        console.log('cannot view empty flyer')
+        return
+      }
       var url = 'http://localhost:5000/getflyerinfo?&flyer=' + context.listOfFlyers[pos]._id
       const axiosConfig = {
         headers: {
@@ -302,6 +360,42 @@ export default {
           })
         this.showModal = false
       }
+    },
+    saveFlyer (pos) {
+      const context = this
+      context.counter = parseInt(sessionStorage.getItem('flyerCount'))
+      if (context.counter + pos >= context.len) {
+        console.log('cannot save empty flyer')
+        return
+      }
+      document.getElementById('saveBtn').value = 'saved'
+      var flyer = context.listOfFlyers[context.counter + pos]
+      var id = flyer._id
+      const axiosConfig = {
+        headers: {
+          token: localStorage.getItem('token')
+        }
+      }
+      var url = 'http://localhost:5000/collect?flyer=' + id
+      axios.post(url, this.credentials, axiosConfig)
+        .then(function (response) {
+          console.log(response)
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
+    },
+    updateFilter () {
+      const context = this
+      sessionStorage.setItem('filter', context.filter)
+      var x = document.getElementById('collectedBox').checked
+      if (x === true) {
+        sessionStorage.setItem('collected', 'true')
+      } else {
+        sessionStorage.setItem('collected', 'false')
+      }
+      console.log(context.filter)
+      location.reload()
     }
   }
 }
