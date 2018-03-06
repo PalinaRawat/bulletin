@@ -1,0 +1,117 @@
+html, body {
+  height: 100%;
+  width: 100%;
+}
+h1, h2 {
+  font-size: 2em;
+}
+a {
+  color: #42b983;
+}
+figure {
+  display: block;
+  border: 100px;
+  border-color: darkgrey
+}
+.topnav {
+    overflow: hidden;
+    background-color: #e9e9e9;
+    margin-top: -60px;
+    padding: 0px;
+    list-style-type: none;
+}
+.topnav a {
+    float: left;
+    display: block;
+    color: black;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 17px;
+}
+.home {
+  font-family: Calluna, Arial, sans-serif;
+  background-size: cover;
+  color: black;
+  height: 100%;
+  width: 100%;
+}
+img {
+  height: 4%;
+  width: 4%;
+}
+.modal-content {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+}
+#columns {
+  column-width: 320px;
+  column-gap: 15px;
+  width: 90%;
+  max-width: 1500px;
+  margin: 50px auto;
+  column-fill: balance;
+}
+div#columns figure {
+  /*
+    background below changes the color inside each flyer box
+  */
+  background: rgba(23, 137, 222, 1);
+  border: 2px solid #fcfcfc;
+  box-shadow: 0 1px 2px rgba(34, 25, 25, 0.4);
+  margin: 0 2px 15px;
+  padding: 15px;
+  column-fill: balance;
+  padding-bottom: 10px;
+  display: inline-block;
+  column-break-inside: avoid;
+}
+div#columns figure img {
+  width: 100%; height: auto;
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 15px;
+  margin-bottom: 5px;
+}
+div#columns figure p {
+  font-size: .9rem;
+  color: #444;
+  line-height: 1.5;
+}
+div#columns small {
+  font-size: 1rem;
+  float: right;
+  text-transform: uppercase;
+  color: #aaa;
+}
+div#columns small a {
+  color: #666;
+  text-decoration: none;
+  transition: .4s color;
+}
+div#columns:hover figure:not(:hover) {
+}
+@media screen and (max-width: 750px) {
+  #columns { column-gap: 0px; }
+  #columns figure { width: 100%; }
+}
+.modal-content {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+}
+input[type=submit] {
+    padding:2px;
+    background-color: red;
+    border-radius: 5px;
+}
+input[type=button] {
+    padding:2px;
+    background-color: #4CAF50;
+    border-radius: 5px;
+}
+
