@@ -166,12 +166,7 @@ export default {
       const axiosConfig = {
         headers: {
           token: localStorage.getItem('token')
-        },
-        body: {
-          startdate: dateObj,
-          enddate: end
         }
-
       }
       axios.post('http://localhost:5000/getflyers?collected' + collected + '&startdate=' + dateObj + '&enddate=' + end, this.credentials, axiosConfig).then(res => {
         context.listOfFlyers = res.data.flyers
@@ -228,6 +223,11 @@ export default {
     click () {
       // var token = localStorage.getItem('token', null)
       var url = 'http://localhost:5000/create?'
+      const axiosConfig = {
+        headers: {
+          token: localStorage.getItem('token')
+        }
+      }
       var title = document.querySelector('input[name=title]').value
       var description = document.querySelector('input[name=description]').value
       var imageurl = document.querySelector('input[name=imageurl]').value
@@ -254,8 +254,12 @@ export default {
       context.counter = parseInt(sessionStorage.getItem('flyerCount'))
       var flyer = context.listOfFlyers[context.counter + pos]
       var id = flyer._id
-      var auth = localStorage.getItem('auth', null)
-      var url = 'http://localhost:8000/collect?auth=' + auth + 'flyer=' + id
+      const axiosConfig = {
+        headers: {
+          token: localStorage.getItem('token')
+        }
+      }
+      var url = 'http://localhost:5000/collect?flyer=' + id
       axios.post(url)
         .then(function (response) {
           console.log(response)
