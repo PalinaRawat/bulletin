@@ -4,6 +4,7 @@
    <div class="topnav">
       <router-link class="active" to="/home" tag="a">Home</router-link>
       <router-link class="active" to="/settings" tag="a">Settings</router-link>
+      <router-link to="/" @click.native="logout">Logout</router-link>
        <button id="show-modal" @click="showModal = true">Create a flyer</button>
       <img src="../assets/icon.svg">
     </div>
@@ -112,6 +113,10 @@ export default {
     this.getflyers()
   },
   methods: {
+    logout () {
+      console.log('I am logging out')
+      localStorage.removeItem('token')
+    },
     getflyers () {
       const context = this
       context.message = 'yoo'
