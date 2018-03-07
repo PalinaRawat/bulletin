@@ -11,6 +11,7 @@ router.use(multer({ dest: 'tmp/'}).single('image'))
 router.post('/signup', auth.signup)
 router.post('/login', auth.login)
 router.post('/reset', auth.reset)
+router.post('/checkUser', auth.checkUser)
 
 ////// PROTECTED ROUTES //////
 router.use(auth.authenticate)

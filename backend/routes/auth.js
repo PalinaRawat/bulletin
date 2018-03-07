@@ -6,12 +6,31 @@ var jwt					= require('jsonwebtoken')
 var jwtsecret = process.env.JWTSECRET
 var nodemailer = require('nodemailer');
 
+var checkUser = function ( req, res ) {
+
+	console.log('\n\nCheck User has been called!');
+
+	if(!req.body.email)
+		return res.json({ success: false, message: "Insufficient Information" })
+
+	MongoClient.connect(MongoURL, function(err, db) {
+		var users = db.collection('users')
+		users.find({ email: req.body.email }).toArray(function(err, result) {
+			if (err)
+				return res.json({ success: false, message: 'Error connecting to database' })
+			if (result.length === 0)
+				return res.json({ success: false, message: 'Invalid login information' })
+			if (result.length)
+				return res.json({ success: true, message: 'Please answer your Security Quetion', question: result[0].question })
+		})
+	})
+}
 
 // validates and creates a new account
 var signup = function ( req, res ) {
 
 	//Check to make sure email and password are included
-	if (!req.body.email || !req.body.password)
+	if (!req.body.email || !req.body.password ||  !req.body.securitya || !req.body.securityq)
 		return res.json({ success: false, message: "Insufficient Information" })
 	//Check to make sure that email ends with @purdue.edu
 	if (!req.body.email.endsWith('@purdue.edu'))
@@ -42,7 +61,9 @@ var signup = function ( req, res ) {
 						email: req.body.email,
 						password: hash,
 						verified: false,
-						created: new Date()
+						created: new Date(),
+						question: req.body.securityq,
+						answer: req.body.securitya,
 					}
 
 					users.insert(user, function ( err, db ) {
@@ -97,66 +118,38 @@ var login = function ( req, res ) {
 
 // validates current password and resets it to new password
 var reset = function ( req, res ) {
+
+	console.log('\n\nReset has been called!');
+
 	if (!req.body.email)
 		return res.json({ success: false, message: 'Insufficient login information' })
-
-	// if (req.body.newPassword.length < 8)
-	// 	return res.json({ success: false, message: 'New Password is too short' })
-  //
-	// if (req.body.newPassword !== req.body.confirmPassword)
-	// 	return res.json({ success: false, message: 'New Passwords Do Not Match' })
 
 	MongoClient.connect(MongoURL, function(err, db) {
 		var users = db.collection('users')
 		users.find({ email: req.body.email }).toArray(function(err, result) {
+			console.log('result.answer: ');
+			console.log(result[0].answer);
+			console.log('\nreq.body.answer: ');
+			console.log(req.body.answer);
 			if (err)
 				return res.json({ success: false, message: 'Error connecting to database' })
 			if (result.length === 0)
 				return res.json({ success: false, message: 'Invalid login information' })
 
-			let transporter = nodemailer.createTransport({
-	      host: 'smtp.office365.com',
-	      port: '587',
-	      secure: false,
-	      auth: {
-	          user: 'bulletin.purdue@gmail.com',
-	          pass: 'purdue.bulletin'
-	      },
-				tls: {
-            ciphers: 'SSLv3'
-						// rejectUnauthorized: false
-        }
-				// requireTLS: true
-      })
+			if (result[0].answer !== req.body.answer)
+				return res.json({ success: false, message: 'Incorrect Answer' })
+
 			//New randomized password
 			const newPassword = Math.random().toString(36).slice(-8)
 
-      let mailOptions = {
-          from: '"Bulletin" <bulletin.purdue@gmail.com>', // sender address
-          to: req.body.email, // list of receivers
-          subject: 'Reset Password', // Subject line
-          text: 'your new password is ' + newPassword, // plain text body
-          html: '<b>' + newPassword + '</b><br/><p>Reset password once logged into account!</p>' // html body
-      }
+			bcrypt.hash(newPassword, 10, function(err, hash) {
+				if (err)
+					return res.json({ success: false, message: 'Error encrypting password' })
 
-      transporter.sendMail(mailOptions, (error, info) => {
-        if (error) {
-						console.log(error);
-            return res.json({ success: false, message: 'Error e-mailing new password' });
-        }
-        console.log('Message %s sent: %s', info.messageId, info.response);
-
-				bcrypt.hash(newPassword, 10, function(err, hash) {
-					if (err)
-						return res.json({ success: false, message: 'Error encrypting password' })
-
-						users.findOneAndUpdate( { email: req.body.email }, { $set: { password: hash } }, function (err, result2) {
-							return res.json({ success: true, message: 'Successfully Changed Password!'});
-						})
-				})
-
-        return res.json({ success: false, message: 'Successfully Reset Password' });
-      })
+					users.findOneAndUpdate( { email: req.body.email }, { $set: { password: hash } }, function (err, result2) {
+						return res.json({ success: true, message: 'Password Successfully Changed to: ' + newPassword })
+					})
+			})
 
 		})
 	})
@@ -218,7 +211,8 @@ var functions = {
 	login: login,
 	authenticate: authenticate,
 	reset: reset,
-	change: change
+	change: change,
+	checkUser: checkUser
 }
 
 module.exports = functions
