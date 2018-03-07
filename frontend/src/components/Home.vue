@@ -1,10 +1,10 @@
-/*global click title:true*/
 <template>
   <div class="home">
    <div class="topnav">
       <router-link class="active" to="/home" tag="a">Home</router-link>
       <router-link class="active" to="/settings" tag="a">Settings</router-link>
-      <button id="show-modal" @click="showModal = true">Create a flyer</button>
+      <router-link to="/" @click.native="logout">Logout</router-link>
+       <button id="show-modal" @click="showModal = true">Create a flyer</button>
       <img src="../assets/icon.svg">
     </div>
 
@@ -68,40 +68,59 @@
         </form>
       </div>
     </modal>
+    <div id="filterDiv">
+        <p style="display:block">Filter by: {{filter}}</p>
+        <p style="display:inline-block">Collected only</p>
+        <input id="collectedBox" type="checkbox" style="display:inline-block"/>
+        <select style="display:inline-block" name ="selectFilter" v-model="filter">
+          <option value="All" selected>All</option>
+          <option value="Day">Day</option>
+          <option value="Week">Week</option>
+          <option value="Month">Month</option>
+        </select>
+        <button style="display:inline-block" v-on:click="updateFilter">Confirm</button>
+
+    </div>
 
     <div id="columns">
       <!-- title1 is set in getFlyerImage to the corresponding title -->
       <figure>
-        <input type="submit" v-on:click="click" value="Flag">
-        <input type="button" v-on:click="get_info(1)" value="More information">
+        <input type="button" v-on:click="saveFlyer(0)" value="Save">
+        <input type="submit" v-on:click="delete_flyer(0)" value="Flag">
+        <input type="button" v-on:click="get_info(0)" value="More information">
         <img :src="getFlyerImage(0)">
         <figcaption>{{title1}}</figcaption>
       </figure>
       <figure>
+        <input type="button" v-on:click="saveFlyer(1)" value="Save">
         <input type="submit" v-on:click="delete_flyer(1)" value="Flag">
         <input type="button" v-on:click="get_info(1)" value="More information">
         <img :src="getFlyerImage(1)">
         <figcaption>{{title1}}</figcaption>
       </figure>
       <figure>
+        <input type="button" v-on:click="saveFlyer(2)" value="Save">
         <input type="submit" v-on:click="delete_flyer(1)" value="Flag">
         <input type="button" v-on:click="get_info(1)" value="More information">
         <img :src="getFlyerImage(2)">
         <figcaption>{{title1}}</figcaption>
       </figure>
       <figure>
+        <input type="button" v-on:click="saveFlyer(3)" value="Save">
         <input type="submit" v-on:click="delete_flyer(1)" value="Flag">
         <input type="button" v-on:click="get_info(1)" value="More information">
         <img :src="getFlyerImage(3)">
         <figcaption>{{title1}}</figcaption>
       </figure>
       <figure>
+        <input type="button" v-on:click="saveFlyer(4)" value="Save">
         <input type="submit" v-on:click="delete_flyer(1)" value="Flag">
         <input type="button" v-on:click="get_info(1)" value="More information">
         <img :src="getFlyerImage(4)">
         <figcaption>{{title1}}</figcaption>
       </figure>
       <figure>
+        <input type="button" v-on:click="saveFlyer(5)" value="Save">
         <input type="submit" v-on:click="delete_flyer(1)" value="Flag">
         <input type="button" v-on:click="get_info(1)" value="More information">
         <img :src="getFlyerImage(5)">
@@ -109,6 +128,7 @@
       </figure>
 
       <figure>
+        <input type="button" v-on:click="saveFlyer(6)" value="Save">
         <input type="submit" v-on:click="delete_flyer(1)" value="Flag">
         <input type="button" v-on:click="get_info(1)" value="More information">
         <img :src="getFlyerImage(6)">
@@ -116,6 +136,7 @@
       </figure>
 
       <figure>
+        <input type="button" v-on:click="saveFlyer(7)" value="Save">
         <input type="submit" v-on:click="delete_flyer(1)" value="Flag">
         <input type="button" v-on:click="get_info(1)" value="More information">
         <img :src="getFlyerImage(7)">
@@ -123,6 +144,7 @@
       </figure>
 
       <figure>
+        <input type="button" v-on:click="saveFlyer(8)" value="Save">
         <input type="submit" v-on:click="delete_flyer(1)" value="Flag">
         <input type="button" v-on:click="get_info(1)" value="More information">
         <img :src="getFlyerImage(8)">
@@ -130,7 +152,8 @@
       </figure>
 
       <figure>
-        <input type="submit" v-on:click="delete_flyer(1)" value="Delete">
+        <input type="button" v-on:click="saveFlyer(9)" value="Save">
+        <input type="submit" v-on:click="delete_flyer(1)" value="Flag">
         <input type="button" v-on:click="get_info(1)" value="More information">
         <img :src="getFlyerImage(9)">
         <figcaption>{{title1}}</figcaption>
@@ -153,6 +176,7 @@ import axios from 'axios'
 export default {
   showModal: false,
   name: 'Welcome',
+  filter: 'all',
   data () {
     return {
       msg: 'Home Page',
@@ -168,10 +192,15 @@ export default {
     this.getflyers()
   },
   methods: {
+    logout () {
+      console.log('I am logging out')
+      localStorage.removeItem('token')
+    },
     handleFileUpload () {
       this.file = this.$refs.file.files[0]
     },
     getflyers () {
+<<<<<<< HEAD
       axios.defaults.headers.common['token'] = localStorage.getItem('token')
       const body = new FormData()
       body.append('startdate', 0)
@@ -183,6 +212,42 @@ export default {
         }
         this.listOfFlyers = res.data.flyers
         this.items.push({ flyers: res.data.flyers })
+=======
+      const context = this
+      var collected = false
+      context.filter = sessionStorage.getItem('filter')
+      var collectedStr = sessionStorage.getItem('collected')
+      if (collectedStr === 'true') {
+        collected = true
+      }
+      console.log('collected? ' + collected)
+      console.log('current filter: ' + context.filter)
+      var dateObj = new Date()
+      var end = new Date()
+      if (context.filter === 'All') {
+        console.log('print all')
+        end.setFullYear(dateObj.getFullYear() + 1)
+      } else if (context.filter === 'Day') {
+        console.log('filter by day')
+      } else if (context.filter === 'Week') {
+        end.setDate(dateObj.getDate() + 7)
+        console.log('filter by week')
+      } else if (context.filter === 'Month') {
+        end.setMonth(dateObj.getMonth() + 1)
+      }
+      console.log('start date: ' + dateObj)
+      console.log('end date: ' + end)
+      const axiosConfig = {
+        headers: {
+          token: localStorage.getItem('token')
+        }
+      }
+      axios.post('http://localhost:5000/getflyers?collected' + collected + '&startdate=' + dateObj + '&enddate=' + end, this.credentials, axiosConfig).then(res => {
+        context.listOfFlyers = res.data.flyers
+        context.len = res.data.flyers.length
+        console.log('Total flyer #: ' + res.data.flyers.length)
+        console.log('here')
+>>>>>>> master
       })
         .catch(function (error) {
           console.log(error)
@@ -215,6 +280,10 @@ export default {
     },
     nextPage () {
       const context = this
+      if (context.counter + 10 > context.len) {
+        console.log('end of flyers')
+        return
+      }
       context.counter = parseInt(sessionStorage.getItem('flyerCount')) + 10
       sessionStorage.setItem('flyerCount', context.counter)
       location.reload()
@@ -230,6 +299,10 @@ export default {
     },
     delete_flyer (pos) {
       const context = this
+      if (context.counter + pos >= context.len) {
+        console.log('cannot flag empty flyer')
+        return
+      }
       var url = 'http://localhost:5000/flagflyer?'
       url = url + '&flyer=' + context.listOfFlyers[pos]._id
       console.log(context.listOfFlyers[pos]._id)
@@ -248,6 +321,10 @@ export default {
     },
     get_info (pos) {
       const context = this
+      if (context.counter + pos >= context.len) {
+        console.log('cannot view empty flyer')
+        return
+      }
       var url = 'http://localhost:5000/getflyerinfo?&flyer=' + context.listOfFlyers[pos]._id
       const axiosConfig = {
         headers: {
@@ -299,127 +376,47 @@ export default {
           })
         this.showModal = false
       }
+    },
+    saveFlyer (pos) {
+      const context = this
+      context.counter = parseInt(sessionStorage.getItem('flyerCount'))
+      if (context.counter + pos >= context.len) {
+        console.log('cannot save empty flyer')
+        return
+      }
+      document.getElementById('saveBtn').value = 'saved'
+      var flyer = context.listOfFlyers[context.counter + pos]
+      var id = flyer._id
+      const axiosConfig = {
+        headers: {
+          token: localStorage.getItem('token')
+        }
+      }
+      var url = 'http://localhost:5000/collect?flyer=' + id
+      axios.post(url, this.credentials, axiosConfig)
+        .then(function (response) {
+          console.log(response)
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
+    },
+    updateFilter () {
+      const context = this
+      sessionStorage.setItem('filter', context.filter)
+      var x = document.getElementById('collectedBox').checked
+      if (x === true) {
+        sessionStorage.setItem('collected', 'true')
+      } else {
+        sessionStorage.setItem('collected', 'false')
+      }
+      console.log(context.filter)
+      location.reload()
     }
   }
 }
 </script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-html, body {
-  height: 100%;
-  width: 100%;
-}
-h1, h2 {
-  font-size: 2em;
-}
-a {
-  color: #42b983;
-}
-figure {
-  display: block;
-  border: 100px;
-  border-color: darkgrey
-}
-.topnav {
-    overflow: hidden;
-    background-color: #e9e9e9;
-    margin-top: -60px;
-    padding: 0px;
-    list-style-type: none;
-}
-.topnav a {
-    float: left;
-    display: block;
-    color: black;
-    text-align: center;
-    padding: 14px 16px;
-    text-decoration: none;
-    font-size: 17px;
-}
-.home {
-  font-family: Calluna, Arial, sans-serif;
-  background-size: cover;
-  color: black;
-  height: 100%;
-  width: 100%;
-}
-img {
-  height: 4%;
-  width: 4%;
-}
-.modal-content {
-    background-color: #fefefe;
-    margin: auto;
-    padding: 20px;
-    border: 1px solid #888;
-    width: 80%;
-}
-#columns {
-  column-width: 320px;
-  column-gap: 15px;
-  width: 90%;
-  max-width: 1500px;
-  margin: 50px auto;
-  column-fill: balance;
-}
-div#columns figure {
-  /*
-    background below changes the color inside each flyer box
-  */
-  background: rgba(23, 137, 222, 1);
-  border: 2px solid #fcfcfc;
-  box-shadow: 0 1px 2px rgba(34, 25, 25, 0.4);
-  margin: 0 2px 15px;
-  padding: 15px;
-  column-fill: balance;
-  padding-bottom: 10px;
-  display: inline-block;
-  column-break-inside: avoid;
-}
-div#columns figure img {
-  width: 100%; height: auto;
-  border-bottom: 1px solid #ccc;
-  padding-bottom: 15px;
-  margin-bottom: 5px;
-}
-div#columns figure p {
-  font-size: .9rem;
-  color: #444;
-  line-height: 1.5;
-}
-div#columns small {
-  font-size: 1rem;
-  float: right;
-  text-transform: uppercase;
-  color: #aaa;
-}
-div#columns small a {
-  color: #666;
-  text-decoration: none;
-  transition: .4s color;
-}
-div#columns:hover figure:not(:hover) {
-}
-@media screen and (max-width: 750px) {
-  #columns { column-gap: 0px; }
-  #columns figure { width: 100%; }
-}
-.modal-content {
-    background-color: #fefefe;
-    margin: auto;
-    padding: 20px;
-    border: 1px solid #888;
-    width: 80%;
-}
-input[type=submit] {
-    padding:2px;
-    background-color: red;
-    border-radius: 5px;
-}
-input[type=button] {
-    padding:2px;
-    background-color: #4CAF50;
-    border-radius: 5px;
-}
+<style lang="css">
+@import 'style.css';
 </style>
+<!-- Add "scoped" attribute to limit CSS to this component only -->

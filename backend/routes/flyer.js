@@ -181,9 +181,7 @@ var getinfo = function ( req, res ) {
 
 var getflyers = function ( req, res ) {
   //if (!req.body.start || !req.body.end)  WE WILL NEED THIS WHEN WE ADD FILTERS : TO KNOW
-  //  return res.json({ success: false, message: 'Insufficient information' })
-  console.log(req.body)
-  var startdate = new Date()
+  //  return res.json({ success: false, message: 'Insufficient information' })  var startdate = new Date()
   var enddate = new Date(new Date().setFullYear(new Date().getFullYear() + 1))
   var owner;
   if (req.body.startdate)
