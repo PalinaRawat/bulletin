@@ -22,41 +22,61 @@ var create = function ( req, res ) {
     var flyers = db.collection('flyers')
 
 
-    var bucket = gcs.bucket('bulletin');
-
-    bucket.upload(req.file.path, function(err, file) {
-      if (err) {
-        res.send({ success: false, message: err })
-        return;
-        //res.send({ success: true, message: "Image uploaded", image_url:  'http://storage.googleapis.com/bulletin/' + req.file.filename })
-      }
-      else {
-        fs.unlink(req.file.path, function(error) {
-          if (error) {
-            throw error;
-          }
-        });
-
-        var flyer = {
-          title: req.body.title,
-          description: req.body.description,
-          startdate: req.body.startdate,
-          enddate: req.body.enddate,
-    			flags: 0,
-          image_url: req.body.image_url,
-          //image_url: 'http://storage.googleapis.com/bulletin/' + req.file.filename,
-          owner: req.decoded.email
+    if (!req.body.image_url) {
+      var bucket = gcs.bucket('bulletinstorage');
+      bucket.upload(req.file.path, function(err, file) {
+        if (err) {
+          res.send({ success: false, message: "Error uploading: " + err })
+          return;
+          //res.send({ success: true, message: "Image uploaded", image_url:  'http://storage.googleapis.com/bulletin/' + req.file.filename })
         }
+        else {
+          fs.unlink(req.file.path, function(error) {
+            if (error) {
+              throw error;
+            }
+          });
 
-        flyers.insert(flyer, function(err, result) {
-          flyerid = result.ops[0];
+          var flyer = {
+            title: req.body.title,
+            description: req.body.description,
+            startdate: req.body.startdate,
+            enddate: req.body.enddate,
+      			flags: 0,
+            //image_url: req.body.image_url,
+            image_url: 'http://storage.googleapis.com/bulletinstorage/' + req.file.filename,
+            owner: req.decoded.email
+          }
 
-          if (err)
-            return res.json({ success: false, message: 'Error sending data to database'})
-          return res.json({ success: true, message: 'Created new flyer', flyer: flyerid})
-        })
+          flyers.insert(flyer, function(err, result) {
+            flyerid = result.ops[0];
+
+            if (err)
+              return res.json({ success: false, message: 'Error sending data to database'})
+            return res.json({ success: true, message: 'Created new flyer', flyer: flyerid})
+          })
+        }
+      })
+    } else {
+      var flyer = {
+        title: req.body.title,
+        description: req.body.description,
+        startdate: req.body.startdate,
+        enddate: req.body.enddate,
+        flags: 0,
+        image_url: req.body.image_url,
+        //image_url: 'http://storage.googleapis.com/bulletin/' + req.file.filename,
+        owner: req.decoded.email
       }
-    })
+
+      flyers.insert(flyer, function(err, result) {
+        flyerid = result.ops[0];
+
+        if (err)
+          return res.json({ success: false, message: 'Error sending data to database'})
+        return res.json({ success: true, message: 'Created new flyer', flyer: flyerid})
+      })
+    }
   })
 }
 
@@ -162,6 +182,7 @@ var getinfo = function ( req, res ) {
 var getflyers = function ( req, res ) {
   //if (!req.body.start || !req.body.end)  WE WILL NEED THIS WHEN WE ADD FILTERS : TO KNOW
   //  return res.json({ success: false, message: 'Insufficient information' })
+  console.log(req.body)
   var startdate = new Date()
   var enddate = new Date(new Date().setFullYear(new Date().getFullYear() + 1))
   var owner;
