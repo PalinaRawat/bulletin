@@ -19,6 +19,8 @@ var create = function ( req, res ) {
     return res.json({ success: false, message: 'Insufficient information' })
 
   MongoClient.connect(MongoURL, function(err, db) {
+    if (err)
+      return res.json({ success: false, message: 'Error connecting to database' })
     var flyers = db.collection('flyers')
 
 
@@ -85,6 +87,8 @@ var flag = function ( req, res ) {
     return res.json({ success: false, message: 'Insufficient information' })
 
   MongoClient.connect(MongoURL, function(err, db) {
+    if (err)
+      return res.json({ success: false, message: 'Error connecting to database' })
     var flyers = db.collection('flyers')
 
     flyers.findOne( {_id : new ObjectId(req.body.flyer)}, function(err, result) {
@@ -124,6 +128,8 @@ var collect = function ( req, res ) {
     return res.json({ success: false, message: 'Insufficient information' })
 
   MongoClient.connect(MongoURL, function(err, db) {
+    if (err)
+      return res.json({ success: false, message: 'Error connecting to database' })
     var flyers = db.collection('users')
 
     flyers.findOne( {email : req.decoded.email}, function(err, result) {
@@ -143,6 +149,8 @@ var getuser = function ( req, res ) {
     return res.json({ success: false, message: 'Insufficient information' })
 
     MongoClient.connect(MongoURL, function(err, db) {
+      if (err)
+				return res.json({ success: false, message: 'Error connecting to database' })
       var flyers = db.collection('users')
 
       //console.log(req.body.flyer)
@@ -164,6 +172,8 @@ var getinfo = function ( req, res ) {
     return res.json({ success: false, message: 'Insufficient information' })
 
     MongoClient.connect(MongoURL, function(err, db) {
+      if (err)
+				return res.json({ success: false, message: 'Error connecting to database' })
       var flyers = db.collection('flyers')
 
       //console.log(req.body.flyer)
@@ -191,6 +201,8 @@ var getflyers = function ( req, res ) {
 
 
   MongoClient.connect(MongoURL, function(err, db) {
+    if (err)
+      return res.json({ success: false, message: 'Error connecting to database' })
     var flyers = db.collection('flyers')
 
     flyers.find({startdate: {"$gte": req.body.startdate}, enddate: {"$lte": req.body.enddate}}).toArray(function (err, result) {
