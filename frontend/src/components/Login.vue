@@ -48,6 +48,7 @@ export default {
           context.message = 'Successfully logged in!'
           context.success = true
           localStorage.setItem('token', res.data.token)
+          axios.defaults.headers.common['token'] = res.data.token
           this.$router.push('home')
         } else {
           context.message = res.data.message

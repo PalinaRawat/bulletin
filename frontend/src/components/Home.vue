@@ -135,6 +135,7 @@
         <img :src="getFlyerImage(9)">
         <figcaption>{{title1}}</figcaption>
       </figure>
+
     </div>
     <div>
       <button v-on:click="prevPage">
@@ -171,20 +172,21 @@ export default {
       this.file = this.$refs.file.files[0]
     },
     getflyers () {
-      const context = this
-      context.message = 'yoo'
-      const axiosConfig = {
-        headers: {
-          token: localStorage.getItem('token')
+      axios.defaults.headers.common['token'] = localStorage.getItem('token')
+      const body = new FormData()
+      body.append('startdate', 0)
+      body.append('enddate', 1)
+      axios.post('http://localhost:5000/getflyers', body).then(res => {
+        console.log(res.data)
+        if (!res.data.success) {
+          throw new TypeError('Failed to receive flyers: ' + res.data.message)
         }
-      }
-      axios.post(`http://localhost:5000/getflyers`, this.credentials, axiosConfig).then(res => {
-        context.listOfFlyers = res.data.flyers
-        context.len = res.data.flyers.length
-        console.log('Total flyer #: ' + res.data.flyers.length)
+        this.listOfFlyers = res.data.flyers
+        this.items.push({ flyers: res.data.flyers })
       })
         .catch(function (error) {
-          context.msg = 'an error occurred.' + error
+          console.log(error)
+          // this.msg = 'an error occurred.' + error
         })
     },
     getFlyerImage (pos) {
