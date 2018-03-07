@@ -43,9 +43,6 @@
                       placeholder="End date">
         </b-form-input>
         </b-form-group>
-        <b-form-input id="image_url"
-                      placeholder="Image url">
-        </b-form-input>
         <br>
         <b-form-file v-model="form.image" :state="Boolean(form.image)" required placeholder="Choose an image..."></b-form-file>
         </b-form>
@@ -327,8 +324,6 @@ export default {
       else if (this.form.image === null) alert('Upload an image')
       else {
         this.$refs.myModalRef.hide()
-        console.log(this.form.image)
-        console.log(this.form.startdate)
         var startdate = new Date(this.form.startdate)
         var enddate = new Date(this.form.enddate)
         const formData = new FormData()
