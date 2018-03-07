@@ -201,6 +201,8 @@ export default {
       console.log('current filter: ' + context.filter)
       var dateObj = new Date()
       var end = new Date()
+      dateObj = 0
+      end = 1
       if (context.filter === 'All') {
         console.log('print all')
         end.setFullYear(dateObj.getFullYear() + 1)
@@ -219,7 +221,7 @@ export default {
           token: localStorage.getItem('token')
         }
       }
-      axios.post('http://localhost:5000/getflyers?collected' + collected + '&startdate=' + dateObj + '&enddate=' + end, this.credentials, axiosConfig).then(res => {
+      axios.post('http://localhost:5000/getflyers?&collected' + collected + '&startdate=' + dateObj + '&enddate=' + end, this.credentials, axiosConfig).then(res => {
         context.listOfFlyers = res.data.flyers
         context.len = res.data.flyers.length
         console.log('Total flyer #: ' + res.data.flyers.length)
@@ -324,15 +326,13 @@ export default {
       else if (this.form.image === null) alert('Upload an image')
       else {
         this.$refs.myModalRef.hide()
-        var startdate = new Date(this.form.startdate)
-        var enddate = new Date(this.form.enddate)
         const formData = new FormData()
         formData.append('token', localStorage.getItem('token'))
         formData.append('image', this.form.image)
         formData.append('title', this.form.title)
         formData.append('description', this.form.description)
-        formData.append('startdate', startdate)
-        formData.append('enddate', enddate)
+        formData.append('startdate', this.form.startdate)
+        formData.append('enddate', this.form.enddate)
         axios.post(url, formData,
           {
             headers: {
