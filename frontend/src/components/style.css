@@ -44,13 +44,6 @@ img {
   height: 4%;
   width: 4%;
 }
-.modal-content {
-    background-color: #fefefe;
-    margin: auto;
-    padding: 20px;
-    border: 1px solid #888;
-    width: 80%;
-}
 #columns {
   column-width: 320px;
   column-gap: 15px;
