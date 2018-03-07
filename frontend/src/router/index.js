@@ -58,6 +58,7 @@ router.beforeEach((to, from, next) => {
   const authUser = localStorage.getItem('token')
   console.log('authUser: ' + authUser)
   if (to.meta.requiresAuth && !authUser) {
+    router.push({ path: '/login', query: { plan: 'private' } })
     next({ name: 'Login' })
   }
   next()
