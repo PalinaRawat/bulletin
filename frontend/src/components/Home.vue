@@ -1,11 +1,11 @@
 <template>
   <div class="home">
    <div class="topnav">
-      <router-link class="active" to="/home" tag="a">Home</router-link>
-      <router-link class="active" to="/settings" tag="a">Settings</router-link>
-      <router-link to="/" @click.native="logout">Logout</router-link>
-      <b-btn v-b-modal.modal>Create a flyer</b-btn>
-      <img src="../assets/icon.svg">
+     <img src="../assets/icon.svg" style="float: left;">
+     <router-link class="active" to="/home" tag="a">Home</router-link>
+     <router-link class="active" to="/settings" tag="a">Settings</router-link>
+     <router-link to="/" @click.native="logout">Logout</router-link>
+     <b-btn v-b-modal.modal style="float: right; margin-right: 100px; margin-top: 7px;">Create a flyer</b-btn>
     </div>
   <b-modal id="modal" title="Fill the form" ref="myModalRef">
    <b-form>
@@ -52,6 +52,7 @@
          </b-btn>
          </div>
   </b-modal>
+
     <div id="filterDiv">
         <p style="display:block">Filter by: {{filter}}</p>
         <p style="display:inline-block">Collected only</p>
@@ -68,30 +69,24 @@
 
     <div id="columns">
       <div v-for="flyer in listOfFlyers" :key="flyer">
-        <div class="flyer-container">
-          <div class="flyer">
-            <!--
-            <div v-if="collectedFlyers.indexOf(flyer._id) >= 0">
-              <input type="button" v-on:click="saveFlyer(flyer._id)" value="+">
-            </div>
-            <div v-else>
-              <input type="button" v-on:click="saveFlyer(flyer._id)" value="-">
-            </div>
-            <div v-if="flyer.owner == currentuser">
-              <input type="submit" v-on:click="delete_flyer(flyer._id)" value="Delete">
-            </div>
-            <div v-else>
-              <input type="submit" v-on:click="delete_flyer(flyer._id)" value="Flag">
-            </div>
-            <input type="button" v-on:click="get_info(flyer._id)" value="More information">
-            -->
-            <img :src="flyer.image_url" alt="">
-            <div class="middle">
-              <button>View</button>
-              <button v-if="collectedFlyers.indexOf(flyer._id) >= 0" v-on:click="saveFlyer(flyer._id)" style="background-color: green;">collect</button>
-              <button v-else v-on:click="saveFlyer(flyer._id)" style="background-color: red;">throw away</button>
-              <button v-if="flyer.owner == currentuser" v-on:click="delete_flyer(flyer._id)" style="background-color: red;">X</button>
-              <button v-else v-on:click="delete_flyer(flyer._id)" value="flag" style="background-color: red;">flag</button>
+        <b-modal ref="myModalRef" :id="flyer.title" :title="flyer.title">
+          <img :src="flyer.image_url" style="opacity: 1; max-width: 200px; max-height 200px; width: auto; height: auto;" alt="">
+          <p class="my-4">{{flyer.description}}</p>
+          <p class="my-4">Date: {{new Date(flyer.startdate).toDateString()}} - {{new Date(flyer.enddate).toDateString()}}</p>
+          <div slot="modal-footer" class="w-100">
+           <b-btn v-if="collectedFlyers.indexOf(flyer._id) >= 0" v-on:click="saveFlyer(flyer._id)" style="background-color: green;">collect</b-btn>
+           <b-btn v-else v-on:click="saveFlyer(flyer._id)" style="background-color: darkgreen;">collected</b-btn>
+           <b-btn v-if="flyer.owner == currentuser" v-on:click="delete_flyer(flyer._id)" style="background-color: red;">X</b-btn>
+           <b-btn v-else v-on:click="delete_flyer(flyer._id)" value="flag" style="background-color: red;">&#9873;</b-btn>
+          </div>
+        </b-modal>
+        <div class="container">
+          <div class="flyer-container">
+            <div class="flyer">
+              <img :src="flyer.image_url" alt="">
+              <div class="middle">
+                <b-btn v-b-modal="flyer.title">More Information</b-btn>
+              </div>
             </div>
           </div>
         </div>
