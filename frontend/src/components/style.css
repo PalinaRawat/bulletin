@@ -80,6 +80,8 @@ img {
   height: auto;
   transition: .5s ease;
   z-index: 1;
+  border: 2px;
+  box-shadow: 3px 3px 5px 0px;
 }
 
 .flyer-container:hover img {
