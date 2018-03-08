@@ -54,9 +54,10 @@
   </b-modal>
 
     <div id="filterDiv">
-        <p style="display:block">Filter by: {{filter}}</p>
+        <p style="display:block">Filter by: {{this.filter}}</p>
         <p style="display:inline-block">Collected only</p>
-        <input id="collectedBox" type="checkbox" style="display:inline-block"/>
+        <input id="collectedBox" type="checkbox" style="display:inline-block"  v-if="collected == 'false'"/>
+        <input id="collectedBox" type="checkbox" style="display:inline-block" v-else checked/>
         <select style="display:inline-block" name ="selectFilter" v-model="filter">
           <option value="All" selected>All</option>
           <option value="Day">Day</option>
@@ -74,7 +75,7 @@
           <p class="my-4">{{flyer.description}}</p>
           <p class="my-4">Date: {{new Date(flyer.startdate).toDateString()}} - {{new Date(flyer.enddate).toDateString()}}</p>
           <div slot="modal-footer" class="w-100">
-            <b-btn v-if="collectedFlyers.indexOf(flyer._id) >= 0" v-on:click="saveFlyer(flyer._id)" style="background-color: green;">collect</b-btn>
+            <b-btn v-if="collectedFlyers.indexOf(flyer._id) == -1" v-on:click="saveFlyer(flyer._id)" style="background-color: green;">collect</b-btn>
             <b-btn v-else v-on:click="saveFlyer(flyer._id)" style="background-color: darkgreen;">collected</b-btn>
             <b-btn v-if="flyer.owner == currentuser" v-on:click="delete_flyer(flyer._id)" style="background-color: red;">X</b-btn>
             <b-btn v-else v-on:click="delete_flyer(flyer._id, flyer.title)" @click="hide_modal" value="flag" style="background-color: red;">&#9873;</b-btn>
@@ -111,6 +112,7 @@ export default {
       listOfFlyers: [],
       collectedFlyers: [],
       currentFlyers: [],
+      collected: sessionStorage.getItem('collected'),
       currentuser: '',
       counter: 0,
       form: {
@@ -154,11 +156,11 @@ export default {
       axios.post('http://localhost:5000/getflyers', body).then(res => {
         context.listOfFlyers = res.data.flyers
         // Sorts the listOfFlyers by order of startdate
-        context.listOfFlyers.sort(function(a, b) {
-          a = new Date(a.startdate);
-          b = new Date(b.startdate);
-          return a<b ? -1 : a>b ? 1 : 0;
-        });
+        context.listOfFlyers.sort(function (a, b) {
+          a = new Date(a.startdate)
+          b = new Date(b.startdate)
+          return a < b ? -1 : a > b ? 1 : 0
+        })
         context.collectedFlyers = res.data.collected
         context.currentuser = res.data.currentuser
         context.len = res.data.flyers.length
@@ -219,6 +221,7 @@ export default {
       const body = new FormData()
       body.append('flyer', id)
       axios.post('http://localhost:5000/collect', body).then(function (response) {
+        console.log(response)
         var index = context.collectedFlyers.indexOf(id)
         if (index !== -1) {
           context.collectedFlyers.splice(index, 1)
@@ -235,8 +238,10 @@ export default {
       var x = document.getElementById('collectedBox').checked
       if (x === true) {
         sessionStorage.setItem('collected', 'true')
+        this.collected = 'true'
       } else {
         sessionStorage.setItem('collected', 'false')
+        this.collected = 'false'
       }
       console.log(context.filter)
       location.reload()
