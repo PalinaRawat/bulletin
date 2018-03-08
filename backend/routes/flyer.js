@@ -223,7 +223,14 @@ var getflyers = function ( req, res ) {
           if (err)
             return res.json({ success: false, message: 'Error finding flyers in database'})
 
-            return res.json({success: true , flyers:result, collected: userresult.collected, currentuser: req.decoded.email})
+
+          var collected = userresult.collected
+          if (!collected){
+            collected = []
+          }
+
+
+            return res.json({success: true , flyers:result, collected: collected, currentuser: req.decoded.email})
         })
       }
     })
