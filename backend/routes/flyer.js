@@ -118,9 +118,13 @@ var collect = function ( req, res ) {
       if (err)
         return res.json({ success: false, message: 'Error finding user in database'})
 
-
-        flyers.update({email : req.decoded.email}, {$addToSet:{'collected' : req.body.flyer}})
-        return res.json({ success: true, message: 'Collected flyer' })
+        if (result.collected.indexOf(req.body.flyer) == -1) {
+          flyers.update({email : req.decoded.email}, {$addToSet:{'collected' : req.body.flyer}})
+          return res.json({ success: true, message: 'Collected flyer' })
+        } else {
+          flyers.update({email : req.decoded.email}, {$pull:{'collected' : req.body.flyer}})
+          return res.json({ success: true, message: 'Removed collected flyer' })
+        }
     })
   })
 	//return res.json({ success: true, message: "test" })
