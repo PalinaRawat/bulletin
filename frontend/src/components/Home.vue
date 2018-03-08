@@ -143,8 +143,6 @@ export default {
       context.filter = sessionStorage.getItem('filter')
       var dateObj = new Date()
       var end = new Date()
-      dateObj = 0
-      end = 1
       if (context.filter === 'All') {
         console.log('print all')
         end.setFullYear(dateObj.getFullYear() + 1)
