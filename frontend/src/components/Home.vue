@@ -60,7 +60,6 @@
                      v-model="status"
                      style="display:inline-block">
         </b-form-checkbox>
-        <select id="selectFilter" style="display:inline-block" name ="selectFilter" v-model="filter">
         <input id="collectedBox" type="checkbox" style="display:inline-block"  v-if="collected == 'false'"/>
         <input id="collectedBox" type="checkbox" style="display:inline-block" v-else checked/>
         <select style="display:inline-block" name ="selectFilter" v-model="filter">
