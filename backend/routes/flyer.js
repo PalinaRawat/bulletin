@@ -37,8 +37,6 @@ var create = function ( req, res ) {
           var flyer = {
             title: req.body.title,
             description: req.body.description,
-            startdate: new Date(req.body.startdate).getTime(),
-            enddate: new Date(req.body.enddate).getTime(),
       			flags: 0,
             //image_url: req.body.image_url,
             image_url: 'http://storage.googleapis.com/bulletinstorage/' + req.file.filename,
@@ -193,8 +191,6 @@ var getflyers = function ( req, res ) {
   if (req.body.enddate) {
     enddate = new Date(req.body.enddate).getTime()
   }
-
-  console.log("START " + startdate);console.log("END " + enddate);
 
   MongoClient.connect(MongoURL, function(err, db) {
     if (err)
