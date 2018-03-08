@@ -199,18 +199,32 @@ var getflyers = function ( req, res ) {
   MongoClient.connect(MongoURL, function(err, db) {
     if (err)
       return res.json({ success: false, message: 'Error connecting to database' })
-    var flyers = db.collection('flyers')
-    flyers.find({startdate: {"$gte": startdate}, enddate: {"$lte": enddate}, users_flagged: {$nin: [req.decoded.email]}}).toArray(function (err, result) {
-      if (err)
-        return res.json({ success: false, message: 'Error finding flyers in database'})
+    var users = db.collection('users')
+    users.findOne({ email: req.decoded.email }, function (err, userresult) {
+      if (err) {
+        return res.json({ success: false, message: 'Error connecting to database' })
+      }
+      if (req.body.collected == 'true') {
+        var flyers = db.collection('flyers')
+        var collectedId = []
+        for (var item in userresult.collected) {
+          collectedId.push(new ObjectId(userresult.collected[item]))
+        }
+        flyers.find({"_id" : { $in : collectedId } ,startdate: {"$gte": startdate}, enddate: {"$lte": enddate}, users_flagged: {$nin: [req.decoded.email]}}).toArray(function (err, result) {
+          if (err)
+            return res.json({ success: false, message: 'Error finding flyers in database'})
 
-      var users = db.collection('users')
+            return res.json({success: true , flyers:result, collected: userresult.collected, currentuser: req.decoded.email})
+        })
+      } else {
+        var flyers = db.collection('flyers')
+        flyers.find({startdate: {"$gte": startdate}, enddate: {"$lte": enddate}, users_flagged: {$nin: [req.decoded.email]}}).toArray(function (err, result) {
+          if (err)
+            return res.json({ success: false, message: 'Error finding flyers in database'})
 
-    	users.findOne({ email: req.decoded.email }, function (err, userresult) {
-    			if (err)
-    				return res.json({ success: false, message: 'Error connecting to database' })
-          return res.json({success: true , flyers:result, collected: userresult.collected, currentuser: req.decoded.email})
-      })
+            return res.json({success: true , flyers:result, collected: userresult.collected, currentuser: req.decoded.email})
+        })
+      }
     })
   })
 }

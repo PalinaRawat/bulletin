@@ -1,11 +1,11 @@
 <template>
   <div class="home">
    <div class="topnav">
-     <img src="../assets/icon.svg" style="float: left;">
-     <router-link class="active" to="/home" tag="a">Home</router-link>
-     <router-link class="active" to="/settings" tag="a">Settings</router-link>
-     <router-link to="/" @click.native="logout">Logout</router-link>
-     <b-btn v-b-modal.modal style="float: right; margin-right: 100px; margin-top: 7px;">Create a flyer</b-btn>
+     <img src="../assets/icon.svg" style="float: left; margin-top: 7px;">
+     <router-link class="active" to="/home" tag="a" style="margin-top: 7px;">Home</router-link>
+     <router-link class="active" to="/settings" tag="a" style="margin-top: 7px;">Settings</router-link>
+     <router-link to="/" @click.native="logout" style="float: right; margin-right: 50px; margin-top: 7px; display: inline;"><b-btn style="background-color: red;">Logout</b-btn></router-link>
+     <b-btn v-b-modal.modal style="float: right; margin-right: 15px; margin-top: 20px;">Create a flyer</b-btn>
     </div>
   <b-modal id="modal" title="Fill the form" ref="myModalRef">
    <b-form>
@@ -54,13 +54,16 @@
   </b-modal>
 
     <div id="filterDiv">
-        <p style="display:block">Filter by: {{filter}}</p>
+        <p style="display:block">Filter by: {{this.filter}}</p>
         <p style="display:inline-block">Collected only</p>
         <b-form-checkbox id="collectedBox"
                      v-model="status"
                      style="display:inline-block">
         </b-form-checkbox>
         <select id="selectFilter" style="display:inline-block" name ="selectFilter" v-model="filter">
+        <input id="collectedBox" type="checkbox" style="display:inline-block"  v-if="collected == 'false'"/>
+        <input id="collectedBox" type="checkbox" style="display:inline-block" v-else checked/>
+        <select style="display:inline-block" name ="selectFilter" v-model="filter">
           <option value="All" selected>All</option>
           <option value="Day">Day</option>
           <option value="Week">Week</option>
@@ -77,7 +80,7 @@
           <p class="my-4">{{flyer.description}}</p>
           <p class="my-4">Date: {{new Date(flyer.startdate).toDateString()}} - {{new Date(flyer.enddate).toDateString()}}</p>
           <div slot="modal-footer" class="w-100">
-            <b-btn v-if="collectedFlyers.indexOf(flyer._id) >= 0" v-on:click="saveFlyer(flyer._id)" style="background-color: green;">collect</b-btn>
+            <b-btn v-if="collectedFlyers.indexOf(flyer._id) == -1" v-on:click="saveFlyer(flyer._id)" style="background-color: green;">collect</b-btn>
             <b-btn v-else v-on:click="saveFlyer(flyer._id)" style="background-color: darkgreen;">collected</b-btn>
             <b-btn v-if="flyer.owner == currentuser" v-on:click="delete_flyer(flyer._id)" style="background-color: red;">X</b-btn>
             <b-btn v-else v-on:click="delete_flyer(flyer._id, flyer.title)" @click="hide_modal" value="flag" style="background-color: red;">&#9873;</b-btn>
@@ -114,6 +117,7 @@ export default {
       listOfFlyers: [],
       collectedFlyers: [],
       currentFlyers: [],
+      collected: sessionStorage.getItem('collected'),
       currentuser: '',
       counter: 0,
       form: {
@@ -222,6 +226,7 @@ export default {
       const body = new FormData()
       body.append('flyer', id)
       axios.post('http://localhost:5000/collect', body).then(function (response) {
+        console.log(response)
         var index = context.collectedFlyers.indexOf(id)
         if (index !== -1) {
           context.collectedFlyers.splice(index, 1)
@@ -239,8 +244,10 @@ export default {
       console.log(x)
       if (x === true) {
         sessionStorage.setItem('collected', 'true')
+        this.collected = 'true'
       } else {
         sessionStorage.setItem('collected', 'false')
+        this.collected = 'false'
       }
       console.log(context.filter)
       location.reload()
