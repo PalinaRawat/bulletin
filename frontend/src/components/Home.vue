@@ -134,6 +134,7 @@ export default {
       this.file = this.$refs.file.files[0]
     },
     getflyers () {
+      // TODO: Fix cards rendering out of order
       const context = this
       context.filter = sessionStorage.getItem('filter')
       var dateObj = new Date()
@@ -152,6 +153,12 @@ export default {
       body.append('collected', sessionStorage.getItem('collected'))
       axios.post('http://localhost:5000/getflyers', body).then(res => {
         context.listOfFlyers = res.data.flyers
+        // Sorts the listOfFlyers by order of startdate
+        context.listOfFlyers.sort(function(a, b) {
+          a = new Date(a.startdate);
+          b = new Date(b.startdate);
+          return a<b ? -1 : a>b ? 1 : 0;
+        });
         context.collectedFlyers = res.data.collected
         context.currentuser = res.data.currentuser
         context.len = res.data.flyers.length

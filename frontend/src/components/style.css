@@ -51,18 +51,19 @@ img {
   width: 50px;
 }
 #columns {
-  column-width: 320px;
-  column-gap: 15px;
-  width: 100%;
-  max-width: 100%;
-  margin: 50px auto;
-  column-fill: balance;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-around;
 
 }
 .container {
   width: 300px;
   height: 350px;
   overflow: scroll;
+  display: flex;
+  flex: 1 100%;
 }
 .flyer-container {
   margin: 0;
