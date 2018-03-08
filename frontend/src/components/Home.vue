@@ -138,7 +138,7 @@ export default {
       context.filter = sessionStorage.getItem('filter')
       var dateObj = new Date()
       var end = new Date()
-      if (context.filter === 'All') {
+      if (context.filter.toUpperCase() === 'ALL') {
         end.setFullYear(dateObj.getFullYear() + 3)
       } else if (context.filter === 'Week') {
         end.setDate(dateObj.getDate() + 7)
