@@ -56,14 +56,17 @@
     <div id="filterDiv">
         <p style="display:block">Filter by: {{filter}}</p>
         <p style="display:inline-block">Collected only</p>
-        <input id="collectedBox" type="checkbox" style="display:inline-block"/>
-        <select style="display:inline-block" name ="selectFilter" v-model="filter">
+        <b-form-checkbox id="collectedBox"
+                     v-model="status"
+                     style="display:inline-block">
+        </b-form-checkbox>
+        <select id="selectFilter" style="display:inline-block" name ="selectFilter" v-model="filter">
           <option value="All" selected>All</option>
           <option value="Day">Day</option>
           <option value="Week">Week</option>
           <option value="Month">Month</option>
         </select>
-        <button style="display:inline-block" v-on:click="updateFilter">Confirm</button>
+        <button id="confirmbtn" style="display:inline-block" v-on:click="updateFilter">Confirm</button>
 
     </div>
 
@@ -154,11 +157,11 @@ export default {
       axios.post('http://localhost:5000/getflyers', body).then(res => {
         context.listOfFlyers = res.data.flyers
         // Sorts the listOfFlyers by order of startdate
-        context.listOfFlyers.sort(function(a, b) {
-          a = new Date(a.startdate);
-          b = new Date(b.startdate);
-          return a<b ? -1 : a>b ? 1 : 0;
-        });
+        context.listOfFlyers.sort(function (a, b) {
+          a = new Date(a.startdate)
+          b = new Date(b.startdate)
+          return a < b ? -1 : a > b ? 1 : 0
+        })
         context.collectedFlyers = res.data.collected
         context.currentuser = res.data.currentuser
         context.len = res.data.flyers.length
@@ -233,6 +236,7 @@ export default {
       const context = this
       sessionStorage.setItem('filter', context.filter)
       var x = document.getElementById('collectedBox').checked
+      console.log(x)
       if (x === true) {
         sessionStorage.setItem('collected', 'true')
       } else {
