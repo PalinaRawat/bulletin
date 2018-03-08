@@ -143,6 +143,8 @@ export default {
       context.filter = sessionStorage.getItem('filter')
       var dateObj = new Date()
       var end = new Date()
+      dateObj = 0
+      end = 1
       if (context.filter === 'All') {
         console.log('print all')
         end.setFullYear(dateObj.getFullYear() + 1)
@@ -154,6 +156,7 @@ export default {
       } else if (context.filter === 'Month') {
         end.setMonth(dateObj.getMonth() + 1)
       }
+<<<<<<< HEAD
       console.log('start date: ' + dateObj.toLocaleString())
       console.log('end date: ' + end.toLocaleString())
       // TODO: Set startdate and enddate filter here!
@@ -163,6 +166,16 @@ export default {
       body.append('enddate', end)
       body.append('collected', sessionStorage.getItem('collected'))
       axios.post('http://localhost:5000/getflyers', body).then(res => {
+=======
+      console.log('start date: ' + dateObj)
+      console.log('end date: ' + end)
+      const axiosConfig = {
+        headers: {
+          token: localStorage.getItem('token')
+        }
+      }
+      axios.post('http://localhost:5000/getflyers?&collected' + collected + '&startdate=' + dateObj + '&enddate=' + end, this.credentials, axiosConfig).then(res => {
+>>>>>>> 6da9a53b565afe0075b8e29e150653a5de04e21d
         context.listOfFlyers = res.data.flyers
         context.collectedFlyers = res.data.collected
         context.currentuser = res.data.currentuser
