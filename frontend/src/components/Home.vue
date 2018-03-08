@@ -141,11 +141,26 @@ export default {
     getflyers () {
       const context = this
       context.filter = sessionStorage.getItem('filter')
+      var dateObj = new Date()
+      var end = new Date()
+      if (context.filter === 'All') {
+        console.log('print all')
+        end.setFullYear(dateObj.getFullYear() + 1)
+      } else if (context.filter === 'Day') {
+        console.log('filter by day')
+      } else if (context.filter === 'Week') {
+        end.setDate(dateObj.getDate() + 7)
+        console.log('filter by week')
+      } else if (context.filter === 'Month') {
+        end.setMonth(dateObj.getMonth() + 1)
+      }
+      console.log('start date: ' + dateObj.toLocaleString())
+      console.log('end date: ' + end.toLocaleString())
       // TODO: Set startdate and enddate filter here!
       axios.defaults.headers.common['token'] = localStorage.getItem('token')
       const body = new FormData()
-      body.append('startdate', '')
-      body.append('enddate', '')
+      body.append('startdate', dateObj)
+      body.append('enddate', end)
       body.append('collected', sessionStorage.getItem('collected'))
       axios.post('http://localhost:5000/getflyers', body).then(res => {
         context.listOfFlyers = res.data.flyers
@@ -199,15 +214,13 @@ export default {
       else if (this.form.image === null) alert('Upload an image')
       else {
         this.$refs.myModalRef.hide()
-        var startdate = new Date(this.form.startdate)
-        var enddate = new Date(this.form.enddate)
         const formData = new FormData()
         formData.append('token', localStorage.getItem('token'))
         formData.append('image', this.form.image)
         formData.append('title', this.form.title)
         formData.append('description', this.form.description)
-        formData.append('startdate', startdate)
-        formData.append('enddate', enddate)
+        formData.append('startdate', this.form.startdate)
+        formData.append('enddate', this.form.enddate)
         axios.post(url, formData,
           {
             headers: {
