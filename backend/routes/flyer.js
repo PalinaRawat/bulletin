@@ -113,14 +113,13 @@ var collect = function ( req, res ) {
   MongoClient.connect(MongoURL, function(err, db) {
     if (err)
       return res.json({ success: false, message: 'Error connecting to database' })
-    var flyers = db.collection('users')
+    var users = db.collection('users')
 
-    flyers.findOne( {email : req.decoded.email}, function(err, result) {
+    users.findOne( {email : req.decoded.email}, function(err, result) {
       if (err)
         return res.json({ success: false, message: 'Error finding user in database'})
-
         if (result.collected.indexOf(req.body.flyer) == -1) {
-          flyers.update({email : req.decoded.email}, {$addToSet:{'collected' : req.body.flyer}})
+          users.update({email : req.decoded.email}, {$addToSet:{'collected' : req.body.flyer}})
           return res.json({ success: true, message: 'Collected flyer' })
         } else {
           flyers.update({email : req.decoded.email}, {$pull:{'collected' : req.body.flyer}})

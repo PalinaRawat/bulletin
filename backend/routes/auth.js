@@ -66,6 +66,7 @@ var signup = function ( req, res ) {
 						created: new Date(),
 						question: req.body.securityq,
 						answer: req.body.securitya,
+            collected: []
 					}
 
 					users.insert(user, function ( err, db ) {

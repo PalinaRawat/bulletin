@@ -75,10 +75,10 @@
           <p class="my-4">{{flyer.description}}</p>
           <p class="my-4">Date: {{new Date(flyer.startdate).toDateString()}} - {{new Date(flyer.enddate).toDateString()}}</p>
           <div slot="modal-footer" class="w-100">
-            <b-btn v-if="collectedFlyers.indexOf(flyer._id) == -1" v-on:click="saveFlyer(flyer._id)" style="background-color: green;">collect</b-btn>
-            <b-btn v-else v-on:click="saveFlyer(flyer._id)" style="background-color: darkgreen;">collected</b-btn>
+            <b-btn v-if="collectedFlyers.indexOf(flyer._id) == -1" v-on:click="saveFlyer(flyer._id)" style="background-color: green;">Collect</b-btn>
+            <b-btn v-else v-on:click="saveFlyer(flyer._id)" style="background-color: darkgreen;">Collected</b-btn>
             <b-btn v-if="flyer.owner == currentuser" v-on:click="delete_flyer(flyer._id)" style="background-color: red;">X</b-btn>
-            <b-btn v-else v-on:click="delete_flyer(flyer._id, flyer.title)" @click="hide_modal" value="flag" style="background-color: red;">&#9873;</b-btn>
+            <b-btn v-else v-on:click="delete_flyer(flyer, flyer._id, flyer.title)" @click="hide_modal" value="flag" style="background-color: red;">&#9873;</b-btn>
           </div>
         </b-modal>
         <div class="container">
@@ -172,13 +172,13 @@ export default {
     hide_modal () {
       this.$refs.myModalRef.hide()
     },
-    delete_flyer (id, title) {
+    delete_flyer (flyer, id, title) {
       axios.defaults.headers.common['token'] = localStorage.getItem('token')
       const body = new FormData()
       body.append('flyer', id)
       axios.post('http://localhost:5000/flagflyer', body).then(res => {
         if (res.data.success) {
-          this.listOfFlyers.splice(this.listOfFlyers.indexOf(id), 1)
+          location.reload()
         }
       }).catch(function (error) {
         console.log(error)
