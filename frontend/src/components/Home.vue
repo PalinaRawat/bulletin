@@ -1,11 +1,11 @@
 <template>
   <div class="home">
    <div class="topnav">
-     <img src="../assets/icon.svg" style="float: left;">
-     <router-link class="active" to="/home" tag="a">Home</router-link>
-     <router-link class="active" to="/settings" tag="a">Settings</router-link>
-     <router-link to="/" @click.native="logout">Logout</router-link>
-     <b-btn v-b-modal.modal style="float: right; margin-right: 100px; margin-top: 7px;">Create a flyer</b-btn>
+     <img src="../assets/icon.svg" style="float: left; margin-top: 7px;">
+     <router-link class="active" to="/home" tag="a" style="margin-top: 7px;">Home</router-link>
+     <router-link class="active" to="/settings" tag="a" style="margin-top: 7px;">Settings</router-link>
+     <router-link to="/" @click.native="logout" style="float: right; margin-right: 50px; margin-top: 7px; display: inline;"><b-btn style="background-color: red;">Logout</b-btn></router-link>
+     <b-btn v-b-modal.modal style="float: right; margin-right: 15px; margin-top: 20px;">Create a flyer</b-btn>
     </div>
   <b-modal id="modal" title="Fill the form" ref="myModalRef">
    <b-form>
