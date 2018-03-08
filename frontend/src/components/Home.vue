@@ -68,16 +68,16 @@
     </div>
 
     <div id="columns">
-      <div v-for="flyer in listOfFlyers" :key="flyer">
-        <b-modal ref="myModalRef" :id="flyer.title" :title="flyer.title">
+      <div v-for="(flyer, index) in listOfFlyers" v-bind:key="index">
+        <b-modal ref="flyermodal" :id="flyer.title" :title="flyer.title">
           <img :src="flyer.image_url" style="opacity: 1; max-width: 200px; max-height 200px; width: auto; height: auto;" alt="">
           <p class="my-4">{{flyer.description}}</p>
           <p class="my-4">Date: {{new Date(flyer.startdate).toDateString()}} - {{new Date(flyer.enddate).toDateString()}}</p>
           <div slot="modal-footer" class="w-100">
-           <b-btn v-if="collectedFlyers.indexOf(flyer._id) >= 0" v-on:click="saveFlyer(flyer._id)" style="background-color: green;">collect</b-btn>
-           <b-btn v-else v-on:click="saveFlyer(flyer._id)" style="background-color: darkgreen;">collected</b-btn>
-           <b-btn v-if="flyer.owner == currentuser" v-on:click="delete_flyer(flyer._id)" style="background-color: red;">X</b-btn>
-           <b-btn v-else v-on:click="delete_flyer(flyer._id)" value="flag" style="background-color: red;">&#9873;</b-btn>
+            <b-btn v-if="collectedFlyers.indexOf(flyer._id) >= 0" v-on:click="saveFlyer(flyer._id)" style="background-color: green;">collect</b-btn>
+            <b-btn v-else v-on:click="saveFlyer(flyer._id)" style="background-color: darkgreen;">collected</b-btn>
+            <b-btn v-if="flyer.owner == currentuser" v-on:click="delete_flyer(flyer._id)" style="background-color: red;">X</b-btn>
+            <b-btn v-else v-on:click="delete_flyer(flyer._id, flyer.title)" @click="hide_modal" value="flag" style="background-color: red;">&#9873;</b-btn>
           </div>
         </b-modal>
         <div class="container">
@@ -104,7 +104,7 @@ import BootstrapVue from 'bootstrap-vue'
 Vue.use(BootstrapVue)
 export default {
   name: 'Welcome',
-  filter: 'all',
+  filter: 'All',
   data () {
     return {
       msg: 'Home Page',
@@ -139,19 +139,12 @@ export default {
       var dateObj = new Date()
       var end = new Date()
       if (context.filter === 'All') {
-        console.log('print all')
-        end.setFullYear(dateObj.getFullYear() + 1)
-      } else if (context.filter === 'Day') {
-        console.log('filter by day')
+        end.setFullYear(dateObj.getFullYear() + 3)
       } else if (context.filter === 'Week') {
         end.setDate(dateObj.getDate() + 7)
-        console.log('filter by week')
       } else if (context.filter === 'Month') {
         end.setMonth(dateObj.getMonth() + 1)
       }
-      console.log('start date: ' + dateObj.toLocaleString())
-      console.log('end date: ' + end.toLocaleString())
-      // TODO: Set startdate and enddate filter here!
       axios.defaults.headers.common['token'] = localStorage.getItem('token')
       const body = new FormData()
       body.append('startdate', dateObj)
@@ -162,43 +155,25 @@ export default {
         context.collectedFlyers = res.data.collected
         context.currentuser = res.data.currentuser
         context.len = res.data.flyers.length
-        console.log('Total flyer #: ' + res.data.flyers.length)
-        console.log('here')
-      }).catch(function (error) {
-        context.msg = 'an error occurred.' + error
-      })
-    },
-    delete_flyer (id) {
-      axios.defaults.headers.common['token'] = localStorage.getItem('token')
-      const body = new FormData()
-      body.append('flyer', id)
-      axios.post('http://localhost:5000/flagflyer', body).then(res => {
-
+        console.log('Received ' + res.data.flyers.length + ' flyers!')
       }).catch(function (error) {
         console.log(error)
       })
     },
-    get_info (pos) {
-      /* const context = this
-      if (context.counter + pos >= context.len) {
-        console.log('cannot view empty flyer')
-        return
-      }
-      var url = 'http://localhost:5000/getflyerinfo?&flyer=' + context.listOfFlyers[pos]._id
-      const axiosConfig = {
-        headers: {
-          token: localStorage.getItem('token')
+    hide_modal () {
+      this.$refs.myModalRef.hide()
+    },
+    delete_flyer (id, title) {
+      axios.defaults.headers.common['token'] = localStorage.getItem('token')
+      const body = new FormData()
+      body.append('flyer', id)
+      axios.post('http://localhost:5000/flagflyer', body).then(res => {
+        if (res.data.success) {
+          this.listOfFlyers.splice(this.listOfFlyers.indexOf(id), 1)
         }
-      }
-      axios.post(url, this.credentials, axiosConfig).then(res => {
-        this.showInfo = true
-        console.log(res.title)
-        console.log(res)
+      }).catch(function (error) {
+        console.log(error)
       })
-        .catch(function (error) {
-          context.msg = 'an error occurred.' + error
-        })
-      */
     },
     onSubmit (evt) {
       var url = 'http://localhost:5000/createflyer?'
@@ -232,36 +207,14 @@ export default {
       }
     },
     saveFlyer (id) {
-      /*
-      context.counter = parseInt(sessionStorage.getItem('flyerCount'))
-      if (context.counter + pos >= context.len) {
-        console.log('cannot save empty flyer')
-        return
-      }
-      document.getElementById('saveBtn').value = 'saved'
-      var flyer = context.listOfFlyers[context.counter + pos]
-      var id = flyer._id
-      const axiosConfig = {
-        headers: {
-          token: localStorage.getItem('token')
-        }
-      }
-      var url = 'http://localhost:5000/collect?flyer=' + id
-      axios.post(url, this.credentials, axiosConfig)
-        .then(function (response) {
-          console.log(response)
-        })
-        .catch(function (error) {
-          console.log(error)
-        })
-      */
       const context = this
       axios.defaults.headers.common['token'] = localStorage.getItem('token')
       const body = new FormData()
       body.append('flyer', id)
       axios.post('http://localhost:5000/collect', body).then(function (response) {
-        if (context.collectedFlyers.indexOf(id) >= 0) {
-          context.collectedFlyers.splice(context.collectedFlyers.indexOf(id), 1)
+        var index = context.collectedFlyers.indexOf(id)
+        if (index !== -1) {
+          context.collectedFlyers.splice(index, 1)
         } else {
           context.collectedFlyers.push(id)
         }
