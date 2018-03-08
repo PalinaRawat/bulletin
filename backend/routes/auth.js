@@ -14,6 +14,8 @@ var checkUser = function ( req, res ) {
 		return res.json({ success: false, message: "Insufficient Information" })
 
 	MongoClient.connect(MongoURL, function(err, db) {
+    if (err)
+      return res.json({ success: false, message: 'Error connecting to database' })
 		var users = db.collection('users')
 		users.find({ email: req.body.email }).toArray(function(err, result) {
 			if (err)
@@ -88,6 +90,8 @@ var login = function ( req, res ) {
 		return res.json({ success: false, message: 'Insufficient login information' })
 
 	MongoClient.connect(MongoURL, function(err, db) {
+    if (err)
+      return res.json({ success: false, message: 'Error connecting to database' })
 		var users = db.collection('users')
 		users.find({ email: req.body.email }).toArray(function(err, result) {
 			if (err)
@@ -125,6 +129,8 @@ var reset = function ( req, res ) {
 		return res.json({ success: false, message: 'Insufficient login information' })
 
 	MongoClient.connect(MongoURL, function(err, db) {
+    if (err)
+      return res.json({ success: false, message: 'Error connecting to database' })
 		var users = db.collection('users')
 		users.find({ email: req.body.email }).toArray(function(err, result) {
 			console.log('result.answer: ');
@@ -147,6 +153,8 @@ var reset = function ( req, res ) {
 					return res.json({ success: false, message: 'Error encrypting password' })
 
 					users.findOneAndUpdate( { email: req.body.email }, { $set: { password: hash } }, function (err, result2) {
+            if (err)
+      				return res.json({ success: false, message: 'Error connecting to database' })
 						return res.json({ success: true, message: 'Password Successfully Changed to: ' + newPassword })
 					})
 			})
@@ -179,6 +187,8 @@ var change = function ( req, res ) {
 					return res.json({ success: false, message: 'Error encrypting password' })
 
 					users.findOneAndUpdate( { email: req.decoded.email }, { $set: { password: hash } }, function (err, result2) {
+            if (err)
+      				return res.json({ success: false, message: 'Error connecting to database' })
 						console.log('password is now: ' + req.body.confirmPassword)
 						return res.json({ success: true, message: 'Successfully Changed Password!'});
 					})

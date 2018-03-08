@@ -47,4 +47,18 @@ img {
   height: 4%;
   width: 4%;
 }
+button {
+    background-color: #ADD8E6;
+    color: black;
+    font-size: 15px;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    cursor: pointer;
+    width: 20%;
+    min-width: 150px;
+}
+button:hover {
+    background-color: #ADD2E6;
+}
 </style>
