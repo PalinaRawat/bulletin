@@ -56,10 +56,6 @@
     <div id="filterDiv">
         <p style="display:block">Filter by: {{this.filter}}</p>
         <p style="display:inline-block">Collected only</p>
-        <b-form-checkbox id="collectedBox"
-                     v-model="status"
-                     style="display:inline-block">
-        </b-form-checkbox>
         <input id="collectedBox" type="checkbox" style="display:inline-block"  v-if="collected == 'false'"/>
         <input id="collectedBox" type="checkbox" style="display:inline-block" v-else checked/>
         <select style="display:inline-block" name ="selectFilter" v-model="filter">
