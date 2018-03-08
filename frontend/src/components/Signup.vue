@@ -5,7 +5,7 @@
     <p type="error" style='color:red; font-size: 12px;' v-if='!success'>{{ message }}</p>
     <p type="error" style='color:green; font-size: 12px;' v-if='success'>{{ message }}</p>
     <div>
-      <input type="email" v-model="credentials.email" placeholder="Username" name="uname"/>
+      <input type="email" v-model="credentials.email" placeholder="Email" name="uname"/>
     </div>
     <div>
       <input type="password" v-model="credentials.password" placeholder="Password" name="psw"/>
