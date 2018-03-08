@@ -11,8 +11,13 @@ a {
 figure {
   display: block;
   border: 100px;
-  border-color: darkgrey
+  border-color: darkgrey;
 }
+
+.card {
+  background-color: darkgrey;
+}
+
 .filterDiv {
   display: block;
   width: 100%;
@@ -41,8 +46,8 @@ figure {
   width: 100%;
 }
 img {
-  height: 4%;
-  width: 4%;
+  height: 50px;
+  width: 50px;
 }
 #columns {
   column-width: 320px;
@@ -56,6 +61,8 @@ div#columns figure {
   /*
     background below changes the color inside each flyer box
   */
+  width: 300px;
+  height: 300px;
   background: rgba(23, 137, 222, 1);
   border: 2px solid #fcfcfc;
   box-shadow: 0 1px 2px rgba(34, 25, 25, 0.4);
@@ -67,7 +74,9 @@ div#columns figure {
   column-break-inside: avoid;
 }
 div#columns figure img {
-  width: 100%; height: auto;
+  width: 200px; height: auto;
+  max-width: 200px;
+  max-height: 200px;
   border-bottom: 1px solid #ccc;
   padding-bottom: 15px;
   margin-bottom: 5px;
@@ -111,4 +120,3 @@ input[type=button] {
     background-color: #4CAF50;
     border-radius: 5px;
 }
-

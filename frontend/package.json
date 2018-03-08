@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "axios": "^0.17.1",
+    "bootstrap-vue": "^2.0.0-rc.2",
     "cors": "^2.8.4",
     "vue": "^2.5.2",
     "vue-material": "^1.0.0-beta-7",
