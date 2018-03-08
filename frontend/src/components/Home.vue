@@ -68,23 +68,33 @@
 
     <div id="columns">
       <div v-for="flyer in listOfFlyers" :key="flyer">
-        <figure>
-          <div v-if="collectedFlyers.indexOf(flyer._id) >= 0">
-            <input type="button" v-on:click="saveFlyer(flyer._id)" value="+">
+        <div class="flyer-container">
+          <div class="flyer">
+            <!--
+            <div v-if="collectedFlyers.indexOf(flyer._id) >= 0">
+              <input type="button" v-on:click="saveFlyer(flyer._id)" value="+">
+            </div>
+            <div v-else>
+              <input type="button" v-on:click="saveFlyer(flyer._id)" value="-">
+            </div>
+            <div v-if="flyer.owner == currentuser">
+              <input type="submit" v-on:click="delete_flyer(flyer._id)" value="Delete">
+            </div>
+            <div v-else>
+              <input type="submit" v-on:click="delete_flyer(flyer._id)" value="Flag">
+            </div>
+            <input type="button" v-on:click="get_info(flyer._id)" value="More information">
+            -->
+            <img :src="flyer.image_url" alt="">
+            <div class="middle">
+              <button>View</button>
+              <button v-if="collectedFlyers.indexOf(flyer._id) >= 0" v-on:click="saveFlyer(flyer._id)" style="background-color: green;">collect</button>
+              <button v-else v-on:click="saveFlyer(flyer._id)" style="background-color: red;">throw away</button>
+              <button v-if="flyer.owner == currentuser" v-on:click="delete_flyer(flyer._id)" style="background-color: red;">X</button>
+              <button v-else v-on:click="delete_flyer(flyer._id)" value="flag" style="background-color: red;">flag</button>
+            </div>
           </div>
-          <div v-else>
-            <input type="button" v-on:click="saveFlyer(flyer._id)" value="-">
-          </div>
-          <div v-if="flyer.owner == currentuser">
-            <input type="submit" v-on:click="delete_flyer(flyer._id)" value="Delete">
-          </div>
-          <div v-else>
-            <input type="submit" v-on:click="delete_flyer(flyer._id)" value="Flag">
-          </div>
-          <input type="button" v-on:click="get_info(flyer._id)" value="More information">
-          <img :src="flyer.image_url" alt="">
-          <figcaption>{{flyer.title}}</figcaption>
-        </figure>
+        </div>
       </div>
     </div>
 
@@ -159,7 +169,7 @@ export default {
       })
     },
     get_info (pos) {
-      const context = this
+      /* const context = this
       if (context.counter + pos >= context.len) {
         console.log('cannot view empty flyer')
         return
@@ -178,6 +188,7 @@ export default {
         .catch(function (error) {
           context.msg = 'an error occurred.' + error
         })
+      */
     },
     onSubmit (evt) {
       var url = 'http://localhost:5000/createflyer?'
@@ -214,7 +225,6 @@ export default {
     },
     saveFlyer (id) {
       /*
-      const context = this
       context.counter = parseInt(sessionStorage.getItem('flyerCount'))
       if (context.counter + pos >= context.len) {
         console.log('cannot save empty flyer')
@@ -237,11 +247,16 @@ export default {
           console.log(error)
         })
       */
+      const context = this
       axios.defaults.headers.common['token'] = localStorage.getItem('token')
       const body = new FormData()
       body.append('flyer', id)
       axios.post('http://localhost:5000/collect', body).then(function (response) {
-        console.log(response)
+        if (context.collectedFlyers.indexOf(id) >= 0) {
+          context.collectedFlyers.splice(context.collectedFlyers.indexOf(id), 1)
+        } else {
+          context.collectedFlyers.push(id)
+        }
       }).catch(function (error) {
         console.log(error)
       })

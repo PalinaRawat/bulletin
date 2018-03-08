@@ -52,71 +52,60 @@ img {
 #columns {
   column-width: 320px;
   column-gap: 15px;
-  width: 90%;
+  width: 100%;
   max-width: 1500px;
   margin: 50px auto;
   column-fill: balance;
+
 }
-div#columns figure {
-  /*
-    background below changes the color inside each flyer box
-  */
-  width: 300px;
-  height: 300px;
-  background: rgba(23, 137, 222, 1);
-  border: 2px solid #fcfcfc;
-  box-shadow: 0 1px 2px rgba(34, 25, 25, 0.4);
-  margin: 0 2px 15px;
-  padding: 15px;
-  column-fill: balance;
-  padding-bottom: 10px;
-  display: inline-block;
-  column-break-inside: avoid;
+
+.flyer-container {
+  margin: 0;
+  padding: 20px;
+  width: 100%;
+  height: auto;
 }
-div#columns figure img {
-  width: 200px; height: auto;
-  max-width: 200px;
-  max-height: 200px;
-  border-bottom: 1px solid #ccc;
-  padding-bottom: 15px;
-  margin-bottom: 5px;
+
+.flyer img{
+  opacity: 1;
+  display: block;
+  width: 100%;
+  max-height: 80%;
+  height: auto;
+  transition: .5s ease;
+  z-index: 1;
 }
-div#columns figure p {
-  font-size: .9rem;
-  color: #444;
-  line-height: 1.5;
+
+.flyer-container:hover img {
+  transition: .5s ease;
+  transform: scale(1.1);
+  opacity: 0.3;
+  z-index: -1;
 }
-div#columns small {
-  font-size: 1rem;
-  float: right;
-  text-transform: uppercase;
-  color: #aaa;
+
+.flyer-container:hover .middle {
+  opacity: 1;
+  z-index: 1;
+  visibility: visible;
 }
-div#columns small a {
-  color: #666;
-  text-decoration: none;
-  transition: .4s color;
+
+.flyer-container .middle {
+  opacity: 0;
+  position: relative;
+  visibility: hidden;
+  text-align: center;
+  display: inline;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
 }
-div#columns:hover figure:not(:hover) {
-}
-@media screen and (max-width: 750px) {
-  #columns { column-gap: 0px; }
-  #columns figure { width: 100%; }
-}
+
 .modal-content {
     background-color: #fefefe;
     margin: auto;
     padding: 20px;
     border: 1px solid #888;
     width: 80%;
-}
-input[type=submit] {
-    padding:2px;
-    background-color: red;
-    border-radius: 5px;
-}
-input[type=button] {
-    padding:2px;
-    background-color: #4CAF50;
-    border-radius: 5px;
 }
