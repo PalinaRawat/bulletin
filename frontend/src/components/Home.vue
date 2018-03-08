@@ -84,7 +84,7 @@
         <div class="container">
           <div class="flyer-container">
             <div class="flyer">
-              <img :src="flyer.image_url" alt="">
+              <img :src="flyer.image_url" alt="" v-b-modal="flyer.title">
               <div class="middle">
                 <b-btn v-b-modal="flyer.title">More Information</b-btn>
               </div>
