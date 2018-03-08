@@ -38,7 +38,8 @@ var create = function ( req, res ) {
             title: req.body.title,
             description: req.body.description,
       			flags: 0,
-            //image_url: req.body.image_url,
+            startdate: new Date(req.body.startdate).getTime(),
+            enddate: new Date(req.body.enddate).getTime(),
             image_url: 'http://storage.googleapis.com/bulletinstorage/' + req.file.filename,
             owner: req.decoded.email
           }
@@ -56,8 +57,8 @@ var create = function ( req, res ) {
       var flyer = {
         title: req.body.title,
         description: req.body.description,
-        startdate: req.body.startdate,
-        enddate: req.body.enddate,
+        startdate: new Date(req.body.startdate).getTime(),
+        enddate: new Date(req.body.enddate).getTime(),
         flags: 0,
         image_url: req.body.image_url,
         //image_url: 'http://storage.googleapis.com/bulletin/' + req.file.filename,
