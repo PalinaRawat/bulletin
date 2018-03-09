@@ -2,6 +2,8 @@ require('dotenv').config();
 var MongoClient	= require('mongodb').MongoClient
 var MongoURL		= process.env.MONGO_URL
 var fs = require('fs');
+const path = require('path');
+var multer    = require('multer')
 var ObjectId    = require('mongodb').ObjectID
 var gcloud = require('google-cloud') ({
   projectId: process.env.GCLOUD_PROJECT,
@@ -13,10 +15,30 @@ var gcs= gcloud.storage ({
   keyFilename: 'google-secret.json'
 })
 
+var upload = multer({
+  fileFilter: function (req, file, cb) {
+    console.log(file.originalname)
+    console.log(path.extname(file.originalname))
+    var ext = path.extname(file.originalname)
+    if (ext !== '.png' && ext !== '.jpg' && ext !== '.gif' && ext !== '.jpeg') {
+      req.fileerror = "Invalid file extension"
+  		return cb(null, false, new Error('I don\'t have a clue!'))
+  	} else {
+      return cb(null, true)
+    }
+  },
+  dest: 'tmp/'
+}).single('image')
+
 
 var create = function ( req, res ) {
   if (!req.body.title || !req.body.description || !req.body.startdate || !req.body.enddate)
     return res.json({ success: false, message: 'Insufficient information', body: req.body })
+
+  var ext = path.extname(req.file.originalname)
+  if (ext !== '.png' && ext !== '.jpg' && ext !== '.gif' && ext !== '.jpeg') {
+      return res.json({ success: false, message: 'Invalid file extention'})
+  }
 
   MongoClient.connect(MongoURL, function(err, db) {
     if (err)
@@ -33,7 +55,6 @@ var create = function ( req, res ) {
           //res.send({ success: true, message: "Image uploaded", image_url:  'http://storage.googleapis.com/bulletin/' + req.file.filename })
         }
         else {
-          // TODO: Delete Temp images after upload
           var flyer = {
             title: req.body.title,
             description: req.body.description,
@@ -49,6 +70,18 @@ var create = function ( req, res ) {
 
             if (err)
               return res.json({ success: false, message: 'Error sending data to database'})
+
+              const dir = 'tmp/'
+              fs.readdir(dir, (err, files) => {
+                if (err)
+                  return res.json({ success: false, message: err })
+
+                for (const file of files) {
+                  fs.unlink(path.join(dir, file), err => {
+                    if (err) throw err;
+                  });
+                }
+              });
             return res.json({ success: true, message: 'Created new flyer', flyer: flyerid})
           })
         }
@@ -61,7 +94,6 @@ var create = function ( req, res ) {
         enddate: new Date(req.body.enddate).getTime(),
         flags: 0,
         image_url: req.body.image_url,
-        //image_url: 'http://storage.googleapis.com/bulletin/' + req.file.filename,
         owner: req.decoded.email
       }
 
@@ -80,6 +112,11 @@ var flag = function ( req, res ) {
   // TODO: Fix duplicate flags from same user error! (Crashes server)
   if (!req.body.flyer)
     return res.json({ success: false, message: 'Insufficient information' })
+  try {
+    new ObjectId(req.body.flyer)
+  } catch (error){
+    return res.json({success: false, message: 'Invalid Id!', error: error})
+  }
 
   MongoClient.connect(MongoURL, function(err, db) {
     if (err)
@@ -87,7 +124,7 @@ var flag = function ( req, res ) {
     var flyers = db.collection('flyers')
 
     flyers.findOne( {_id : new ObjectId(req.body.flyer)}, function(err, result) {
-      if (err)
+      if (err || !result)
         return res.json({ success: false, message: 'Error finding flyer in database'})
 
       if (result.owner == req.decoded.email) {
@@ -107,6 +144,11 @@ var flag = function ( req, res ) {
 }
 
 var collect = function ( req, res ) {
+  try {
+    new ObjectId(req.body.flyer)
+  } catch (error){
+    return res.json({success: false, message: 'Invalid Id!', error: error})
+  }
   if (!req.body.flyer)
     return res.json({ success: false, message: 'Insufficient information' })
 
@@ -116,7 +158,7 @@ var collect = function ( req, res ) {
     var users = db.collection('users')
 
     users.findOne( {email : req.decoded.email}, function(err, result) {
-      if (err)
+      if (err || !result)
         return res.json({ success: false, message: 'Error finding user in database'})
         if (result.collected.indexOf(req.body.flyer) == -1) {
           users.update({email : req.decoded.email}, {$addToSet:{'collected' : req.body.flyer}})
@@ -207,8 +249,12 @@ var getflyers = function ( req, res ) {
       if (req.body.collected == 'true') {
         var flyers = db.collection('flyers')
         var collectedId = []
-        for (var item in userresult.collected) {
-          collectedId.push(new ObjectId(userresult.collected[item]))
+        try {
+          for (var item in userresult.collected) {
+            collectedId.push(new ObjectId(userresult.collected[item]))
+          }
+        } catch (error) {
+          return res.json({success: false, message: 'User has an invalid id in collected!', error: error})
         }
         flyers.find({"_id" : { $in : collectedId } ,startdate: {"$gte": startdate}, enddate: {"$lte": enddate}, users_flagged: {$nin: [req.decoded.email]}}).toArray(function (err, result) {
           if (err)
@@ -219,16 +265,13 @@ var getflyers = function ( req, res ) {
       } else {
         var flyers = db.collection('flyers')
         flyers.find({startdate: {"$gte": startdate}, enddate: {"$lte": enddate}, users_flagged: {$nin: [req.decoded.email]}}).toArray(function (err, result) {
-          if (err)
+          if (err || !result)
             return res.json({ success: false, message: 'Error finding flyers in database'})
-
 
           var collected = userresult.collected
           if (!collected){
             collected = []
           }
-
-
             return res.json({success: true , flyers:result, collected: collected, currentuser: req.decoded.email})
         })
       }
