@@ -175,7 +175,7 @@ export default {
     delete_flyer (flyer, id, title) {
       axios.defaults.headers.common['token'] = localStorage.getItem('token')
       const body = new FormData()
-      body.append('flyer', id)
+      body.append('flyer', flyer)
       axios.post('http://localhost:5000/flagflyer', body).then(res => {
         if (res.data.success) {
           location.reload()
