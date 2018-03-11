@@ -164,7 +164,7 @@ var collect = function ( req, res ) {
           users.update({email : req.decoded.email}, {$addToSet:{'collected' : req.body.flyer}})
           return res.json({ success: true, message: 'Collected flyer' })
         } else {
-          flyers.update({email : req.decoded.email}, {$pull:{'collected' : req.body.flyer}})
+          users.update({email : req.decoded.email}, {$pull:{'collected' : req.body.flyer}})
           return res.json({ success: true, message: 'Removed collected flyer' })
         }
     })
