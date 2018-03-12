@@ -192,6 +192,15 @@ export default {
       else if (this.form.enddate === '') alert('Select an enddate')
       else if (this.form.image === null) alert('Upload an image')
       else {
+        var presentReference = new Date()
+        var start = new Date(this.form.startdate)
+        if (presentReference.getTime() > start.getTime()) {
+          alert('Cannot schedule an event in the past.')
+        }
+        if (this.form.enddate < this.form.startdate) {
+          alert('event cannot end before it begins')
+        }
+
         this.$refs.myModalRef.hide()
         const formData = new FormData()
         formData.append('token', localStorage.getItem('token'))
