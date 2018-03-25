@@ -144,7 +144,7 @@ export default {
       if (context.filter.toUpperCase() === 'ALL') {
         end.setFullYear(dateObj.getFullYear() + 3)
       } else if (context.filter === 'Week') {
-        end.setDate(dateObj.getDate() + 7)
+        end.setMonth(dateObj.getMonth() + 1)
       } else if (context.filter === 'Month') {
         end.setMonth(dateObj.getMonth() + 1)
       }
