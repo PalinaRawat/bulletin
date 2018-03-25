@@ -155,7 +155,6 @@ export default {
       body.append('collected', sessionStorage.getItem('collected'))
       axios.post('http://localhost:5000/getflyers', body).then(res => {
         context.listOfFlyers = res.data.flyers
-        // Sorts the listOfFlyers by order of startdate
         context.listOfFlyers.sort(function (a, b) {
           a = new Date(a.startdate)
           b = new Date(b.startdate)
@@ -194,14 +193,7 @@ export default {
       else {
         var presentReference = new Date()
         var start = new Date(this.form.startdate)
-        /*
-        if (presentReference.getTime() > start.getTime()) {
-          alert('Cannot schedule an event in the past.')
-        }
-        if (this.form.enddate < this.form.startdate) {
-          alert('event cannot end before it begins')
-        }*/
-        
+
         this.$refs.myModalRef.hide()
         const formData = new FormData()
         formData.append('token', localStorage.getItem('token'))
