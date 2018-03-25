@@ -130,7 +130,7 @@ export default {
   methods: {
     logout () {
       console.log('I am logging out')
-      localStorage.removeItem('token')
+      //localStorage.removeItem('token')
     },
     handleFileUpload () {
       this.file = this.$refs.file.files[0]
