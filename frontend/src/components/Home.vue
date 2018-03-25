@@ -194,13 +194,14 @@ export default {
       else {
         var presentReference = new Date()
         var start = new Date(this.form.startdate)
+        /*
         if (presentReference.getTime() > start.getTime()) {
           alert('Cannot schedule an event in the past.')
         }
         if (this.form.enddate < this.form.startdate) {
           alert('event cannot end before it begins')
-        }
-
+        }*/
+        
         this.$refs.myModalRef.hide()
         const formData = new FormData()
         formData.append('token', localStorage.getItem('token'))
@@ -246,7 +247,7 @@ export default {
       sessionStorage.setItem('filter', context.filter)
       var x = document.getElementById('collectedBox').checked
       console.log(x)
-      if (x === true) {
+      if (x === false) {
         sessionStorage.setItem('collected', 'true')
         this.collected = 'true'
       } else {
