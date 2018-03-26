@@ -155,11 +155,6 @@ export default {
       body.append('collected', sessionStorage.getItem('collected'))
       axios.post('http://localhost:5000/getflyers', body).then(res => {
         context.listOfFlyers = res.data.flyers
-        context.listOfFlyers.sort(function (a, b) {
-          a = new Date(a.startdate)
-          b = new Date(b.startdate)
-          return a < b ? -1 : a > b ? 1 : 0
-        })
         context.collectedFlyers = res.data.collected
         context.currentuser = res.data.currentuser
         context.len = res.data.flyers.length
