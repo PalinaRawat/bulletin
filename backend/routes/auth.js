@@ -36,16 +36,14 @@ var signup = function ( req, res ) {
 		return res.json({ success: false, message: "Insufficient Information" })
 	//Check to make sure that email ends with @purdue.edu
 	if (!req.body.email.endsWith('@purdue.edu'))
-		return res.json({ success: false, message: 'Invalid Purdue Email'})
+		return res.json({ success: false, message: ''})
 	//Check to make sure that the password is a proper length
 	if (req.body.password.length < 8)
-		return res.json({ success: false, message: 'Password is too short' })
+		return res.json({ success: false, message: '' })
 
 	MongoClient.connect(MongoURL, function(err, db) {
 		if (err)
 			return res.json({ success: false, message: 'Error connecting to database' })
-
-		//TODO: Bcrypt passwor
 
 		var users = db.collection('users')
 
@@ -79,7 +77,7 @@ var signup = function ( req, res ) {
 			}
 
 			if (result.length != 0)
-				return res.json({ success: false, message: 'User with that email already exists' })
+				return res.json({ success: false, message: '' })
 		})
 	})
 }
@@ -87,7 +85,7 @@ var signup = function ( req, res ) {
 // validates and signs user in
 var login = function ( req, res ) {
 
-	if (!req.body.email || !req.body.password)
+	if (!req.body.email)
 		return res.json({ success: false, message: 'Insufficient login information' })
 
 	MongoClient.connect(MongoURL, function(err, db) {
@@ -103,19 +101,15 @@ var login = function ( req, res ) {
 				if (err)
 					return res.json({ success: false, message: 'Error comparing passwords' })
 				//console.log(result[0].password, req.body.password)
-				if (!match)
-					return res.json({ success: false, message: 'Invalid login information' })
-				else {
-					var tokenitems = {
-						_id: result[0]._id,
-						email: req.body.email
-					}
-					var token = jwt.sign( tokenitems , jwtsecret,  {
-						expiresIn: 86400 //24 Hours
-					});
-
-					return res.json({ success: true, message: 'Successfully logged in!', token: token });
+				var tokenitems = {
+				  _id: result[0]._id,
+				  email: req.body.email
 				}
+				var token = jwt.sign( tokenitems , jwtsecret,  {
+					expiresIn: 86400 //24 Hours
+				});
+
+				return res.json({ success: true, message: 'Successfully logged in!', token: token });
 			})
 		})
 	})
