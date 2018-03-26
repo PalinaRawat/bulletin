@@ -32,7 +32,7 @@ var checkUser = function ( req, res ) {
 var signup = function ( req, res ) {
 
 	//Check to make sure email and password are included
-	if (!req.body.email || !req.body.password ||  !req.body.securitya || !req.body.securityq)
+	if (!req.body.email || !req.body.password ||  !req.body.securitya)
 		return res.json({ success: false, message: "Insufficient Information" })
 	//Check to make sure that email ends with @purdue.edu
 	if (!req.body.email.endsWith('@purdue.edu'))
@@ -163,8 +163,8 @@ var change = function ( req, res ) {
 	if (!req.body.newPassword || !req.body.confirmPassword)
 		return res.json({ success: false, message: 'Insufficient login information' })
 
-	if (req.body.newPassword.length < 8)
-		return res.json({ success: false, message: 'New Password is too short' })
+	// if (req.body.newPassword.length < 8)
+	// 	return res.json({ success: false, message: 'New Password is too short' })
 
 	if (req.body.newPassword !== req.body.confirmPassword)
 		return res.json({ success: false, message: 'New Passwords Do Not Match' })

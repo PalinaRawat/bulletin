@@ -5,7 +5,7 @@ import Signup from '@/components/Signup'
 import Login from '@/components/Login'
 import Home from '@/components/Home'
 import ResetPassword from '@/components/ResetPassword'
-import Settings from '@/components/Settings'
+// import Settings from '@/components/Settings'
 
 Vue.use(Router)
 
@@ -41,18 +41,17 @@ var router = new Router({
     {
       path: '/settings',
       name: 'Settings',
-      component: Settings,
+      component: Login,
       meta: { requiresAuth: true }
     }
   ]
 })
 
-
 /* Check to make sure the user has auth permission to access the page */
 router.beforeEach((to, from, next) => {
-  const authUser = localStorage.getItem('token');
+  const authUser = localStorage.getItem('token')
   if (to.meta.requiresAuth && !authUser) {
-    console.log("requiresAuth: true")
+    // console.log("requiresAuth: true")
   }
   next()
 })
