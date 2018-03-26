@@ -132,7 +132,7 @@ var flag = function ( req, res ) {
         return res.json({ success: true, message: 'Deleted own flyer' })
       }
 
-      if (result.flags == 4) {
+      if (result.flags == 5) {
         flyers.remove({_id : new ObjectId(req.body.flyer)})
         return res.json({ success: true, message: 'Flagged flyer and deleted' })
       } else {
@@ -164,7 +164,7 @@ var collect = function ( req, res ) {
           users.update({email : req.decoded.email}, {$addToSet:{'collected' : req.body.flyer}})
           return res.json({ success: true, message: 'Collected flyer' })
         } else {
-          users.update({email : req.decoded.email}, {$pull:{'collected' : req.body.flyer}})
+          //users.update({email : req.decoded.email}, {$pull:{'collected' : req.body.flyer}})
           return res.json({ success: true, message: 'Removed collected flyer' })
         }
     })
