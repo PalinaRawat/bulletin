@@ -47,12 +47,12 @@ var router = new Router({
   ]
 })
 
+
+/* Check to make sure the user has auth permission to access the page */
 router.beforeEach((to, from, next) => {
-  const authUser = localStorage.getItem('token')
-  console.log('authUser: ' + authUser)
+  const authUser = localStorage.getItem('token');
   if (to.meta.requiresAuth && !authUser) {
-    router.push({ path: '/login', query: { plan: 'private' } })
-    next({ name: 'Login' })
+    console.log("requiresAuth: true")
   }
   next()
 })
