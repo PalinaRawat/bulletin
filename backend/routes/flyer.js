@@ -20,12 +20,7 @@ var upload = multer({
     console.log(file.originalname)
     console.log(path.extname(file.originalname))
     var ext = path.extname(file.originalname)
-    if (ext !== '.png' && ext !== '.jpg' && ext !== '.gif' && ext !== '.jpeg') {
-      req.fileerror = "Invalid file extension"
-  		return cb(null, false, new Error('I don\'t have a clue!'))
-  	} else {
-      return cb(null, true)
-    }
+    return cb(null, true)
   },
   dest: 'tmp/'
 }).single('image')
@@ -36,9 +31,6 @@ var create = function ( req, res ) {
     return res.json({ success: false, message: 'Insufficient information', body: req.body })
 
   var ext = path.extname(req.file.originalname)
-  if (ext !== '.png' && ext !== '.jpg' && ext !== '.gif' && ext !== '.jpeg') {
-      return res.json({ success: false, message: 'Invalid file extention'})
-  }
 
   MongoClient.connect(MongoURL, function(err, db) {
     if (err)
