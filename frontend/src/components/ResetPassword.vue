@@ -57,13 +57,12 @@ export default {
     reset () {
       const context = this
       axios.post(`http://localhost:5000/reset`, this.credentials).then(res => {
-        if (res.data.success) {
-          context.message = res.data.message
-          context.qMessage = 'Change in Account Settings'
-          context.qSuccess = true
-        } else {
-          context.message = res.data.message
-        }
+        // if (res.data.success) {
+        context.message = res.data.message
+        context.qMessage = 'Change in Account Settings'
+        context.qSuccess = true
+        // } else {
+        // }
       })
     }
   }
@@ -78,14 +77,17 @@ export default {
   color: #2c3e50;
   margin-top: 60px;
 }
+
 #icon {
   width: 60px;
   margin-bottom: 0;
 }
+
 .login-container {
   margin-top: 30px;
   font-size: 12px;
 }
+
 input {
     width: 20%;
     min-width: 150px;
@@ -98,10 +100,12 @@ input {
     text-align: center;
     outline-width: 1px;
 }
+
 #login{
   font-size: 25px;
   margin-bottom: 0px;
 }
+
 button {
     background-color: #ADD8E6;
     color: black;
@@ -115,5 +119,6 @@ button {
 }
 button:hover {
     background-color: #ADD2E6;
+
 }
 </style>

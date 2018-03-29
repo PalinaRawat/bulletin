@@ -8,7 +8,7 @@
      <b-btn v-b-modal.modal style="float: right; margin-right: 15px; margin-top: 20px;">Create a flyer</b-btn>
     </div>
   <b-modal id="modal" title="Fill the form" ref="myModalRef">
-   <b-form>
+      <b-form>
         <b-form-input id="title"
                       name="title"
                       v-model="form.title"
@@ -78,7 +78,7 @@
             <b-btn v-if="collectedFlyers.indexOf(flyer._id) == -1" v-on:click="saveFlyer(flyer._id)" style="background-color: green;">Collect</b-btn>
             <b-btn v-else v-on:click="saveFlyer(flyer._id)" style="background-color: darkgreen;">Collected</b-btn>
             <b-btn v-if="flyer.owner == currentuser" v-on:click="delete_flyer(flyer._id)" style="background-color: red;">X</b-btn>
-            <b-btn v-else v-on:click="delete_flyer(flyer, flyer._id, flyer.title)" @click="hide_modal" value="flag" style="background-color: red;">&#9873;</b-btn>
+            <b-btn v-else v-on:click="delete_flyer(flyer._id)" @click="hide_modal" value="flag" style="background-color: red;">&#9873;</b-btn>
           </div>
         </b-modal>
         <div class="container">
@@ -130,7 +130,7 @@ export default {
   methods: {
     logout () {
       console.log('I am logging out')
-      //localStorage.removeItem('token')
+      // localStorage.removeItem('token')
     },
     handleFileUpload () {
       this.file = this.$refs.file.files[0]
@@ -141,7 +141,7 @@ export default {
       context.filter = sessionStorage.getItem('filter')
       var dateObj = new Date()
       var end = new Date()
-      if (context.filter.toUpperCase() === 'ALL') {
+      if (context.filter === 'All') {
         end.setFullYear(dateObj.getFullYear() + 3)
       } else if (context.filter === 'Week') {
         end.setMonth(dateObj.getMonth() + 1)
@@ -155,11 +155,6 @@ export default {
       body.append('collected', sessionStorage.getItem('collected'))
       axios.post('http://localhost:5000/getflyers', body).then(res => {
         context.listOfFlyers = res.data.flyers
-        context.listOfFlyers.sort(function (a, b) {
-          a = new Date(a.startdate)
-          b = new Date(b.startdate)
-          return a < b ? -1 : a > b ? 1 : 0
-        })
         context.collectedFlyers = res.data.collected
         context.currentuser = res.data.currentuser
         context.len = res.data.flyers.length
@@ -187,14 +182,14 @@ export default {
       var url = 'http://localhost:5000/createflyer?'
       if (this.form.title === '') alert('Fill the title')
       else if (this.form.description === '') alert('Fill the description')
-      else if (this.form.startdate === '') alert('Select a startdate')
-      else if (this.form.enddate === '') alert('Select an enddate')
+      else if (this.form.startdate === '') var alertMsg = 'Select a start date'
+      else if (this.form.enddate === '') console.log(alertMsg)
       else if (this.form.image === null) alert('Upload an image')
       else {
-        var presentReference = new Date()
-        var start = new Date(this.form.startdate)
+        // var presentReference = new Date()
+        // var start = new Date(this.form.startdate)
 
-        this.$refs.myModalRef.hide()
+        // this.$refs.myModalRef.hide()
         const formData = new FormData()
         formData.append('token', localStorage.getItem('token'))
         formData.append('image', this.form.image)

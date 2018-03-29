@@ -20,12 +20,7 @@ var upload = multer({
     console.log(file.originalname)
     console.log(path.extname(file.originalname))
     var ext = path.extname(file.originalname)
-    if (ext !== '.png' && ext !== '.jpg' && ext !== '.gif' && ext !== '.jpeg') {
-      req.fileerror = "Invalid file extension"
-  		return cb(null, false, new Error('I don\'t have a clue!'))
-  	} else {
-      return cb(null, true)
-    }
+    return cb(null, true)
   },
   dest: 'tmp/'
 }).single('image')
@@ -36,9 +31,6 @@ var create = function ( req, res ) {
     return res.json({ success: false, message: 'Insufficient information', body: req.body })
 
   var ext = path.extname(req.file.originalname)
-  if (ext !== '.png' && ext !== '.jpg' && ext !== '.gif' && ext !== '.jpeg') {
-      return res.json({ success: false, message: 'Invalid file extention'})
-  }
 
   MongoClient.connect(MongoURL, function(err, db) {
     if (err)
@@ -127,12 +119,7 @@ var flag = function ( req, res ) {
       if (err || !result)
         return res.json({ success: false, message: 'Error finding flyer in database'})
 
-      if (result.owner == req.decoded.email) {
-        flyers.remove({_id : new ObjectId(req.body.flyer)})
-        return res.json({ success: true, message: 'Deleted own flyer' })
-      }
-
-      if (result.flags == 4) {
+      if (result.flags == 5) {
         flyers.remove({_id : new ObjectId(req.body.flyer)})
         return res.json({ success: true, message: 'Flagged flyer and deleted' })
       } else {
@@ -164,7 +151,7 @@ var collect = function ( req, res ) {
           users.update({email : req.decoded.email}, {$addToSet:{'collected' : req.body.flyer}})
           return res.json({ success: true, message: 'Collected flyer' })
         } else {
-          users.update({email : req.decoded.email}, {$pull:{'collected' : req.body.flyer}})
+          //users.update({email : req.decoded.email}, {$pull:{'collected' : req.body.flyer}})
           return res.json({ success: true, message: 'Removed collected flyer' })
         }
     })
@@ -256,7 +243,7 @@ var getflyers = function ( req, res ) {
         } catch (error) {
           return res.json({success: false, message: 'User has an invalid id in collected!', error: error})
         }
-        flyers.find({"_id" : { $in : collectedId } ,startdate: {"$gte": startdate}, enddate: {"$lte": enddate}, users_flagged: {$nin: [req.decoded.email]}}).toArray(function (err, result) {
+        flyers.find({"_id" : { $in : collectedId } , users_flagged: {$nin: [req.decoded.email]}}).toArray(function (err, result) {
           if (err)
             return res.json({ success: false, message: 'Error finding flyers in database'})
 
