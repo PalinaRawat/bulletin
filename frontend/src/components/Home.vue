@@ -78,7 +78,7 @@
             <b-btn v-if="collectedFlyers.indexOf(flyer._id) == -1" v-on:click="saveFlyer(flyer._id)" style="background-color: green;">Collect</b-btn>
             <b-btn v-else v-on:click="saveFlyer(flyer._id)" style="background-color: darkgreen;">Collected</b-btn>
             <b-btn v-if="flyer.owner == currentuser" v-on:click="delete_flyer(flyer._id)" style="background-color: red;">X</b-btn>
-            <b-btn v-else v-on:click="delete_flyer(flyer, flyer._id, flyer.title)" @click="hide_modal" value="flag" style="background-color: red;">&#9873;</b-btn>
+            <b-btn v-else v-on:click="delete_flyer(flyer._id)" @click="hide_modal" value="flag" style="background-color: red;">&#9873;</b-btn>
           </div>
         </b-modal>
         <div class="container">
