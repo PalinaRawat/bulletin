@@ -7,15 +7,28 @@ var request = require("request"),
     ACCOUNT MANAGEMENT
 
 */
-
-describe("Signup with invalid email", function() {
+describe("Signup with existing email", function() {
   describe("POST /signup", function() {
     it("Should return success: false + error message", function(done) {
 
-      request.post({ url: base_url + "signup", form: {email:'kevin@gmail.com', password:'password'}}, function(err,httpResponse,body) {
+      request.post({ url: base_url + "signup", form: {email:'rawatp@purdue.edu', password:'1997palina', securityq:'test', securitya:'test' }}, function(err,httpResponse,body) {
         console.log(body)
         body = JSON.parse(body);
         assert.equal(body.success, false)
+        done();
+      });
+    });
+  });
+});
+
+describe("Signup with valid email", function() {
+  describe("POST /signup", function() {
+    it("Should return success: true  message: Created new account", function(done) {
+
+      request.post({ url: base_url + "signup", form: {email:'rawa@purdue.edu', password:'1997palina', securityq:'test', securitya:'test' }}, function(err,httpResponse,body) {
+        console.log(body)
+        body = JSON.parse(body);
+        assert.equal(body.success, true)
         done();
       });
     });
@@ -65,13 +78,14 @@ describe("Get flyers with logged in user", function() {
 
 
 
+
 /*
 
     FLYER MANAGEMENT
 
 */
 
-describe("Create a flyer", function() {
+/*describe("Create a flyer", function() {
   describe("POST /create then POST /flag", function() {
     it("Should return success: true  message: successfully created and deleted flyer", function(done) {
       request.post({ url: base_url + "login", form: {email:'kevin@purdue.edu', password:'password'}}, function(err,httpResponse,body) {
@@ -89,4 +103,4 @@ describe("Create a flyer", function() {
       });
     });
   });
-});
+});*/

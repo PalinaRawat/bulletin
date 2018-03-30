@@ -54,7 +54,7 @@
   </b-modal>
 
     <div id="filterDiv">
-        <p style="display:block">Filter by: {{this.filter}}</p>
+        <p style="display:block">Filter by: Month</p>
         <p style="display:inline-block">Collected only</p>
         <input id="collectedBox" type="checkbox" style="display:inline-block"  v-if="collected == 'false'"/>
         <input id="collectedBox" type="checkbox" style="display:inline-block" v-else checked/>
@@ -72,7 +72,7 @@
       <div v-for="(flyer, index) in listOfFlyers" v-bind:key="index">
         <b-modal ref="flyermodal" :id="flyer.title" :title="flyer.title">
           <img :src="flyer.image_url" style="opacity: 1; max-width: 200px; max-height 200px; width: auto; height: auto;" alt="">
-          <p class="my-4">{{flyer.description}}</p>
+          <p class="my-4">flyer.description</p>
           <p class="my-4">Date: {{new Date(flyer.startdate).toDateString()}} - {{new Date(flyer.enddate).toDateString()}}</p>
           <div slot="modal-footer" class="w-100">
             <b-btn v-if="collectedFlyers.indexOf(flyer._id) == -1" v-on:click="saveFlyer(flyer._id)" style="background-color: green;">Collect</b-btn>
@@ -182,8 +182,8 @@ export default {
       var url = 'http://localhost:5000/createflyer?'
       if (this.form.title === '') alert('Fill the title')
       else if (this.form.description === '') alert('Fill the description')
-      else if (this.form.startdate === '') var alertMsg = 'Select a start date'
-      else if (this.form.enddate === '') console.log(alertMsg)
+      else if (this.form.startdate === '') alert('Select a start date')
+      else if (this.form.enddate === '') console.log('no pop up')
       else if (this.form.image === null) alert('Upload an image')
       else {
         // var presentReference = new Date()

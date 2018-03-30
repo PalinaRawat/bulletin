@@ -118,17 +118,15 @@ var flag = function ( req, res ) {
     flyers.findOne( {_id : new ObjectId(req.body.flyer)}, function(err, result) {
       if (err || !result)
         return res.json({ success: false, message: 'Error finding flyer in database'})
-
       if (result.owner == req.decoded.email) {
-        flyers.remove({_id : new ObjectId(req.body.flyer)})
+        //flyers.remove({_id : new ObjectId(req.body.flyer)})
         return res.json({ success: true, message: 'Deleted own flyer' })
       }
-
       if (result.flags == 5) {
         flyers.remove({_id : new ObjectId(req.body.flyer)})
         return res.json({ success: true, message: 'Flagged flyer and deleted' })
       } else {
-        flyers.update({_id : new ObjectId(req.body.flyer)}, {$set:{'flags' : parseInt(result.flags) + 1}, $push:{'users_flagged': req.decoded.email }})
+        flyers.update({_id : new ObjectId(req.body.flyer)}, {$set:{'flags' : parseInt(result.flags) + 1}})
         return res.json({ success: true, message: 'Flagged flyer' })  }
     })
   })
@@ -256,7 +254,11 @@ var getflyers = function ( req, res ) {
         })
       } else {
         var flyers = db.collection('flyers')
+<<<<<<< HEAD
         flyers.find({startdate: {"$gte": startdate}, enddate: {"$lte": enddate}}).toArray(function (err, result) {
+=======
+        flyers.find({enddate: {"$lte": enddate}, users_flagged: {$nin: [req.decoded.email]}}).toArray(function (err, result) {
+>>>>>>> 781271df9cda750a143d2a64231f048be3f99609
           if (err || !result)
             return res.json({ success: false, message: 'Error finding flyers in database'})
 
