@@ -72,13 +72,13 @@
       <div v-for="(flyer, index) in listOfFlyers" v-bind:key="index">
         <b-modal ref="flyermodal" :id="flyer.title" :title="flyer.title">
           <img :src="flyer.image_url" style="opacity: 1; max-width: 200px; max-height 200px; width: auto; height: auto;" alt="">
-          <p class="my-4">{{flyer.description}}</p>
+          <p class="my-4">flyer.description</p>
           <p class="my-4">Date: {{new Date(flyer.startdate).toDateString()}} - {{new Date(flyer.enddate).toDateString()}}</p>
           <div slot="modal-footer" class="w-100">
             <b-btn v-if="collectedFlyers.indexOf(flyer._id) == -1" v-on:click="saveFlyer(flyer._id)" style="background-color: green;">Collect</b-btn>
             <b-btn v-else v-on:click="saveFlyer(flyer._id)" style="background-color: darkgreen;">Collected</b-btn>
             <b-btn v-if="flyer.owner == currentuser" v-on:click="delete_flyer(flyer._id)" style="background-color: red;">X</b-btn>
-            <b-btn v-else v-on:click="delete_flyer(flyer, flyer._id, flyer.title)" @click="hide_modal" value="flag" style="background-color: red;">&#9873;</b-btn>
+            <b-btn v-else v-on:click="delete_flyer(flyer._id)" @click="hide_modal" value="flag" style="background-color: red;">&#9873;</b-btn>
           </div>
         </b-modal>
         <div class="container">
