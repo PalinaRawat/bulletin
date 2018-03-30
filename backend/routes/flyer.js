@@ -118,7 +118,10 @@ var flag = function ( req, res ) {
     flyers.findOne( {_id : new ObjectId(req.body.flyer)}, function(err, result) {
       if (err || !result)
         return res.json({ success: false, message: 'Error finding flyer in database'})
-
+      if (result.owner == req.decoded.email) {
+        //flyers.remove({_id : new ObjectId(req.body.flyer)})
+        return res.json({ success: true, message: 'Deleted own flyer' })
+      }
       if (result.flags == 5) {
         flyers.remove({_id : new ObjectId(req.body.flyer)})
         return res.json({ success: true, message: 'Flagged flyer and deleted' })
