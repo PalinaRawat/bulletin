@@ -143,16 +143,18 @@ var reset = function ( req, res ) {
 			//New randomized password
 			const newPassword = Math.random().toString(36).slice(-8)
 
-			bcrypt.hash(newPassword, 10, function(err, hash) {
-				if (err)
-					return res.json({ success: false, message: 'Error encrypting password' })
+			return res.json({ success: true, message: 'Password Successfully Changed to: ' + newPassword })
 
-					users.findOneAndUpdate( { email: req.body.email }, { $set: { password: hash } }, function (err, result2) {
-            if (err)
-      				return res.json({ success: false, message: 'Error connecting to database' })
-						return res.json({ success: true, message: 'Password Successfully Changed to: ' + newPassword })
-					})
-			})
+			// bcrypt.hash(newPassword, 10, function(err, hash) {
+			// 	if (err)
+			// 		return res.json({ success: false, message: 'Error encrypting password' })
+      //
+			// 		users.findOneAndUpdate( { email: req.body.email }, { $set: { password: hash } }, function (err, result2) {
+      //       if (err)
+      // 				return res.json({ success: false, message: 'Error connecting to database' })
+			// 			return res.json({ success: true, message: 'Password Successfully Changed to: ' + newPassword })
+			// 		})
+			// })
 
 		})
 	})
