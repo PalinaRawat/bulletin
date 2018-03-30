@@ -246,7 +246,7 @@ var getflyers = function ( req, res ) {
         } catch (error) {
           return res.json({success: false, message: 'User has an invalid id in collected!', error: error})
         }
-        flyers.find({"_id" : { $in : collectedId } , users_flagged: {$nin: [req.decoded.email]}}).toArray(function (err, result) {
+        flyers.find({"_id" : { $in : collectedId }}).toArray(function (err, result) {
           if (err)
             return res.json({ success: false, message: 'Error finding flyers in database'})
 
@@ -254,7 +254,11 @@ var getflyers = function ( req, res ) {
         })
       } else {
         var flyers = db.collection('flyers')
+<<<<<<< HEAD
+        flyers.find({startdate: {"$gte": startdate}, enddate: {"$lte": enddate}}).toArray(function (err, result) {
+=======
         flyers.find({enddate: {"$lte": enddate}, users_flagged: {$nin: [req.decoded.email]}}).toArray(function (err, result) {
+>>>>>>> 781271df9cda750a143d2a64231f048be3f99609
           if (err || !result)
             return res.json({ success: false, message: 'Error finding flyers in database'})
 
