@@ -103,7 +103,7 @@ var login = function ( req, res ) {
 				//console.log(result[0].password, req.body.password)
         if (!match)
           return res.json({ success: false, message: 'Invalid login information' })
-          
+
 				var tokenitems = {
 				  _id: result[0]._id,
 				  email: req.body.email
@@ -148,17 +148,6 @@ var reset = function ( req, res ) {
 			//New randomized password
 			const newPassword = Math.random().toString(36).slice(-8)
 
-<<<<<<< HEAD
-			bcrypt.hash(newPassword, 10, function(err, hash) {
-				if (err)
-					return res.json({ success: false, message: 'Error encrypting password' })
-
-					users.findOneAndUpdate( { email: req.body.email }, { $set: { password: hash } }, function (err, result2) {
-            	return res.json({ success: false, message: 'Error connecting to database' })
-						return res.json({ success: true, message: 'Password Successfully Changed to: ' + newPassword })
-					})
-			})
-=======
 			return res.json({ success: true, message: 'Password Successfully Changed to: ' + newPassword })
 
 			// bcrypt.hash(newPassword, 10, function(err, hash) {
@@ -171,7 +160,6 @@ var reset = function ( req, res ) {
 			// 			return res.json({ success: true, message: 'Password Successfully Changed to: ' + newPassword })
 			// 		})
 			// })
->>>>>>> 781271df9cda750a143d2a64231f048be3f99609
 
 		})
 	})
