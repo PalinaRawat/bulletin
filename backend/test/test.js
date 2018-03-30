@@ -25,7 +25,7 @@ describe("Signup with valid email", function() {
   describe("POST /signup", function() {
     it("Should return success: true  message: Created new account", function(done) {
 
-      request.post({ url: base_url + "signup", form: {email:'rawa@purdue.edu', password:'1997palina', securityq:'test', securitya:'test' }}, function(err,httpResponse,body) {
+      request.post({ url: base_url + "signup", form: {email:'uuii@purdue.edu', password:'1997palina', securityq:'test', securitya:'test' }}, function(err,httpResponse,body) {
         console.log(body)
         body = JSON.parse(body);
         assert.equal(body.success, true)
