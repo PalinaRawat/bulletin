@@ -2,8 +2,8 @@
   <div class="hello">
     <img src="../assets/icon.svg">
     <h1>{{ msg }}</h1>
-    <router-link to="/login" tag="button">Login</router-link>
-    <router-link to="/signup" tag="button">Signup</router-link>
+    <router-link to="/signup" tag="button">Login</router-link>
+    <router-link to="/login" tag="button">Signup</router-link>
   </div>
 </template>
 
