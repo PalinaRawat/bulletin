@@ -254,11 +254,7 @@ var getflyers = function ( req, res ) {
         })
       } else {
         var flyers = db.collection('flyers')
-<<<<<<< HEAD
-        flyers.find({startdate: {"$gte": startdate}, enddate: {"$lte": enddate}}).toArray(function (err, result) {
-=======
         flyers.find({enddate: {"$lte": enddate}, users_flagged: {$nin: [req.decoded.email]}}).toArray(function (err, result) {
->>>>>>> 781271df9cda750a143d2a64231f048be3f99609
           if (err || !result)
             return res.json({ success: false, message: 'Error finding flyers in database'})
 
