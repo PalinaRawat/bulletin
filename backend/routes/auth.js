@@ -86,23 +86,23 @@ var signup = function ( req, res ) {
 var login = function ( req, res ) {
 
 	if (!req.body.email)
-		return res.json({ success: false, message: 'Insufficient login information' })
+		return res.json({ success: false, message: '' })
 
 	MongoClient.connect(MongoURL, function(err, db) {
     if (err)
-      return res.json({ success: false, message: 'Error connecting to database' })
+      return res.json({ success: false, message: '' })
 		var users = db.collection('users')
 		users.find({ email: req.body.email }).toArray(function(err, result) {
 			if (err)
-				return res.json({ success: false, message: 'Error connecting to database' })
+				return res.json({ success: false, message: '' })
 			if (result.length === 0)
-				return res.json({ success: false, message: 'Invalid login information' })
+				return res.json({ success: false, message: '' })
 			bcrypt.compare(req.body.password, result[0].password, function(err, match) {
 				if (err)
-					return res.json({ success: false, message: 'Error comparing passwords' })
+					return res.json({ success: false, message: '' })
 				//console.log(result[0].password, req.body.password)
         if (!match)
-          return res.json({ success: false, message: 'Invalid login information' })
+          return res.json({ success: false, message: '' })
 
 				var tokenitems = {
 				  _id: result[0]._id,
