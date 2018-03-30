@@ -58,8 +58,8 @@ export default {
       const context = this
       axios.post(`http://localhost:5000/reset`, this.credentials).then(res => {
         // if (res.data.success) {
-        context.message = res.data.message
-        context.qMessage = 'Change in Account Settings'
+        //context.message = res.data.message
+        context.qMessage = 'Change New Password in Account Settings'
         context.qSuccess = true
         // } else {
         // }
