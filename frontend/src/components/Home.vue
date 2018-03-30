@@ -54,7 +54,7 @@
   </b-modal>
 
     <div id="filterDiv">
-        <p style="display:block">Filter by: Month</p>
+        <p style="display:block">Filter by: {{this.filter}}</p>
         <p style="display:inline-block">Collected only</p>
         <input id="collectedBox" type="checkbox" style="display:inline-block"  v-if="collected == 'false'"/>
         <input id="collectedBox" type="checkbox" style="display:inline-block" v-else checked/>
