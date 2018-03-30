@@ -126,7 +126,7 @@ var flag = function ( req, res ) {
         flyers.remove({_id : new ObjectId(req.body.flyer)})
         return res.json({ success: true, message: 'Flagged flyer and deleted' })
       } else {
-        flyers.update({_id : new ObjectId(req.body.flyer)}, {$set:{'flags' : parseInt(result.flags) + 1}, $push:{'users_flagged': req.decoded.email }})
+        // flyers.update({_id : new ObjectId(req.body.flyer)}, {$set:{'flags' : parseInt(result.flags) + 1}, $push:{'users_flagged': req.decoded.email }})
         return res.json({ success: true, message: 'Flagged flyer' })  }
     })
   })
