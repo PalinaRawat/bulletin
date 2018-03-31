@@ -182,8 +182,8 @@ export default {
       var url = 'http://localhost:5000/createflyer?'
       if (this.form.title === '') alert('Fill the title')
       else if (this.form.description === '') alert('Fill the description')
-      else if (this.form.startdate === '') alert('Select a start date')
-      else if (this.form.enddate === '') console.log('no pop up')
+      else if (this.form.startdate === '') console.log('no pop up')
+      else if (this.form.enddate === '') alert('Fill the end date')
       else if (this.form.image === null) alert('Upload an image')
       else {
         // var presentReference = new Date()
